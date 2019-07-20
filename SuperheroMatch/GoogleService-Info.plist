@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>665394761832-nn1j4m1se8f69jug6q53f104i5fe0ud2.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.665394761832-nn1j4m1se8f69jug6q53f104i5fe0ud2</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>665394761832-rb9ochqdv6jbh1o33i12av7n6mpanecd.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBRQjXZabl7VLJoXetCaV7dyMQrHqoMEu8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>665394761832</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>nl.mwsoft.SuperheroMatch</string>
+	<key>PROJECT_ID</key>
+	<string>superheromatch</string>
+	<key>STORAGE_BUCKET</key>
+	<string>superheromatch.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:665394761832:ios:55323706f42463c3</string>
+	<key>DATABASE_URL</key>
+	<string>https://superheromatch.firebaseio.com</string>
+</dict>
+</plist>

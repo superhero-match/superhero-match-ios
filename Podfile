@@ -21,7 +21,6 @@ target 'SuperheroMatch' do
   pod 'MBProgressHUD'
   pod 'IQAudioRecorderController'
 
-  pod 'JSQMessagesViewController', '7.3.3'
   pod 'IDMPhotoBrowser'
 
 

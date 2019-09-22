@@ -19,10 +19,10 @@ class Suggestions {
     
     func suggestions(params: [String: Any]!, closure: @escaping (_ json: Any?, _ error: Error?)->()) {
         self.networkManager.loadUrl(
-            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHERO_SUGGESTIONS_PORT + "/api/v1/suggestions/suggestions",
+            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHERO_SUGGESTIONS_PORT + "/api/v1/superhero_suggestions/suggest",
             params: params!,
             method: .post,
-            encoding: URLEncoding.httpBody
+            encoding: nil
         ) { json, error in
             closure(json, error)
         }

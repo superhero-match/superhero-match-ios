@@ -37,7 +37,6 @@
 		113C1A2D22F741F300FFCAE6 /* CheckEmailResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C1A2C22F741F300FFCAE6 /* CheckEmailResponse.swift */; };
 		1150E60822E499EE007D16CF /* MatchesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E60722E499EE007D16CF /* MatchesTableViewCell.swift */; };
 		1150E61522E4A619007D16CF /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E61422E4A619007D16CF /* Camera.swift */; };
-		1150E61722E4A69B007D16CF /* PhotoMediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E61622E4A69B007D16CF /* PhotoMediaItem.swift */; };
 		1150E61922E4AFA2007D16CF /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E61822E4AFA2007D16CF /* ChatVC.swift */; };
 		1150E61B22E4B012007D16CF /* MessagesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E61A22E4B012007D16CF /* MessagesVC.swift */; };
 		1150E61D22E4B088007D16CF /* NewMessageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E61C22E4B088007D16CF /* NewMessageVC.swift */; };
@@ -50,6 +49,8 @@
 		1150E62B22E4B521007D16CF /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E62A22E4B521007D16CF /* CustomImageView.swift */; };
 		1150E62D22E4D03E007D16CF /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E62C22E4D03E007D16CF /* ProfileImage.swift */; };
 		1150E62F22E4D58E007D16CF /* SuggestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E62E22E4D58E007D16CF /* SuggestionCell.swift */; };
+		117A57392337CFFE00EB3560 /* SuggestionsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117A57382337CFFE00EB3560 /* SuggestionsResponse.swift */; };
+		117A573B2337D0B500EB3560 /* Superhero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117A573A2337D0B500EB3560 /* Superhero.swift */; };
 		11827D1722F776660095B570 /* certificate.der in Resources */ = {isa = PBXBuildFile; fileRef = 11827D1622F7764D0095B570 /* certificate.der */; };
 		11B4494122E1D56500FD7122 /* DBConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B4494022E1D56500FD7122 /* DBConstants.swift */; };
 		11B4494322E1DEDF00FD7122 /* SuperheroMatchDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B4494222E1DEDF00FD7122 /* SuperheroMatchDB.swift */; };
@@ -124,7 +125,6 @@
 		113C1A2C22F741F300FFCAE6 /* CheckEmailResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckEmailResponse.swift; sourceTree = "<group>"; };
 		1150E60722E499EE007D16CF /* MatchesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesTableViewCell.swift; sourceTree = "<group>"; };
 		1150E61422E4A619007D16CF /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
-		1150E61622E4A69B007D16CF /* PhotoMediaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMediaItem.swift; sourceTree = "<group>"; };
 		1150E61822E4AFA2007D16CF /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatVC.swift; path = Chat/ChatVC.swift; sourceTree = "<group>"; };
 		1150E61A22E4B012007D16CF /* MessagesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesVC.swift; sourceTree = "<group>"; };
 		1150E61C22E4B088007D16CF /* NewMessageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageVC.swift; sourceTree = "<group>"; };
@@ -137,6 +137,8 @@
 		1150E62A22E4B521007D16CF /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		1150E62C22E4D03E007D16CF /* ProfileImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImage.swift; sourceTree = "<group>"; };
 		1150E62E22E4D58E007D16CF /* SuggestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionCell.swift; sourceTree = "<group>"; };
+		117A57382337CFFE00EB3560 /* SuggestionsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsResponse.swift; sourceTree = "<group>"; };
+		117A573A2337D0B500EB3560 /* Superhero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Superhero.swift; sourceTree = "<group>"; };
 		11827D1622F7764D0095B570 /* certificate.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = certificate.der; sourceTree = "<group>"; };
 		11B4493E22E1D3E600FD7122 /* SuperheroMatch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SuperheroMatch-Bridging-Header.h"; sourceTree = "<group>"; };
 		11B4494022E1D56500FD7122 /* DBConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBConstants.swift; sourceTree = "<group>"; };
@@ -213,9 +215,10 @@
 				1130FD7322E0DFCF00B64C36 /* MessageQueueItem.swift */,
 				1130FD7522E0E08700B64C36 /* ReceivedOnlineMessage.swift */,
 				1150E61422E4A619007D16CF /* Camera.swift */,
-				1150E61622E4A69B007D16CF /* PhotoMediaItem.swift */,
 				113C1A2C22F741F300FFCAE6 /* CheckEmailResponse.swift */,
 				1122491222FB41F70064F54C /* RegisterResponse.swift */,
+				117A57382337CFFE00EB3560 /* SuggestionsResponse.swift */,
+				117A573A2337D0B500EB3560 /* Superhero.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -717,8 +720,6 @@
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/IDMPhotoBrowser/IDMPhotoBrowser.framework",
 				"${BUILT_PRODUCTS_DIR}/IQAudioRecorderController/IQAudioRecorderController.framework",
-				"${BUILT_PRODUCTS_DIR}/JSQMessagesViewController/JSQMessagesViewController.framework",
-				"${BUILT_PRODUCTS_DIR}/JSQSystemSoundPlayer/JSQSystemSoundPlayer.framework",
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
 				"${BUILT_PRODUCTS_DIR}/ProgressHUD/ProgressHUD.framework",
@@ -743,8 +744,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IDMPhotoBrowser.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQAudioRecorderController.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JSQMessagesViewController.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JSQSystemSoundPlayer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProgressHUD.framework",
@@ -804,7 +803,6 @@
 				11C8BC3822DF19BB0089DCE0 /* AppDelegate.swift in Sources */,
 				1130FD7222E0DCFC00B64C36 /* Message.swift in Sources */,
 				11C8BC6C22DF206B0089DCE0 /* Extensions.swift in Sources */,
-				1150E61722E4A69B007D16CF /* PhotoMediaItem.swift in Sources */,
 				1150E61522E4A619007D16CF /* Camera.swift in Sources */,
 				1130FD6022E091EA00B64C36 /* MainTabVC.swift in Sources */,
 				1150E61B22E4B012007D16CF /* MessagesVC.swift in Sources */,
@@ -829,6 +827,8 @@
 				1130FD6822E0A4FB00B64C36 /* ProfileVC.swift in Sources */,
 				1130FD6C22E0C46C00B64C36 /* Protocols.swift in Sources */,
 				11C8BC7822DF6C4A0089DCE0 /* SuperheroProfilePicVC.swift in Sources */,
+				117A573B2337D0B500EB3560 /* Superhero.swift in Sources */,
+				117A57392337CFFE00EB3560 /* SuggestionsResponse.swift in Sources */,
 				1150E60822E499EE007D16CF /* MatchesTableViewCell.swift in Sources */,
 				11C8BC7422DF535E0089DCE0 /* SuperheroFavoriteGenderVC.swift in Sources */,
 				11C8BC6922DF1B8F0089DCE0 /* VerifyIdentityVC.swift in Sources */,
@@ -1026,6 +1026,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3BU57K4Q53;
 				INFOPLIST_FILE = SuperheroMatch/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1045,6 +1046,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3BU57K4Q53;
 				INFOPLIST_FILE = SuperheroMatch/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

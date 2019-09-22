@@ -11,7 +11,9 @@ import Foundation
 class CheckEmailResponse {
     
     var status: Int64!
-    var registered: Bool!
+    var isRegistered: Bool!
+    var isDeleted: Bool!
+    var isBlocked: Bool!
     
     enum SerializationError: Error {
         case missing(String)
@@ -26,13 +28,25 @@ class CheckEmailResponse {
             throw SerializationError.missing("status")
         }
         
-        // Extract registered
-        guard let registered = json["registered"] as? Bool else {
-            throw SerializationError.missing("registered")
+        // Extract isRegistered
+        guard let isRegistered = json["isRegistered"] as? Bool else {
+            throw SerializationError.missing("isRegistered")
+        }
+        
+        // Extract isDeleted
+        guard let isDeleted = json["isDeleted"] as? Bool else {
+            throw SerializationError.missing("isDeleted")
+        }
+        
+        // Extract isBlocked
+        guard let isBlocked = json["isBlocked"] as? Bool else {
+            throw SerializationError.missing("isBlocked")
         }
         
         self.status = status
-        self.registered = registered
+        self.isRegistered = isRegistered
+        self.isDeleted = isDeleted
+        self.isBlocked = isBlocked
         
     }
     

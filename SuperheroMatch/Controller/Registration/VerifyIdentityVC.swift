@@ -124,7 +124,11 @@ class VerifyIdentityVC: UIViewController, GIDSignInUIDelegate {
                 
                 let response = try CheckEmailResponse(json: checkEmailResponse as! [String : Any])
 
-                if !response.registered! {
+                print(response.isRegistered)
+                print(response.isDeleted)
+                print(response.isBlocked)
+                
+                if !response.isRegistered {
                     let superheroNameVC = SuperheroNameVC()
                     self.navigationController?.pushViewController(superheroNameVC, animated: true)
                 } else {

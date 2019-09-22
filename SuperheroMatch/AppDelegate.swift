@@ -66,11 +66,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
         self.verifyIdentityVC = VerifyIdentityVC()
         
-        window = UIWindow()
-        window?.rootViewController = UINavigationController(rootViewController: self.verifyIdentityVC!)
+//        window = UIWindow()
+//        window?.rootViewController = UINavigationController(rootViewController: self.verifyIdentityVC!)
         
-//        let mainTabVC = MainTabVC()
-//        window?.rootViewController = mainTabVC
+        let mainTabVC = MainTabVC()
+        window?.rootViewController = mainTabVC
         
         return true
     }

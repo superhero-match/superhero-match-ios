@@ -13,11 +13,10 @@ class DBConstants {
     // Version table columns
     static let TABLE_VERSION = "version"
     static let VERSION = "version"
+    static let DB_VERSION:Int64 = 1
     
     static let TABLE_CREATE_VERSION = """
-        CREATE TABLE IF NOT EXISTS (\(DBConstants.TABLE_VERSION) (
-        \(DBConstants.VERSION) VARCHAR(16)
-        )
+        CREATE TABLE IF NOT EXISTS \(DBConstants.TABLE_VERSION) (\(DBConstants.VERSION) INTEGER)
     """
     
     //=======================================================================================================================
@@ -27,6 +26,7 @@ class DBConstants {
     static let U_ID = "_id"
     static let USER_EMAIL = "user_email"
     static let USER_NAME = "user_name"
+    static let SUPERHERO_NAME = "superhero_name"
     static let USER_MAIN_PROFILE_PIC_URL = "user_main_profile_pic_url"
     static let USER_GENDER = "user_gender"
     static let USER_LOOKING_FOR_GENDER = "user_looking_for_gender"
@@ -48,11 +48,12 @@ class DBConstants {
     
     // SQL to create table user
     static let TABLE_CREATE_USER =
-    "CREATE TABLE " + TABLE_USER + " (" +
+    "CREATE TABLE IF NOT EXISTS " + TABLE_USER + " (" +
     U_ID + " TEXT PRIMARY KEY, " +
     USER_EMAIL + " TEXT NOT NULL," +
     USER_NAME + " TEXT NOT NULL," +
-    USER_MAIN_PROFILE_PIC_URL + " TEXT NOT NULL," +
+    SUPERHERO_NAME + " TEXT NOT NULL," +
+    USER_MAIN_PROFILE_PIC_URL + " TEXT," +
     USER_GENDER + " INTEGER NOT NULL," +
     USER_LOOKING_FOR_GENDER + " INTEGER NOT NULL," +
     USER_AGE + " INTEGER NOT NULL," +
@@ -73,7 +74,7 @@ class DBConstants {
     
     // insert default user
     static let INSERT_DEFAULT_USER = "INSERT INTO " + TABLE_USER +
-    " VALUES ( 'default', 'default@default.com', 'defaultName', 'defaultUrl', 1, 2, 34, 18, 65, 100, 'km', 0.0, 0.0," +
+    " VALUES ( 'default', 'default@default.com', 'defaultName', 'defaultSuperheroName', 'defaultUrl', 1, 2, 34, 18, 65, 100, 'km', 0.0, 0.0," +
     "'30-05-1985', 'Country', 'City', 'Super Power', 'FREE', 0, 0, '17-07-2019')";
     
     //=======================================================================================================================
@@ -87,7 +88,7 @@ class DBConstants {
     
     // SQL to create table user
     static let TABLE_CREATE_USER_PROFILE_PICTURE =
-    "CREATE TABLE " + TABLE_USER_PROFILE_PICTURE + " (" +
+    "CREATE TABLE IF NOT EXISTS " + TABLE_USER_PROFILE_PICTURE + " (" +
     USER_PROFILE_PICTURE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
     USER_ID + " TEXT NOT NULL," +
     USER_PROFILE_PIC_URI + " TEXT NOT NULL, " +
@@ -113,7 +114,7 @@ class DBConstants {
     
     // SQL to create table date_match
     static let TABLE_CREATE_MATCHED_USER =
-    "CREATE TABLE " + TABLE_MATCHED_USER + " (" +
+    "CREATE TABLE IF NOT EXISTS " + TABLE_MATCHED_USER + " (" +
     MATCHED_USER_ID + " TEXT PRIMARY KEY, " +
     MATCHED_USER_NAME + " TEXT NOT NULL," +
     MATCHED_USER_MAIN_PROFILE_PIC_URL + " TEXT NOT NULL," +
@@ -137,7 +138,7 @@ class DBConstants {
     
     // SQL to create table user
     static let TABLE_CREATE_MATCH_PROFILE_PICTURE =
-    "CREATE TABLE " + TABLE_MATCH_PROFILE_PICTURE + " (" +
+    "CREATE TABLE IF NOT EXISTS " + TABLE_MATCH_PROFILE_PICTURE + " (" +
     MATCH_PROFILE_PICTURE_ID + "  INTEGER PRIMARY KEY AUTOINCREMENT, " +
     PICTURE_MATCH_ID + " TEXT NOT NULL," +
     MATCH_PROFILE_PIC_URL + " TEXT NOT NULL, " +
@@ -156,7 +157,7 @@ class DBConstants {
     
     // SQL to create table chat
     static let TABLE_CREATE_MATCH_CHAT =
-    "CREATE TABLE " + TABLE_CHAT + " (" +
+    "CREATE TABLE IF NOT EXISTS " + TABLE_CHAT + " (" +
     CHAT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
     CHAT_NAME + " TEXT NOT NULL," +
     MATCH_NAME + " TEXT NOT NULL," +
@@ -180,7 +181,7 @@ class DBConstants {
 
     // SQL to create table message
     static let TABLE_CREATE_CHAT_MESSAGE =
-    "CREATE TABLE " + TABLE_MESSAGE + " (" +
+    "CREATE TABLE IF NOT EXISTS " + TABLE_MESSAGE + " (" +
     MESSAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
     MESSAGE_CHAT_ID + " INTEGER," +
     MESSAGE_SENDER_ID + " TEXT NOT NULL," +
@@ -203,7 +204,7 @@ class DBConstants {
     
     // SQL to create table text_message
     static let TABLE_CREATE_MESSAGE_QUEUE =
-    "CREATE TABLE " + TABLE_MESSAGE_QUEUE + " (" +
+    "CREATE TABLE IF NOT EXISTS " + TABLE_MESSAGE_QUEUE + " (" +
     MESSAGE_QUEUE_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
     MESSAGE_QUEUE_MESSAGE_UUID + " TEXT NOT NULL UNIQUE," +
     MESSAGE_QUEUE_MESSAGE_RECEIVER_ID + " INTEGER NOT NULL," +
@@ -220,7 +221,7 @@ class DBConstants {
     
     // SQL to create table retrieved offline message
     static let TABLE_CREATE_RETRIEVED_OFFLINE_MESSAGE_UUID =
-    "CREATE TABLE " + TABLE_RETRIEVED_OFFLINE_MESSAGE_UUID + " (" +
+    "CREATE TABLE IF NOT EXISTS " + TABLE_RETRIEVED_OFFLINE_MESSAGE_UUID + " (" +
     RETRIEVED_OFFLINE_MESSAGE_UUID_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
     RETRIEVED_OFFLINE_MESSAGE_UUID + " TEXT NOT NULL UNIQUE," +
     " FOREIGN KEY(" + RETRIEVED_OFFLINE_MESSAGE_UUID + ") REFERENCES " + TABLE_MESSAGE + "(" + MESSAGE_UUID + ")" +
@@ -236,7 +237,7 @@ class DBConstants {
     
     // SQL to create table text_message
     static let TABLE_CREATE_RECEIVED_ONLINE_MESSAGE =
-    "CREATE TABLE " + TABLE_RECEIVED_ONLINE_MESSAGE + " (" +
+    "CREATE TABLE IF NOT EXISTS " + TABLE_RECEIVED_ONLINE_MESSAGE + " (" +
     RECEIVED_ONLINE_MESSAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
     RECEIVED_ONLINE_MESSAGE_UUID + " TEXT NOT NULL UNIQUE," +
     " FOREIGN KEY(" + RECEIVED_ONLINE_MESSAGE_UUID + ") REFERENCES " + TABLE_MESSAGE + "(" + MESSAGE_UUID + ")" +

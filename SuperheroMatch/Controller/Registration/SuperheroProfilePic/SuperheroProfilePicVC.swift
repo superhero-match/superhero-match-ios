@@ -12,6 +12,8 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
     
     var imageIsSelected: Bool!
     var register: Register?
+    var user: User?
+    let userDB = UserDB.sharedDB
     
     let superheroProfilePicLabel: UILabel = {
         let lbl = UILabel()
@@ -158,29 +160,29 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         
         let userID = UUID().uuidString.replacingOccurrences(of: "-", with: "")
         
-        let user = User(userID: userID, email: email, name: name, superheroName: superheroName, mainProfilePicUrl: "", profilePicsUrls: nil, gender: Int64(gender), lookingForGender: Int64(favoriteGender), age: Int64(age), lookingForAgeMin: 25, lookingForAgeMax: 55, lookingForDistanceMax: 50, distanceUnit: "km", lat: 52.0957154, lon: 5.1264266, birthday: birthday, country: "Country", city: "City", superPower: superPower, accountType: "FREE")
+        user = User(userID: userID, email: email, name: name, superheroName: superheroName, mainProfilePicUrl: "", profilePicsUrls: nil, gender: Int64(gender), lookingForGender: Int64(favoriteGender), age: Int64(age), lookingForAgeMin: 25, lookingForAgeMax: 55, lookingForDistanceMax: 50, distanceUnit: "km", lat: 52.0957154, lon: 5.1264266, birthday: birthday, country: "Country", city: "City", superPower: superPower, accountType: "FREE")
         
         var params = [String: Any]()
         
-        params["id"] = user.userID
-        params["email"] = user.email
-        params["name"] = user.name
-        params["superheroName"] = user.superheroName
-        params["mainProfilePicUrl"] = user.mainProfilePicUrl
-        params["gender"] = user.gender
-        params["lookingForGender"] = user.lookingForGender
-        params["age"] = user.age
-        params["lookingForAgeMin"] = user.lookingForAgeMin
-        params["lookingForAgeMax"] = user.lookingForAgeMax
-        params["lookingForDistanceMax"] = user.lookingForDistanceMax
-        params["distanceUnit"] = user.distanceUnit
-        params["lat"] = user.lat
-        params["lon"] = user.lon
-        params["birthday"] = user.birthday
-        params["country"] = user.country
-        params["city"] = user.city
-        params["superPower"] = user.superPower
-        params["accountType"] = user.accountType
+        params["id"] = user!.userID
+        params["email"] = user!.email
+        params["name"] = user!.name
+        params["superheroName"] = user!.superheroName
+        params["mainProfilePicUrl"] = user!.mainProfilePicUrl
+        params["gender"] = user!.gender
+        params["lookingForGender"] = user!.lookingForGender
+        params["age"] = user!.age
+        params["lookingForAgeMin"] = user!.lookingForAgeMin
+        params["lookingForAgeMax"] = user!.lookingForAgeMax
+        params["lookingForDistanceMax"] = user!.lookingForDistanceMax
+        params["distanceUnit"] = user!.distanceUnit
+        params["lat"] = user!.lat
+        params["lon"] = user!.lon
+        params["birthday"] = user!.birthday
+        params["country"] = user!.country
+        params["city"] = user!.city
+        params["superPower"] = user!.superPower
+        params["accountType"] = user!.accountType
         
         return params
         
@@ -196,7 +198,7 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         _ = navigationController?.popViewController(animated: true)
     }
     
-    func showIncorrectAgeAlert() {
+    func showIncorrectAlert() {
         
         let alert = UIAlertController(title: "Something went wrong", message: "Something went wrong. Please try agin later.", preferredStyle: UIAlertController.Style.alert)
         
@@ -227,17 +229,20 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
                 
                 // If registered sucessfully, save user to local db, naviagte to MainTabVC.
                 // If not ok, show alert.
-                
-                print(response.status!)
-                print(response.registered!)
-                
                 if response.registered! {
-                    // TO-DO: save to local db
+                    let (err, changes) = self.userDB.updateDefaultUser(user: self.user!)
+                    if case .SQLError = err {
+                        print("###########  updateDefaultUser err  ##############")
+                        print(err)
+                    }
+                    
+                    print("###########  updateDefaultUser changes  ##############")
+                    print(changes)
                     
                     let mainTabVC = MainTabVC()
                     self.present(mainTabVC, animated: true, completion: nil)
                 } else {
-                    self.showIncorrectAgeAlert()
+                    self.showIncorrectAlert()
                 }
                 
             } catch {

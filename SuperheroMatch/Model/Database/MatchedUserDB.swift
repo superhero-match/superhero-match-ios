@@ -10,7 +10,7 @@ import Foundation
 
 class MatchedUserDB {
     
-    // Fetch chat by chat id.
+    // Fetch matched user by id.
     func getMatchedUserById(matchedUserId: String!) -> (DBError, User?) {
         var err:DBError = .NoError
         var matchedUser: User? = nil

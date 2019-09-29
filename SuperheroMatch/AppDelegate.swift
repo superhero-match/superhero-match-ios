@@ -23,54 +23,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
         GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
         GIDSignIn.sharedInstance().delegate = self
+        
+        window = UIWindow()
 
+        let superheroMatchDB = SuperheroMatchDB.sharedDB
+        let userDB = UserDB.sharedDB
         
-//        let superheroMatchDB = SuperheroMatchDB.sharedDB
-//        DispatchQueue.global().async {
-//
-//            var err = superheroMatchDB.createUserTable()
-//
-//            switch err {
-//            case .NoError:
-//                print("###########  superheroMatchDB.createUserTable err  ##############")
-//                print("No error")
-//                print("##################################")
-//                break
-//            case .SQLError:
-//                print("###########  superheroMatchDB.createUserTable err  ##############")
-//                print(err)
-//                print("##################################")
-//                break
-//            default:
-//                break
-//            }
-//
-//            err = superheroMatchDB.insertDefaultUser()
-//
-//            switch err {
-//            case .NoError:
-//                print("###########  superheroMatchDB.insertDefaultUser err   ##############")
-//                print("No error")
-//                print("##################################")
-//                break
-//            case .SQLError:
-//                print("###########  superheroMatchDB.insertDefaultUser err   ##############")
-//                print(err)
-//                print("##################################")
-//                break
-//            default:
-//                break
-//            }
-//
-//        }
+        DispatchQueue.global().async {
+
+            let (err, dbVersion) = superheroMatchDB.getDBVersion()
+           if case .SQLError = err {
+                print("###########  getDBVersion err  ##############")
+                print(err)
+            }
+            
+            switch dbVersion {
+            case nil:
+                print("###########  database does not exist -> create database  ##############")
+                let dberr = superheroMatchDB.createDB()
+                if case .SQLError = dberr {
+                    print(dberr)
+                }
+                
+                break
+            case DBConstants.DB_VERSION:
+                print("###########  the same database version -> all good  ##############")
+                
+                break
+            default:
+                print("###########  different database version -> database needs an upgarde  ##############")
+                
+                break
+            }
+
+        }
         
-        self.verifyIdentityVC = VerifyIdentityVC()
+        let (uerr, userId) = userDB.getUserId()
+        if case .SQLError = uerr {
+            print("###########  getUserId uerr  ##############")
+            print(uerr)
+        }
         
-//        window = UIWindow()
-//        window?.rootViewController = UINavigationController(rootViewController: self.verifyIdentityVC!)
-        
-        let mainTabVC = MainTabVC()
-        window?.rootViewController = mainTabVC
+        if userId == "default" || userId == nil {
+            self.verifyIdentityVC = VerifyIdentityVC()
+            self.window?.rootViewController = UINavigationController(rootViewController: self.verifyIdentityVC!)
+        } else {
+            let mainTabVC = MainTabVC()
+            self.window?.rootViewController = mainTabVC
+        }
         
         return true
     }

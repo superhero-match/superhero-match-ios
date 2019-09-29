@@ -10,6 +10,102 @@ import Foundation
 
 class UserDB {
     
+    static let sharedDB = UserDB()
+    
+    // Fetch user.
+    func getUser() -> (DBError, User?) {
+        var err:DBError = .NoError
+        var user: User? = nil
+        
+        let superheroMatchDB = SuperheroMatchDB.sharedDB
+        
+        if let db = superheroMatchDB.dbOpen() {
+            
+            let query = """
+            SELECT * FROM \(DBConstants.TABLE_USER)
+            """;
+            
+            var stmt:OpaquePointer? = nil
+            var result = sqlite3_prepare_v2(db, query, -1, &stmt, nil)
+            
+            var retryCount:Int = 0
+            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
+                sleep(1)
+                retryCount += 1
+                result = sqlite3_prepare_v2(db, query, -1, &stmt, nil)
+            }
+            
+            if SQLITE_OK == result {
+                result = sqlite3_step(stmt)
+                if SQLITE_ROW == result {
+                    
+                    let rawUserId = sqlite3_column_text(stmt, 0)
+                    let userId = String(cString:rawUserId!)
+                    
+                    let rawEmail = sqlite3_column_text(stmt, 1)
+                    let email = String(cString:rawEmail!)
+                    
+                    let rawUserName = sqlite3_column_text(stmt, 2)
+                    let userName = String(cString:rawUserName!)
+                    
+                    let rawSuperheroName = sqlite3_column_text(stmt, 3)
+                    let superheroName = String(cString:rawSuperheroName!)
+                    
+                    let rawMainProfilePic = sqlite3_column_text(stmt, 4)
+                    let mainProfilePic = String(cString:rawMainProfilePic!)
+                    
+                    let userGender = sqlite3_column_int64(stmt, 5)
+                    
+                    let userLookingForGender = sqlite3_column_int64(stmt, 6)
+                    
+                    let userAge = sqlite3_column_int64(stmt, 7)
+                    
+                    let userLookingForMinAge = sqlite3_column_int64(stmt, 8)
+                    
+                    let userLookingForMaxAge = sqlite3_column_int64(stmt, 9)
+                    
+                    let userLookingForDistanceMax = sqlite3_column_int64(stmt, 10)
+                    
+                    let rawDistanceUnit = sqlite3_column_text(stmt, 11)
+                    let distanceUnit = String(cString:rawDistanceUnit!)
+                    
+                    let userLat = sqlite3_column_double(stmt, 12)
+                    
+                    let userLon = sqlite3_column_double(stmt, 13)
+                    
+                    let rawUserBirthDay = sqlite3_column_text(stmt, 14)
+                    let userBirthDay = String(cString:rawUserBirthDay!)
+                    
+                    let rawUserCountry = sqlite3_column_text(stmt, 15)
+                    let userCountry = String(cString:rawUserCountry!)
+                    
+                    let rawUserCity = sqlite3_column_text(stmt, 16)
+                    let userCity = String(cString:rawUserCity!)
+                    
+                    let rawUserSuperPower = sqlite3_column_text(stmt, 17)
+                    let userSuperPower = String(cString:rawUserSuperPower!)
+                    
+                    let rawUserAccountType = sqlite3_column_text(stmt, 18)
+                    let userAccountType = String(cString:rawUserAccountType!)
+
+                    
+                    user = User(userID: userId, email: email, name: userName, superheroName: superheroName, mainProfilePicUrl: mainProfilePic, profilePicsUrls: nil, gender: userGender, lookingForGender: userLookingForGender, age: userAge, lookingForAgeMin: userLookingForMinAge, lookingForAgeMax: userLookingForMaxAge, lookingForDistanceMax: userLookingForDistanceMax, distanceUnit: distanceUnit, lat: userLat, lon: userLon, birthday: userBirthDay, country: userCountry, city: userCity, superPower: userSuperPower, accountType: userAccountType)
+                    
+                }
+                
+                sqlite3_finalize(stmt)
+            } else {
+                let errStr = String(cString: sqlite3_errstr(result))
+                err = .SQLError(errStr)
+            }
+            
+            _ = superheroMatchDB.dbClose(db: db)
+            
+        }
+        
+        return (err, user)
+    }
+    
     // Fetch user's id.
     func getUserId() -> (DBError, String?) {
         var err:DBError = .NoError
@@ -20,13 +116,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.U_ID) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.U_ID) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) // WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.U_ID) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.U_ID) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) // WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -61,13 +157,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_NAME) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_NAME) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_NAME) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_NAME) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -102,13 +198,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_EMAIL) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_EMAIL) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_EMAIL) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_EMAIL) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -143,13 +239,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_MAIN_PROFILE_PIC_URL) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_MAIN_PROFILE_PIC_URL) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) // WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_MAIN_PROFILE_PIC_URL) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_MAIN_PROFILE_PIC_URL) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -228,13 +324,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_GENDER) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_GENDER) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_GENDER) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_GENDER) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -268,13 +364,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_GENDER) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_GENDER) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_GENDER) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_GENDER) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -308,13 +404,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_AGE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_AGE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_AGE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_AGE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -348,13 +444,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_MIN_AGE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_MIN_AGE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_MIN_AGE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_MIN_AGE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -388,13 +484,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_MAX_AGE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_MAX_AGE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_MAX_AGE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_MAX_AGE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -428,13 +524,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_MAX_DISTANCE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_MAX_DISTANCE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_MAX_DISTANCE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LOOKING_FOR_MAX_DISTANCE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -468,13 +564,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_DISTANCE_UNIT) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_DISTANCE_UNIT) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_DISTANCE_UNIT) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_DISTANCE_UNIT) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -509,13 +605,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LATEST_LATITUDE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LATEST_LATITUDE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LATEST_LATITUDE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LATEST_LATITUDE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -549,13 +645,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LATEST_LONGITUDE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LATEST_LONGITUDE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) // WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LATEST_LONGITUDE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1'", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_LATEST_LONGITUDE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -589,13 +685,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_BIRTHDAY) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_BIRTHDAY) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_BIRTHDAY) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_BIRTHDAY) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -630,13 +726,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_COUNTRY) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_COUNTRY) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_COUNTRY) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_COUNTRY) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -671,13 +767,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_CITY) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_CITY) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_CITY) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_CITY) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -712,13 +808,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_SUPER_POWER) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_SUPER_POWER) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_SUPER_POWER) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_SUPER_POWER) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) //  WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -833,13 +929,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_CREATED) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_CREATED) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) // WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_CREATED) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_CREATED) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) // WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -874,13 +970,13 @@ class UserDB {
         if let db = superheroMatchDB.dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_ACCOUNT_TYPE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_ACCOUNT_TYPE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) // WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_ACCOUNT_TYPE) FROM \(DBConstants.TABLE_USER) WHERE \(DBConstants.USER_IS_LOGGED_IN)=1", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.USER_ACCOUNT_TYPE) FROM \(DBConstants.TABLE_USER)", -1, &stmt, nil) // WHERE \(DBConstants.USER_IS_LOGGED_IN)=1
             }
             
             if SQLITE_OK == result {
@@ -931,7 +1027,7 @@ class UserDB {
             \(DBConstants.USER_LATEST_LONGITUDE)=\(user.lon!),
             \(DBConstants.USER_BIRTHDAY)='\(user.birthday!)',
             \(DBConstants.USER_COUNTRY)='\(user.country!)',
-            \(DBConstants.USER_CITY)='\(user.city!)'
+            \(DBConstants.USER_CITY)='\(user.city!)',
             \(DBConstants.USER_SUPER_POWER)='\(user.superPower!)',
             \(DBConstants.USER_ACCOUNT_TYPE)='\(user.accountType!)'
             WHERE \(DBConstants.U_ID)='default'
@@ -1186,7 +1282,7 @@ class UserDB {
         return (err, changes)
     }
 
-    // Saves new user.
+    // Saves new user profile piture.
     func insertProfilePic(userId: String!, picUrl: String!, picUri: String!) -> (DBError, Int) {
         var err:DBError = .NoError
         var changes:Int = 0

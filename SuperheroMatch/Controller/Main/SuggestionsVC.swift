@@ -14,6 +14,8 @@ class SuggestionsVC: UICollectionViewController , UICollectionViewDelegateFlowLa
     
     var suggestions : [User] = []
     var sgs: Suggestions?
+    let userDB = UserDB.sharedDB
+    var user: User?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +28,17 @@ class SuggestionsVC: UICollectionViewController , UICollectionViewDelegateFlowLa
         
         self.collectionView?.backgroundColor = .white
         self.navigationItem.title = "Suggestions"
+        
+        let (dbErr, user) = self.userDB.getUser()
+        if case .SQLError = dbErr {
+            print("###########  getUser dbErr  ##############")
+            print(dbErr)
+        }
+        
+        if user != nil {
+            self.user = user
+        }
+        
         
         fetchSuggestions()
     }
@@ -79,24 +92,17 @@ class SuggestionsVC: UICollectionViewController , UICollectionViewDelegateFlowLa
     
     func fetchSuggestions() {
         
-        let gender = UserDefaults.standard.integer(forKey: "gender")
-        
-        let favoriteGender = UserDefaults.standard.integer(forKey: "favoriteGender")
-        
-        let userID = UUID().uuidString.replacingOccurrences(of: "-", with: "")
-        
-        
         var params = [String: Any]()
         
-        params["id"] = userID
-        params["lookingForGender"] = favoriteGender
-        params["gender"] = gender
-        params["lookingForAgeMin"] = 21
-        params["lookingForAgeMax"] = 55
-        params["maxDistance"] = 50
-        params["distanceUnit"] = "km"
-        params["lat"] = 52.0957154
-        params["lon"] = 5.1264266
+        params["id"] = self.user?.userID
+        params["lookingForGender"] = self.user?.lookingForGender
+        params["gender"] = self.user?.gender
+        params["lookingForAgeMin"] = self.user?.lookingForAgeMin
+        params["lookingForAgeMax"] = self.user?.lookingForAgeMax
+        params["maxDistance"] = self.user?.lookingForDistanceMax
+        params["distanceUnit"] = self.user?.distanceUnit
+        params["lat"] = self.user?.lat
+        params["lon"] = self.user?.lon
         params["offset"] = 0
         params["size"] = 10
         

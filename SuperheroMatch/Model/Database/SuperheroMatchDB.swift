@@ -83,20 +83,20 @@ class SuperheroMatchDB: NSObject {
         
     }
     
-    func insertVersion(dbVersion: String) -> DBError {
+    func insertVersion(dbVersion: Int64) -> DBError {
         
         var err:DBError = .NoError
         
         if let db = dbOpen() {
             
             var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, "INSERT INTO Version (version) VALUES(\(dbVersion))", -1, &stmt, nil)
+            var result = sqlite3_prepare_v2(db, "INSERT INTO version (version) VALUES(\(dbVersion))", -1, &stmt, nil)
             
             var retryCount:Int = 0
             while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
                 sleep(1)
                 retryCount += 1
-                result = sqlite3_prepare_v2(db, "INSERT INTO Version (version) VALUES(\(dbVersion))", -1, &stmt, nil)
+                result = sqlite3_prepare_v2(db, "INSERT INTO version (version) VALUES(\(dbVersion))", -1, &stmt, nil)
             }
             
             if SQLITE_OK == result {
@@ -113,6 +113,44 @@ class SuperheroMatchDB: NSObject {
         
         return err
         
+    }
+    
+    // Fetch database version.
+    func getDBVersion() -> (DBError, Int64?) {
+        var err:DBError = .NoError
+        var dbVersion:Int64? = nil
+        
+        let superheroMatchDB = SuperheroMatchDB.sharedDB
+        
+        if let db = superheroMatchDB.dbOpen() {
+            
+            var stmt:OpaquePointer? = nil
+            var result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.VERSION) FROM \(DBConstants.TABLE_VERSION)", -1, &stmt, nil)
+            
+            var retryCount:Int = 0
+            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
+                sleep(1)
+                retryCount += 1
+                result = sqlite3_prepare_v2(db, "SELECT \(DBConstants.VERSION) FROM \(DBConstants.TABLE_VERSION)", -1, &stmt, nil)
+            }
+            
+            if SQLITE_OK == result {
+                result = sqlite3_step(stmt)
+                if SQLITE_ROW == result {
+                    dbVersion = sqlite3_column_int64(stmt, 0)
+                }
+                
+                sqlite3_finalize(stmt)
+            }  else {
+                let errStr = String(cString: sqlite3_errstr(result))
+                err = .SQLError(errStr)
+            }
+            
+            _ = superheroMatchDB.dbClose(db: db)
+            
+        }
+        
+        return (err, dbVersion)
     }
     
     
@@ -430,6 +468,74 @@ class SuperheroMatchDB: NSObject {
             
             _ = self.dbClose(db: db)
             
+        }
+        
+        return err
+        
+    }
+    
+    func createDB() -> DBError {
+        
+        var err:DBError = .NoError
+        
+        err = createVersionTable()
+        if case .SQLError = err {
+            return err
+        }
+        
+        err = insertVersion(dbVersion: DBConstants.DB_VERSION)
+        if case .SQLError = err {
+            return err
+        }
+        
+        err = createUserTable()
+        if case .SQLError = err {
+           return err
+        }
+
+        err = insertDefaultUser()
+        if case .SQLError = err {
+            return err
+        }
+        
+        err = createUserPictureTable()
+        if case .SQLError = err {
+            return err
+        }
+        
+        err = createMatchedUserTable()
+        if case .SQLError = err {
+            return err
+        }
+        
+        err = createMatchProfilePictureTable()
+        if case .SQLError = err {
+            return err
+        }
+        
+        err = createChatTable()
+        if case .SQLError = err {
+            return err
+        }
+        
+        err = createMessageTable()
+        if case .SQLError = err {
+            return err
+        }
+        
+        err = createMessageQueueTable()
+        if case .SQLError = err {
+            return err
+        }
+        
+        err = createRetrievedOfflineMessageUUIDTable()
+        if case .SQLError = err {
+            return err
+        }
+        
+        err = createReceivedOnlineMessageTable()
+        if case .SQLError = err {
+            return err
         }
         
         return err

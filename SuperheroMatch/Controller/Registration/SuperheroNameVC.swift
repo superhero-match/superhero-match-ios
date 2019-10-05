@@ -7,8 +7,17 @@
 //
 
 import UIKit
+import CoreLocation
 
-class SuperheroNameVC: UIViewController {
+class SuperheroNameVC: UIViewController, CLLocationManagerDelegate {
+    
+    // Used to start getting the users location
+    let locationManager = CLLocationManager()
+    var timer = Timer()
+    
+    var latitude: Double?
+    
+    var longitude: Double?
     
     let superheroNameLabel: UILabel = {
         let lbl = UILabel()
@@ -53,7 +62,7 @@ class SuperheroNameVC: UIViewController {
         
         return btn
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -67,6 +76,71 @@ class SuperheroNameVC: UIViewController {
         
         view.addSubview(termsAndPoliciesBtn)
         termsAndPoliciesBtn.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
+        
+        locationManager.delegate = self
+        
+        // For use when the app is open
+        locationManager.requestWhenInUseAuthorization()
+        
+        // If location services is enabled get the users location
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest // You can change the locaiton accuary here.
+        locationManager.startUpdatingLocation()
+        
+        timer.invalidate()   // just in case you had existing `Timer`, `invalidate` it before we lose our reference to it
+        timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
+            
+        }
+    }
+    
+    // Print out the location to the console
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            UserDefaults.standard.set(location.coordinate.latitude, forKey: "lat")
+            UserDefaults.standard.set(location.coordinate.longitude, forKey: "lon")
+            UserDefaults.standard.synchronize()
+            
+            locationManager.stopUpdatingLocation()
+        }
+    }
+    
+    // If we have been deined access give the user the option to change it
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if(status == CLAuthorizationStatus.denied) {
+            showLocationDisabledPopUp()
+        }
+    }
+    
+    // Show the popup to the user if we have been denied access
+    func showLocationDisabledPopUp() {
+        let alertController = UIAlertController(title: "Background Location Access Disabled",
+                                                message: "In order to submit offline report you need to enable your location services.",
+                                                preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        let openAction = UIAlertAction(title: "Open Settings", style: .default) { (action) in
+            if let url = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(url, options: self.convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
+                
+            }
+        }
+        alertController.addAction(openAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func grabit() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+    }
+    
+    // Helper function inserted by Swift 4.2 migrator.
+    fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+        return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
     }
     
     func configureComponents() {
@@ -88,7 +162,6 @@ class SuperheroNameVC: UIViewController {
         // For now just navigate to SuperheroNameVC
         let superheroBirthdayVC = SuperheroBirthdayVC()
         navigationController?.pushViewController(superheroBirthdayVC, animated: true)
-        
     }
     
     @objc func handleValueChanged() {

@@ -160,7 +160,11 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         
         let userID = UUID().uuidString.replacingOccurrences(of: "-", with: "")
         
-        user = User(userID: userID, email: email, name: name, superheroName: superheroName, mainProfilePicUrl: "", profilePicsUrls: nil, gender: Int64(gender), lookingForGender: Int64(favoriteGender), age: Int64(age), lookingForAgeMin: 25, lookingForAgeMax: 55, lookingForDistanceMax: 50, distanceUnit: "km", lat: 52.0957154, lon: 5.1264266, birthday: birthday, country: "Country", city: "City", superPower: superPower, accountType: "FREE")
+        let lat = UserDefaults.standard.double(forKey: "lat")
+        
+        let lon = UserDefaults.standard.double(forKey: "lon")
+        
+        user = User(userID: userID, email: email, name: name, superheroName: superheroName, mainProfilePicUrl: "", profilePicsUrls: nil, gender: Int64(gender), lookingForGender: Int64(favoriteGender), age: Int64(age), lookingForAgeMin: 25, lookingForAgeMax: 55, lookingForDistanceMax: 50, distanceUnit: "km", lat: lat, lon: lon, birthday: birthday, country: "Country", city: "City", superPower: superPower, accountType: "FREE")
         
         var params = [String: Any]()
         

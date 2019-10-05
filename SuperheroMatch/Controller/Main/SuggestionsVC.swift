@@ -7,15 +7,24 @@
 //
 
 import UIKit
+import CoreLocation
 
 private let reuseIdentifier = "Cell"
 
-class SuggestionsVC: UICollectionViewController , UICollectionViewDelegateFlowLayout, SuggestionCellDelegate {
+class SuggestionsVC: UICollectionViewController , UICollectionViewDelegateFlowLayout, SuggestionCellDelegate, CLLocationManagerDelegate {
     
     var suggestions : [User] = []
     var sgs: Suggestions?
     let userDB = UserDB.sharedDB
     var user: User?
+    
+    // Used to start getting the users location
+    let locationManager = CLLocationManager()
+    var timer = Timer()
+    
+    var latitude: Double?
+    
+    var longitude: Double?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +48,20 @@ class SuggestionsVC: UICollectionViewController , UICollectionViewDelegateFlowLa
             self.user = user
         }
         
+        locationManager.delegate = self
+        
+        // For use when the app is open
+        locationManager.requestWhenInUseAuthorization()
+        
+        // If location services is enabled get the users location
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest // You can change the locaiton accuary here.
+        locationManager.startUpdatingLocation()
+        
+        timer.invalidate()   // just in case you had existing `Timer`, `invalidate` it before we lose our reference to it
+        timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
+            
+        }
         
         fetchSuggestions()
     }
@@ -141,6 +164,64 @@ class SuggestionsVC: UICollectionViewController , UICollectionViewDelegateFlowLa
         let suggestion3 = User(userID: "id3", email: nil, name: "Superhero 3", superheroName: "Superhero 1", mainProfilePicUrl: "main profile pic", profilePicsUrls: ["pic 1", "pic 2"], gender: 1, lookingForGender: nil, age: 25, lookingForAgeMin: nil, lookingForAgeMax: nil, lookingForDistanceMax: nil, distanceUnit: nil, lat: nil, lon: nil, birthday: nil, country: nil, city: nil, superPower: "Super Power 3", accountType: "FREE")
         suggestions.append(suggestion3)
         
+    }
+    
+    // Print out the location to the console
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            let (dbErr, userId) = self.userDB.getUserId()
+            if case .SQLError = dbErr {
+                print("###########  getUserId dbErr  ##############")
+                print(dbErr)
+            }
+            
+            let (err, _) = self.userDB.updateUserLatAndLon(lat: location.coordinate.latitude, lon: location.coordinate.longitude, userId: userId)
+            if case .SQLError = err {
+                print("###########  updateUserLatAndLon err  ##############")
+                print(err)
+            }
+            
+            locationManager.stopUpdatingLocation()
+        }
+    }
+    
+    // If we have been deined access give the user the option to change it
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if(status == CLAuthorizationStatus.denied) {
+            showLocationDisabledPopUp()
+        }
+    }
+    
+    // Show the popup to the user if we have been denied access
+    func showLocationDisabledPopUp() {
+        let alertController = UIAlertController(title: "Background Location Access Disabled",
+                                                message: "In order to submit offline report you need to enable your location services.",
+                                                preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        let openAction = UIAlertAction(title: "Open Settings", style: .default) { (action) in
+            if let url = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(url, options: self.convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
+                
+            }
+        }
+        alertController.addAction(openAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func grabit() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+    }
+    
+    // Helper function inserted by Swift 4.2 migrator.
+    fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+        return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
     }
     
     

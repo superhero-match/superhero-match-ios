@@ -96,9 +96,9 @@ class SuperheroBirthdayVC: UIViewController {
     
     @objc func handleNext() {
         
-        // For now just navigate to SuperheroGenderVC
-        let superheroGenderVC = SuperheroGenderVC()
-        navigationController?.pushViewController(superheroGenderVC, animated: true)
+        // Navigate to SuperheroDistanceUnitVC
+        let superheroDistanceUnitVC = SuperheroDistanceUnitVC()
+        navigationController?.pushViewController(superheroDistanceUnitVC, animated: true)
         
     }
     

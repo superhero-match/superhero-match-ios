@@ -127,7 +127,7 @@ class SuperheroFavoriteGenderVC: UIViewController {
     
     @objc func handleNext() {
         
-        // For now just navigate to SuperheroSuperPowerVC
+        // Navigate to SuperheroSuperPowerVC
         let superheroSuperPowerVC = SuperheroSuperPowerVC()
         navigationController?.pushViewController(superheroSuperPowerVC, animated: true)
         
@@ -135,7 +135,7 @@ class SuperheroFavoriteGenderVC: UIViewController {
     
     @objc func handlePrevious() {
         
-        // Navigate back to SuperheroNameVC
+        // Navigate back to SuperheroGenderVC
         _ = navigationController?.popViewController(animated: true)
         
     }

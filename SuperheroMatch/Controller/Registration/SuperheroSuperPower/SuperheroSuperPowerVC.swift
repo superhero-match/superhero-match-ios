@@ -95,7 +95,7 @@ class SuperheroSuperPowerVC: UIViewController {
         UserDefaults.standard.set(superPowerTextField.text!, forKey: "superPower")
         UserDefaults.standard.synchronize()
         
-        // For now just navigate to SuperheroProfilePicVC
+        // Navigate to SuperheroProfilePicVC
         let superheroProfilePicVC = SuperheroProfilePicVC()
         navigationController?.pushViewController(superheroProfilePicVC, animated: true)
         

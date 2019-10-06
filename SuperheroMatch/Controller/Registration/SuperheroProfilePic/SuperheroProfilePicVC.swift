@@ -66,10 +66,10 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         
         return btn
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // background color white
         view.backgroundColor = .white
         
@@ -158,13 +158,19 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         
         let superPower = UserDefaults.standard.string(forKey: "superPower") ?? ""
         
-        let userID = UUID().uuidString.replacingOccurrences(of: "-", with: "")
+        let userID = UUID().uuidString.lowercased().replacingOccurrences(of: "-", with: "")
         
         let lat = UserDefaults.standard.double(forKey: "lat")
         
         let lon = UserDefaults.standard.double(forKey: "lon")
         
-        user = User(userID: userID, email: email, name: name, superheroName: superheroName, mainProfilePicUrl: "", profilePicsUrls: nil, gender: Int64(gender), lookingForGender: Int64(favoriteGender), age: Int64(age), lookingForAgeMin: 25, lookingForAgeMax: 55, lookingForDistanceMax: 50, distanceUnit: "km", lat: lat, lon: lon, birthday: birthday, country: "Country", city: "City", superPower: superPower, accountType: "FREE")
+        let country = UserDefaults.standard.string(forKey: "country") ?? ""
+        
+        let city = UserDefaults.standard.string(forKey: "city") ?? ""
+        
+        let distanceUnit = UserDefaults.standard.string(forKey: "distanceUnit") ?? ""
+        
+        user = User(userID: userID, email: email, name: name, superheroName: superheroName, mainProfilePicUrl: "", profilePicsUrls: nil, gender: Int64(gender), lookingForGender: Int64(favoriteGender), age: Int64(age), lookingForAgeMin: ConstantRegistry.DEFAULT_MIN_AGE, lookingForAgeMax: ConstantRegistry.DEFAULT_MAX_AGE, lookingForDistanceMax: ConstantRegistry.DEFAULT_MAX_DISTANCE, distanceUnit: distanceUnit, lat: lat, lon: lon, birthday: birthday, country: country, city: city, superPower: superPower, accountType: ConstantRegistry.DEFAULT_ACCOUNT_TYPE)
         
         var params = [String: Any]()
         
@@ -198,20 +204,21 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     @objc func handlePrevious() {
-        // Navigate back to SuperheroFavoriteGenderVC
+        // Navigate back to SuperheroSuperPowerVC
         _ = navigationController?.popViewController(animated: true)
     }
     
     func showIncorrectAlert() {
         
-        let alert = UIAlertController(title: "Something went wrong", message: "Something went wrong. Please try agin later.", preferredStyle: UIAlertController.Style.alert)
+        let alert = UIAlertController(title: "Something went wrong", message: "Something went wrong. Please try again later.", preferredStyle: UIAlertController.Style.alert)
         
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: { _ in
             //Cancel Action
         }))
         
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { _ in
-            // Retry Action
+            let params = self.configureRegisterRequest()
+            self.register(register: self.register!, params: params)
         }))
         
         self.present(alert, animated: true, completion: nil)
@@ -243,17 +250,29 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
                     print("###########  updateDefaultUser changes  ##############")
                     print(changes)
                     
-                    let mainTabVC = MainTabVC()
-                    self.present(mainTabVC, animated: true, completion: nil)
+                    self.navigationController?.dismiss(animated: false, completion: { () -> Void in
+                        DispatchQueue.global(qos: .background).async {
+
+                            // Background Thread
+
+                            DispatchQueue.main.async {
+                                // Run UI Updates
+                                let mainTabVC = MainTabVC()
+                                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                                appDelegate.window?.rootViewController! = mainTabVC
+                            }
+                        }
+                    })
+                    
                 } else {
                     self.showIncorrectAlert()
                 }
                 
             } catch {
-                print("catch")
+                print("register catch")
             }
         }
         
     }
-
+    
 }

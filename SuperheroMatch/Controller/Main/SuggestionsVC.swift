@@ -20,6 +20,7 @@ class SuggestionsVC: UICollectionViewController , UICollectionViewDelegateFlowLa
     
     // Used to start getting the users location
     let locationManager = CLLocationManager()
+    let geocoder = CLGeocoder()
     var timer = Timer()
     
     var latitude: Double?
@@ -175,11 +176,29 @@ class SuggestionsVC: UICollectionViewController , UICollectionViewDelegateFlowLa
                 print(dbErr)
             }
             
-            let (err, _) = self.userDB.updateUserLatAndLon(lat: location.coordinate.latitude, lon: location.coordinate.longitude, userId: userId)
-            if case .SQLError = err {
-                print("###########  updateUserLatAndLon err  ##############")
-                print(err)
+            let (latLonErr, _) = self.userDB.updateUserLatAndLon(lat: location.coordinate.latitude, lon: location.coordinate.longitude, userId: userId)
+            if case .SQLError = latLonErr {
+                print("###########  updateUserLatAndLon latLonErr  ##############")
+                print(latLonErr)
             }
+            
+            geocoder.reverseGeocodeLocation(location, completionHandler: {(placemarks, error) in
+                if (error != nil) {
+                    print("Error in reverseGeocode")
+                    print(error)
+                }
+                
+                let placemark = placemarks! as [CLPlacemark]
+                if placemark.count > 0 {
+                    let placemark = placemarks![0]
+                    
+                    let (ccErr, _) = self.userDB.updateUserCountryAndCity(country: placemark.country!, city: placemark.locality!, userId: userId)
+                    if case .SQLError = ccErr {
+                        print("###########  updateUserCountryAndCity ccErr  ##############")
+                        print(ccErr)
+                    }
+                }
+            })
             
             locationManager.stopUpdatingLocation()
         }

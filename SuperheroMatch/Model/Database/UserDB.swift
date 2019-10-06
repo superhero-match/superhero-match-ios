@@ -1207,6 +1207,44 @@ class UserDB {
         
         return (err, changes)
     }
+    
+    // Update user country and city.
+    func updateUserCountryAndCity(country: String!, city: String!, userId: String!) -> (DBError, Int) {
+        var err:DBError = .NoError
+        var changes:Int = 0
+        
+        let superheroMatchDB = SuperheroMatchDB.sharedDB
+        
+        if let db = superheroMatchDB.dbOpen() {
+            let sql = """
+            UPDATE \(DBConstants.TABLE_USER) SET
+            \(DBConstants.USER_COUNTRY)='\(country!)',
+            \(DBConstants.USER_CITY)='\(city!)'
+            WHERE \(DBConstants.U_ID)='\(userId!)'
+            """;
+            var result = sqlite3_exec(db, sql, nil, nil, nil)
+            
+            var retryCount:Int = 0
+            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
+                sleep(1)
+                retryCount += 1
+                result = sqlite3_exec(db, sql, nil, nil, nil)
+            }
+            
+            if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            }
+            else {
+                let errStr = String(cString: sqlite3_errstr(result))
+                err = .SQLError(errStr)
+            }
+            
+            _ = superheroMatchDB.dbClose(db: db)
+            
+        }
+        
+        return (err, changes)
+    }
 
     // Update user account type.
     func updateUserAccountType(userId: String!, accountType: String!) -> (DBError, Int) {

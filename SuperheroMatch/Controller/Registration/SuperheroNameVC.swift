@@ -13,6 +13,8 @@ class SuperheroNameVC: UIViewController, CLLocationManagerDelegate {
     
     // Used to start getting the users location
     let locationManager = CLLocationManager()
+    let geocoder = CLGeocoder()
+
     var timer = Timer()
     
     var latitude: Double?
@@ -100,6 +102,22 @@ class SuperheroNameVC: UIViewController, CLLocationManagerDelegate {
             UserDefaults.standard.set(location.coordinate.longitude, forKey: "lon")
             UserDefaults.standard.synchronize()
             
+            geocoder.reverseGeocodeLocation(location, completionHandler: {(placemarks, error) in
+                if (error != nil) {
+                    print("Error in reverseGeocode")
+                    print(error)
+                }
+                
+                let placemark = placemarks! as [CLPlacemark]
+                if placemark.count > 0 {
+                    let placemark = placemarks![0]
+                    
+                    UserDefaults.standard.set(placemark.country!, forKey: "country")
+                    UserDefaults.standard.set(placemark.locality!, forKey: "city")
+                    UserDefaults.standard.synchronize()
+                }
+            })
+            
             locationManager.stopUpdatingLocation()
         }
     }
@@ -159,7 +177,7 @@ class SuperheroNameVC: UIViewController, CLLocationManagerDelegate {
         UserDefaults.standard.set(superheroNameTextField.text!, forKey: "superheroName")
         UserDefaults.standard.synchronize()
         
-        // For now just navigate to SuperheroNameVC
+        // Navigate to SuperheroNameVC
         let superheroBirthdayVC = SuperheroBirthdayVC()
         navigationController?.pushViewController(superheroBirthdayVC, animated: true)
     }

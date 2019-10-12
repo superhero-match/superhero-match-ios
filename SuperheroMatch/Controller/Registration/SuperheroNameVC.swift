@@ -191,9 +191,9 @@ class SuperheroNameVC: UIViewController, CLLocationManagerDelegate {
             return
         }
         
-        guard superheroNameTextField.text!.count >= 2 else {
-            nextBtn.isEnabled = false
-            nextBtn.backgroundColor = UIColor(red: 149/255, green: 204/255, blue: 244/255, alpha: 1)
+        guard superheroNameTextField.text!.count >= 2 || superheroNameTextField.text!.count <= 26 else {
+            self.nextBtn.isEnabled = false
+            self.nextBtn.backgroundColor = UIColor(red: 149/255, green: 204/255, blue: 244/255, alpha: 1)
             
             return
         }

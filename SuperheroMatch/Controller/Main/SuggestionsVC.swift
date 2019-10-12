@@ -133,28 +133,28 @@ class SuggestionsVC: UICollectionViewController , UICollectionViewDelegateFlowLa
         print(params)
 
         
-        self.sgs = Suggestions()
-        self.sgs!.suggestions(params: params) { json, error in
-            do {
-                
-                //Convert to Data
-                let jsonData = try JSONSerialization.data(withJSONObject: json!, options: JSONSerialization.WritingOptions.prettyPrinted)
-                
-                //In production, you usually want to try and cast as the root data structure. Here we are casting as a dictionary. If the root object is an array cast as [Any].
-                let suggestionsResponse = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? AnyObject
-                
-                let response = try SuggestionsResponse(json: suggestionsResponse as! [String : AnyObject])
-
-                if response.status != 200  {
-                    print("Error!")
-                } else {
-                    print("All good!")
-                }
-                
-            } catch {
-                print("catch")
-            }
-        }
+//        self.sgs = Suggestions()
+//        self.sgs!.suggestions(params: params) { json, error in
+//            do {
+//
+//                //Convert to Data
+//                let jsonData = try JSONSerialization.data(withJSONObject: json!, options: JSONSerialization.WritingOptions.prettyPrinted)
+//
+//                //In production, you usually want to try and cast as the root data structure. Here we are casting as a dictionary. If the root object is an array cast as [Any].
+//                let suggestionsResponse = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? AnyObject
+//
+//                let response = try SuggestionsResponse(json: suggestionsResponse as! [String : AnyObject])
+//
+//                if response.status != 200  {
+//                    print("Error!")
+//                } else {
+//                    print("All good!")
+//                }
+//
+//            } catch {
+//                print("catch")
+//            }
+//        }
         
         let suggestion1 = User(userID: "id1", email: nil, name: "Superhero 1", superheroName: "Superhero 1", mainProfilePicUrl: "main profile pic", profilePicsUrls: ["pic 1", "pic 2"], gender: 1, lookingForGender: nil, age: 25, lookingForAgeMin: nil, lookingForAgeMax: nil, lookingForDistanceMax: nil, distanceUnit: nil, lat: nil, lon: nil, birthday: nil, country: nil, city: nil, superPower: "Super Power 1", accountType: "FREE")
         suggestions.append(suggestion1)

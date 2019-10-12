@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SuperheroSuperPowerVC: UIViewController {
+class SuperheroSuperPowerVC: UIViewController, UITextFieldDelegate {
     
     let superPowerLabel: UILabel = {
         let lbl = UILabel()
@@ -73,10 +73,13 @@ class SuperheroSuperPowerVC: UIViewController {
         // hide nav bar
         navigationController?.navigationBar.isHidden = true
         
+        superPowerTextField.delegate = self
+        
         configureComponents()
         
         view.addSubview(termsAndPoliciesBtn)
         termsAndPoliciesBtn.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
+        
     }
     
     func configureComponents() {
@@ -88,6 +91,16 @@ class SuperheroSuperPowerVC: UIViewController {
         
         view.addSubview(stackView)
         stackView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 280)
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        let maxLength = 125
+        let currentString: NSString = textField.text! as NSString
+        let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
+        
+        return newString.length <= maxLength
+        
     }
     
     @objc func handleNext() {

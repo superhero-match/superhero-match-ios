@@ -2,7 +2,7 @@
 //  ProfileVC.swift
 //  SuperheroMatch
 //
-//  Created by Nikolajus Karpovas on 18/07/2019.
+//  Created by Nikolajus Karpovas on 07/10/2019.
 //  Copyright © 2019 Nikolajus Karpovas. All rights reserved.
 //
 
@@ -70,7 +70,6 @@ class ProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLayout,
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ProfileImage
 
         // cell.imageURL = user?.profilePicsUrls[indexPath.row]
-
         return cell
     }
     

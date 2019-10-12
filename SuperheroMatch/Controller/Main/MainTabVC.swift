@@ -23,13 +23,18 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
     func configureViewControllers() {
         
         // Suggestions controller
-        let suggestionsVC = configureNaviagtionController(unselectedImage: (UIImage(named: "suggestions_inactive") ?? nil)!, selectedImage: (UIImage(named: "suggestions") ?? nil)!, rootViewController: SuggestionsVC(collectionViewLayout: UICollectionViewFlowLayout()))
+//        let suggestionsVC = configureNaviagtionController(unselectedImage: (UIImage(named: "suggestions_inactive") ?? nil)!, selectedImage: (UIImage(named: "suggestions") ?? nil)!, rootViewController: SuggestionsVC(collectionViewLayout: UICollectionViewFlowLayout()))
+        
+        let suggestionsVC = configureNaviagtionController(unselectedImage: (UIImage(named: "suggestions_inactive") ?? nil)!, selectedImage: (UIImage(named: "suggestions") ?? nil)!, rootViewController: UserSuggestionsVC())
         
         // Matches controller
         let matchesVC = configureNaviagtionController(unselectedImage: (UIImage(named: "matches_inactive") ?? nil)!, selectedImage: (UIImage(named: "matches") ?? nil)!, rootViewController: MatchesVC())
         
         // Profile controller
-        let profileVC = configureNaviagtionController(unselectedImage: (UIImage(named: "user_inactive") ?? nil)!, selectedImage: (UIImage(named: "user") ?? nil)!, rootViewController: ProfileVC(collectionViewLayout: UICollectionViewFlowLayout()))
+//        let profileVC = configureNaviagtionController(unselectedImage: (UIImage(named: "user_inactive") ?? nil)!, selectedImage: (UIImage(named: "user") ?? nil)!, rootViewController: ProfileVC(collectionViewLayout: UICollectionViewFlowLayout()))
+        
+        let profileVC = configureNaviagtionController(unselectedImage: (UIImage(named: "user_inactive") ?? nil)!, selectedImage: (UIImage(named: "user") ?? nil)!, rootViewController: UserProfileVC())
+        
         
         // add VCs to tab controller
         viewControllers = [suggestionsVC, matchesVC, profileVC]

@@ -32,7 +32,6 @@ class ProfileHeader: UICollectionViewCell {
         piv.clipsToBounds = true
         piv.backgroundColor = .lightGray
         
-        
         return piv
     }()
     

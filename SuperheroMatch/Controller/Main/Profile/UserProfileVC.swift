@@ -19,13 +19,6 @@ class UserProfileVC: UIViewController {
         return piv
     }()
     
-    let infoDelimeterTopView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .lightGray
-        
-        return view
-    }()
-    
     let userName: UILabel = {
         let userName = UILabel()
         userName.font = UIFont(name: "Gotham Book", size: 22)
@@ -40,13 +33,6 @@ class UserProfileVC: UIViewController {
         lbl.textAlignment = .center
         
         return lbl
-    }()
-    
-    let infoDelimeterBottomView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .lightGray
-        
-        return view
     }()
     
     let superPowerImageView: UIImageView = {
@@ -67,13 +53,6 @@ class UserProfileVC: UIViewController {
         lbl.sizeToFit()
         
         return lbl
-    }()
-    
-    let superPowerDelimeterBottomView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .lightGray
-        
-        return view
     }()
     
     lazy var settingsButton: UIButton = {
@@ -106,11 +85,8 @@ class UserProfileVC: UIViewController {
         profileImageView.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height * 0.5)
         profileImageView.callback = handleMainProfileImageTapped
         
-        view.addSubview(infoDelimeterTopView)
-        infoDelimeterTopView.anchor(top: profileImageView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 1)
-        
         view.addSubview(userName)
-        userName.anchor(top: infoDelimeterTopView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 5, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
+        userName.anchor(top: profileImageView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 5, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
         
         view.addSubview(genderAge)
         genderAge.anchor(top: userName.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 5, paddingRight: 0, width: 0, height: 25)
@@ -118,23 +94,17 @@ class UserProfileVC: UIViewController {
         userName.text = "Superhero"
         genderAge.text = "Gender, Age"
         
-        view.addSubview(infoDelimeterBottomView)
-        infoDelimeterBottomView.anchor(top: genderAge.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 5, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 1)
-        
         view.addSubview(superPowerImageView)
-        superPowerImageView.anchor(top: infoDelimeterBottomView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 25, paddingLeft: 5, paddingBottom: 0, paddingRight: 0, width: 40, height: 40)
+        superPowerImageView.anchor(top: genderAge.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 25, paddingLeft: 5, paddingBottom: 0, paddingRight: 0, width: 40, height: 40)
         
         view.addSubview(superPower)
-        superPower.anchor(top: infoDelimeterBottomView.bottomAnchor, left: superPowerImageView.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 5, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: view.frame.width, height: 80)
-        
-        view.addSubview(superPowerDelimeterBottomView)
-        superPowerDelimeterBottomView.anchor(top: superPower.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 5, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 1)
+        superPower.anchor(top: genderAge.bottomAnchor, left: superPowerImageView.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 5, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: view.frame.width, height: 80)
         
         view.addSubview(settingsButton)
-        settingsButton.anchor(top: superPowerDelimeterBottomView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 40, width: 40, height: 40)
+        settingsButton.anchor(top: superPower.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 40, width: 40, height: 40)
         
         view.addSubview(editInfoButton)
-        editInfoButton.anchor(top: superPowerDelimeterBottomView.bottomAnchor, left: nil, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 40, paddingBottom: 0, paddingRight: 20, width: 40, height: 40)
+        editInfoButton.anchor(top: superPower.bottomAnchor, left: nil, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 40, paddingBottom: 0, paddingRight: 20, width: 40, height: 40)
         
     }
     

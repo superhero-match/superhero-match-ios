@@ -16,12 +16,12 @@ class User {
     var superheroName: String!
     var mainProfilePicUrl: String!
     var profilePicsUrls: [String]?
-    var gender: Int64!
-    var lookingForGender: Int64?
-    var age: Int64!
-    var lookingForAgeMin: Int64?
-    var lookingForAgeMax: Int64?
-    var lookingForDistanceMax: Int64?
+    var gender: Int!
+    var lookingForGender: Int!
+    var age: Int!
+    var lookingForAgeMin: Int?
+    var lookingForAgeMax: Int?
+    var lookingForDistanceMax: Int?
     var distanceUnit: String?
     var lat: Double?
     var lon: Double?
@@ -44,12 +44,12 @@ class User {
         superheroName: String!,
         mainProfilePicUrl: String!,
         profilePicsUrls: [String]!,
-        gender: Int64!,
-        lookingForGender: Int64?,
-        age: Int64!,
-        lookingForAgeMin: Int64?,
-        lookingForAgeMax: Int64?,
-        lookingForDistanceMax: Int64?,
+        gender: Int!,
+        lookingForGender: Int!,
+        age: Int!,
+        lookingForAgeMin: Int!,
+        lookingForAgeMax: Int!,
+        lookingForDistanceMax: Int!,
         distanceUnit: String?,
         lat: Double?,
         lon: Double?,
@@ -113,26 +113,26 @@ class User {
         }
         
         // Extract gender
-        guard let gender = json["gender"] as? Int64 else {
+        guard let gender = json["gender"] as? Int else {
             throw SerializationError.missing("gender")
         }
         
         // Extract lookingForGender
-        let lookingForGender = ((json["lookingForGender"] as? Int64) != nil) ? json["lookingForGender"] as? Int64 : 0
+        let lookingForGender = ((json["lookingForGender"] as? Int) != nil) ? json["lookingForGender"] as? Int : 0
         
         // Extract age
-        guard let age = json["age"] as? Int64 else {
+        guard let age = json["age"] as? Int else {
             throw SerializationError.missing("age")
         }
         
         // Extract lookingForAgeMin
-        let lookingForAgeMin = ((json["lookingForAgeMin"] as? Int64) != nil) ? json["lookingForAgeMin"] as? Int64 : 0
+        let lookingForAgeMin = ((json["lookingForAgeMin"] as? Int) != nil) ? json["lookingForAgeMin"] as? Int : 0
         
         // Extract lookingForAgeMax
-        let lookingForAgeMax = ((json["lookingForAgeMax"] as? Int64) != nil) ? json["lookingForAgeMax"] as? Int64 : 0
+        let lookingForAgeMax = ((json["lookingForAgeMax"] as? Int) != nil) ? json["lookingForAgeMax"] as? Int : 0
         
         // Extract lookingForDistanceMax
-        let lookingForDistanceMax = ((json["lookingForDistanceMax"] as? Int64) != nil) ? json["lookingForDistanceMax"] as? Int64 : 0
+        let lookingForDistanceMax = ((json["lookingForDistanceMax"] as? Int) != nil) ? json["lookingForDistanceMax"] as? Int : 0
         
         // Extract distanceUnit
         let distanceUnit = ((json["distanceUnit"] as? String) != nil) ? json["distanceUnit"] as? String : ""

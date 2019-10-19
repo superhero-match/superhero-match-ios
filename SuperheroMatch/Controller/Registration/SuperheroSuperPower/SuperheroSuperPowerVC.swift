@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SuperheroSuperPowerVC: UIViewController, UITextFieldDelegate {
+class SuperheroSuperPowerVC: UIViewController, UITextViewDelegate {
     
     let superPowerLabel: UILabel = {
         let lbl = UILabel()
@@ -20,15 +20,12 @@ class SuperheroSuperPowerVC: UIViewController, UITextFieldDelegate {
         return lbl
     }()
     
-    let superPowerTextField: UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "Your Super Power..."
-        tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        tf.borderStyle = .roundedRect
-        tf.font = UIFont.systemFont(ofSize: 14)
-        tf.addTarget(self, action: #selector(handleValueChanged), for: .editingChanged)
+    let superPowerTextView: UITextView = {
+        let tv = UITextView()
+        tv.backgroundColor = UIColor(white: 0, alpha: 0.03)
+        tv.font = UIFont.systemFont(ofSize: 18)
         
-        return tf
+        return tv
     }()
     
     let nextBtn: UIButton = {
@@ -73,7 +70,7 @@ class SuperheroSuperPowerVC: UIViewController, UITextFieldDelegate {
         // hide nav bar
         navigationController?.navigationBar.isHidden = true
         
-        superPowerTextField.delegate = self
+        superPowerTextView.delegate = self
         
         configureComponents()
         
@@ -84,7 +81,7 @@ class SuperheroSuperPowerVC: UIViewController, UITextFieldDelegate {
     
     func configureComponents() {
         
-        let stackView = UIStackView(arrangedSubviews: [superPowerLabel, superPowerTextField, nextBtn, previousBtn])
+        let stackView = UIStackView(arrangedSubviews: [superPowerLabel, superPowerTextView, nextBtn, previousBtn])
         stackView.axis = .vertical
         stackView.spacing = 10
         stackView.distribution = .fillEqually
@@ -93,11 +90,24 @@ class SuperheroSuperPowerVC: UIViewController, UITextFieldDelegate {
         stackView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 280)
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textViewDidChange(_ textView: UITextView) {
+        
+        guard superPowerTextView.hasText else {
+            nextBtn.isEnabled = false
+            nextBtn.backgroundColor = UIColor(red: 149/255, green: 204/255, blue: 244/255, alpha: 1)
+            return
+        }
+        
+        nextBtn.isEnabled = true
+        nextBtn.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
+
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
         let maxLength = 125
-        let currentString: NSString = textField.text! as NSString
-        let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
+        let currentString: NSString = textView.text! as NSString
+        let newString: NSString = currentString.replacingCharacters(in: range, with: text) as NSString
         
         return newString.length <= maxLength
         
@@ -105,7 +115,7 @@ class SuperheroSuperPowerVC: UIViewController, UITextFieldDelegate {
     
     @objc func handleNext() {
         
-        UserDefaults.standard.set(superPowerTextField.text!, forKey: "superPower")
+        UserDefaults.standard.set(superPowerTextView.text!, forKey: "superPower")
         UserDefaults.standard.synchronize()
         
         // Navigate to SuperheroProfilePicVC
@@ -121,16 +131,4 @@ class SuperheroSuperPowerVC: UIViewController, UITextFieldDelegate {
         
     }
     
-    @objc func handleValueChanged() {
-        
-        guard superPowerTextField.hasText else {
-            nextBtn.isEnabled = false
-            nextBtn.backgroundColor = UIColor(red: 149/255, green: 204/255, blue: 244/255, alpha: 1)
-            return
-        }
-        
-        nextBtn.isEnabled = true
-        nextBtn.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
-        
-    }
 }

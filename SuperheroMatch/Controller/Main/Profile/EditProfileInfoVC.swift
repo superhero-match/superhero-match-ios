@@ -8,10 +8,12 @@
 
 import UIKit
 
-class EditProfileInfoVC: UIViewController, UITextFieldDelegate {
+class EditProfileInfoVC: UIViewController, UITextViewDelegate {
+    
+    let userDB = UserDB.sharedDB
+    var user: User?
     
     var kmMiSV: UIStackView!
-    var superPowerSV: UIStackView!
     
     let superPowerLabel: UILabel = {
         let lbl = UILabel()
@@ -23,20 +25,17 @@ class EditProfileInfoVC: UIViewController, UITextFieldDelegate {
         return lbl
     }()
     
-    let superPowerTextField: UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "Your Super Power..."
-        tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        tf.borderStyle = .roundedRect
-        tf.font = UIFont.systemFont(ofSize: 14)
-        tf.addTarget(self, action: #selector(handleValueChanged), for: .editingChanged)
+    let superPowerTextView: UITextView = {
+        let tv = UITextView()
+        tv.backgroundColor = UIColor(white: 0, alpha: 0.03)
+        tv.font = UIFont.systemFont(ofSize: 18)
         
-        return tf
+        return tv
     }()
     
     let superheroDistanceUnitLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = "Distance Unit"
+        lbl.text = "Kilometers / Miles"
         lbl.font = UIFont(name: "Gotham Book", size: 22)
         lbl.textAlignment = .center
         lbl.numberOfLines = 2
@@ -65,14 +64,14 @@ class EditProfileInfoVC: UIViewController, UITextFieldDelegate {
         
         return btn
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // background color white
         view.backgroundColor = .white
         
-        superPowerTextField.delegate = self
+        superPowerTextView.delegate = self
         
         configureSuperPower()
         
@@ -81,6 +80,75 @@ class EditProfileInfoVC: UIViewController, UITextFieldDelegate {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         
         view.addGestureRecognizer(tap)
+        
+        let (dbErr, user) = self.userDB.getUser()
+        if case .SQLError = dbErr {
+            print("###########  getUser dbErr  ##############")
+            print(dbErr)
+        }
+        
+        if user != nil {
+            self.user = user
+            
+            superPowerTextView.text = self.user?.superPower
+            
+            configureDistanceUnitButtons()
+        }
+    }
+    
+    func configureDistanceUnitButtons() {
+        
+        // configure distance unit buttons here
+        switch self.user?.distanceUnit {
+        case ConstantRegistry.KILOMETERS:
+            // Configure buttons
+            kmBtn.setTitleColor(.white, for: .normal)
+            kmBtn.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
+            
+            miBtn.setTitleColor(.black, for: .normal)
+            miBtn.backgroundColor = .white
+            
+            break
+        case ConstantRegistry.MILES:
+            // Configure buttons
+            kmBtn.setTitleColor(.black, for: .normal)
+            kmBtn.backgroundColor = .white
+            
+            miBtn.setTitleColor(.white, for: .normal)
+            miBtn.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
+            
+            break
+        default:
+            
+            
+            break
+        }
+        
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        
+        guard !superPowerTextView.hasText else {
+            
+            let (spErr, _) = self.userDB.updateUserSuperPower(superPower: superPowerTextView.text!, userId: self.user?.userID)
+            if case .SQLError = spErr {
+                print("###########  updateUserSuperPower spErr  ##############")
+                print(spErr)
+            }
+            
+            return
+        }
+        
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        let maxLength = 125
+        let currentString: NSString = textView.text! as NSString
+        let newString: NSString = currentString.replacingCharacters(in: range, with: text) as NSString
+        
+        return newString.length <= maxLength
+        
     }
     
     @objc func dismissKeyboard() {
@@ -89,20 +157,18 @@ class EditProfileInfoVC: UIViewController, UITextFieldDelegate {
     
     func configureSuperPower() {
         
-        superPowerSV = UIStackView(arrangedSubviews: [superPowerLabel, superPowerTextField])
-        superPowerSV.axis = .vertical
-        superPowerSV.spacing = 10
-        superPowerSV.distribution = .fillEqually
+        view.addSubview(superPowerLabel)
+        superPowerLabel.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 50)
         
-        view.addSubview(superPowerSV)
-        superPowerSV.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 280)
+        view.addSubview(superPowerTextView)
+        superPowerTextView.anchor(top: superPowerLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 50, paddingBottom: 0, paddingRight: 50, width: 260, height: 120)
         
     }
     
     func configureKmMi() {
         
         view.addSubview(superheroDistanceUnitLabel)
-        superheroDistanceUnitLabel.anchor(top: superPowerSV.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
+        superheroDistanceUnitLabel.anchor(top: superPowerTextView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
         
         kmMiSV = UIStackView(arrangedSubviews: [kmBtn, miBtn])
         kmMiSV.axis = .horizontal
@@ -114,27 +180,6 @@ class EditProfileInfoVC: UIViewController, UITextFieldDelegate {
         kmMiSV.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        let maxLength = 125
-        let currentString: NSString = textField.text! as NSString
-        let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
-        
-        return newString.length <= maxLength
-        
-    }
-    
-    @objc func handleValueChanged() {
-        
-        guard superPowerTextField.hasText else {
-            
-            // TO-DO: save to local db
-            
-            return
-        }
-        
-    }
-    
     @objc func handleSelectKm() {
         
         // Configure buttons
@@ -144,7 +189,11 @@ class EditProfileInfoVC: UIViewController, UITextFieldDelegate {
         miBtn.setTitleColor(.black, for: .normal)
         miBtn.backgroundColor = .white
         
-        // TO-DO: save to local db
+        let (duErr, _) = self.userDB.updateUserDistanceUnit(distanceUnit: ConstantRegistry.KILOMETERS, userId: self.user?.userID)
+        if case .SQLError = duErr {
+            print("###########  updateUserDistanceUnit duErr  ##############")
+            print(duErr)
+        }
         
     }
     
@@ -157,7 +206,11 @@ class EditProfileInfoVC: UIViewController, UITextFieldDelegate {
         miBtn.setTitleColor(.white, for: .normal)
         miBtn.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
         
-        // TO-DO: save to local db
+        let (duErr, _) = self.userDB.updateUserDistanceUnit(distanceUnit: ConstantRegistry.MILES, userId: self.user?.userID)
+        if case .SQLError = duErr {
+            print("###########  updateUserDistanceUnit duErr  ##############")
+            print(duErr)
+        }
         
     }
     

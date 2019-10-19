@@ -54,17 +54,17 @@ class UserDB {
                     let rawMainProfilePic = sqlite3_column_text(stmt, 4)
                     let mainProfilePic = String(cString:rawMainProfilePic!)
                     
-                    let userGender = sqlite3_column_int64(stmt, 5)
+                    let userGender = sqlite3_column_int(stmt, 5)
                     
-                    let userLookingForGender = sqlite3_column_int64(stmt, 6)
+                    let userLookingForGender = sqlite3_column_int(stmt, 6)
                     
-                    let userAge = sqlite3_column_int64(stmt, 7)
+                    let userAge = sqlite3_column_int(stmt, 7)
                     
-                    let userLookingForMinAge = sqlite3_column_int64(stmt, 8)
+                    let userLookingForMinAge = sqlite3_column_int(stmt, 8)
                     
-                    let userLookingForMaxAge = sqlite3_column_int64(stmt, 9)
+                    let userLookingForMaxAge = sqlite3_column_int(stmt, 9)
                     
-                    let userLookingForDistanceMax = sqlite3_column_int64(stmt, 10)
+                    let userLookingForDistanceMax = sqlite3_column_int(stmt, 10)
                     
                     let rawDistanceUnit = sqlite3_column_text(stmt, 11)
                     let distanceUnit = String(cString:rawDistanceUnit!)
@@ -87,11 +87,12 @@ class UserDB {
                     
                     let rawUserAccountType = sqlite3_column_text(stmt, 18)
                     let userAccountType = String(cString:rawUserAccountType!)
-
                     
-                    user = User(userID: userId, email: email, name: userName, superheroName: superheroName, mainProfilePicUrl: mainProfilePic, profilePicsUrls: nil, gender: userGender, lookingForGender: userLookingForGender, age: userAge, lookingForAgeMin: userLookingForMinAge, lookingForAgeMax: userLookingForMaxAge, lookingForDistanceMax: userLookingForDistanceMax, distanceUnit: distanceUnit, lat: userLat, lon: userLon, birthday: userBirthDay, country: userCountry, city: userCity, superPower: userSuperPower, accountType: userAccountType)
+                    
+                    user = User(userID: userId, email: email, name: userName, superheroName: superheroName, mainProfilePicUrl: mainProfilePic, profilePicsUrls: nil, gender: Int(userGender), lookingForGender: Int(userLookingForGender), age: Int(userAge), lookingForAgeMin: Int(userLookingForMinAge), lookingForAgeMax: Int(userLookingForMaxAge), lookingForDistanceMax: Int(userLookingForDistanceMax), distanceUnit: distanceUnit, lat: userLat, lon: userLon, birthday: userBirthDay, country: userCountry, city: userCity, superPower: userSuperPower, accountType: userAccountType)
                     
                 }
+                
                 
                 sqlite3_finalize(stmt)
             } else {
@@ -228,7 +229,7 @@ class UserDB {
         
         return (err, email)
     }
-
+    
     // Fetch user's main profile picture url.
     func getUserMainProfilePicUrl() -> (DBError, String?) {
         var err:DBError = .NoError
@@ -553,7 +554,7 @@ class UserDB {
         
         return (err, maxDistance)
     }
-
+    
     // Fetch user's selected distance unit.
     func getUserDistanceUnit() -> (DBError, String?) {
         var err:DBError = .NoError
@@ -838,7 +839,7 @@ class UserDB {
         
         return (err, superPower)
     }
-
+    
     // Check if user is verified.
     func getUserIsVerified(userId: String!) -> (DBError, Int64?) {
         var err:DBError = .NoError
@@ -918,7 +919,7 @@ class UserDB {
         
         return (err, isLoggedIn)
     }
-
+    
     // Fetch user created date.
     func getUserCreated() -> (DBError, String?) {
         var err:DBError = .NoError
@@ -959,7 +960,7 @@ class UserDB {
         
         return (err, created)
     }
-
+    
     // Fetch user's account type.
     func getUserAccountType() -> (DBError, String?) {
         var err:DBError = .NoError
@@ -1000,7 +1001,7 @@ class UserDB {
         
         return (err, accountType)
     }
-
+    
     // Update default user.
     // This is called after registration is completed.
     func updateDefaultUser(user: User!) -> (DBError, Int) {
@@ -1067,45 +1068,45 @@ class UserDB {
             let sql = """
             INSERT INTO \(DBConstants.TABLE_USER)
             (
-                \(DBConstants.U_ID),
-                \(DBConstants.USER_EMAIL),
-                \(DBConstants.USER_NAME),
-                \(DBConstants.USER_MAIN_PROFILE_PIC_URL),
-                \(DBConstants.USER_GENDER),
-                \(DBConstants.USER_LOOKING_FOR_GENDER),
-                \(DBConstants.USER_AGE),
-                \(DBConstants.USER_LOOKING_FOR_MIN_AGE),
-                \(DBConstants.USER_LOOKING_FOR_MAX_AGE),
-                \(DBConstants.USER_LOOKING_FOR_MAX_DISTANCE),
-                \(DBConstants.USER_DISTANCE_UNIT),
-                \(DBConstants.USER_LATEST_LATITUDE),
-                \(DBConstants.USER_LATEST_LONGITUDE),
-                \(DBConstants.USER_BIRTHDAY),
-                \(DBConstants.USER_COUNTRY),
-                \(DBConstants.USER_CITY),
-                \(DBConstants.USER_SUPER_POWER),
-                \(DBConstants.USER_ACCOUNT_TYPE)
+            \(DBConstants.U_ID),
+            \(DBConstants.USER_EMAIL),
+            \(DBConstants.USER_NAME),
+            \(DBConstants.USER_MAIN_PROFILE_PIC_URL),
+            \(DBConstants.USER_GENDER),
+            \(DBConstants.USER_LOOKING_FOR_GENDER),
+            \(DBConstants.USER_AGE),
+            \(DBConstants.USER_LOOKING_FOR_MIN_AGE),
+            \(DBConstants.USER_LOOKING_FOR_MAX_AGE),
+            \(DBConstants.USER_LOOKING_FOR_MAX_DISTANCE),
+            \(DBConstants.USER_DISTANCE_UNIT),
+            \(DBConstants.USER_LATEST_LATITUDE),
+            \(DBConstants.USER_LATEST_LONGITUDE),
+            \(DBConstants.USER_BIRTHDAY),
+            \(DBConstants.USER_COUNTRY),
+            \(DBConstants.USER_CITY),
+            \(DBConstants.USER_SUPER_POWER),
+            \(DBConstants.USER_ACCOUNT_TYPE)
             )
             VALUES
             (
-                '\(user.userID!)',
-                '\(user.email!)',
-                '\(user.name!)',
-                '\(user.mainProfilePicUrl!)',
-                \(user.gender!),
-                \(user.lookingForGender!),
-                \(user.age!),
-                \(user.lookingForAgeMin!),
-                \(user.lookingForAgeMax!),
-                \(user.lookingForDistanceMax!),
-                '\(user.distanceUnit!)',
-                \(user.lat!),
-                \(user.lon!),
-                '\(user.birthday!)',
-                '\(user.country!)',
-                '\(user.city!)',
-                '\(user.superPower!)',
-                '\(user.accountType!)'
+            '\(user.userID!)',
+            '\(user.email!)',
+            '\(user.name!)',
+            '\(user.mainProfilePicUrl!)',
+            \(user.gender!),
+            \(user.lookingForGender!),
+            \(user.age!),
+            \(user.lookingForAgeMin!),
+            \(user.lookingForAgeMax!),
+            \(user.lookingForDistanceMax!),
+            '\(user.distanceUnit!)',
+            \(user.lat!),
+            \(user.lon!),
+            '\(user.birthday!)',
+            '\(user.country!)',
+            '\(user.city!)',
+            '\(user.superPower!)',
+            '\(user.accountType!)'
             )
             """;
             
@@ -1245,7 +1246,193 @@ class UserDB {
         
         return (err, changes)
     }
-
+    
+    // Update user super power.
+    func updateUserSuperPower(superPower: String!, userId: String!) -> (DBError, Int) {
+        var err:DBError = .NoError
+        var changes:Int = 0
+        
+        let superheroMatchDB = SuperheroMatchDB.sharedDB
+        
+        if let db = superheroMatchDB.dbOpen() {
+            let sql = """
+            UPDATE \(DBConstants.TABLE_USER) SET
+            \(DBConstants.USER_SUPER_POWER)='\(superPower!)'
+            WHERE \(DBConstants.U_ID)='\(userId!)'
+            """;
+            var result = sqlite3_exec(db, sql, nil, nil, nil)
+            
+            var retryCount:Int = 0
+            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
+                sleep(1)
+                retryCount += 1
+                result = sqlite3_exec(db, sql, nil, nil, nil)
+            }
+            
+            if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            }
+            else {
+                let errStr = String(cString: sqlite3_errstr(result))
+                err = .SQLError(errStr)
+            }
+            
+            _ = superheroMatchDB.dbClose(db: db)
+            
+        }
+        
+        return (err, changes)
+    }
+    
+    // Update user distance unit.
+    func updateUserDistanceUnit(distanceUnit: String!, userId: String!) -> (DBError, Int) {
+        var err:DBError = .NoError
+        var changes:Int = 0
+        
+        let superheroMatchDB = SuperheroMatchDB.sharedDB
+        
+        if let db = superheroMatchDB.dbOpen() {
+            let sql = """
+            UPDATE \(DBConstants.TABLE_USER) SET
+            \(DBConstants.USER_DISTANCE_UNIT)='\(distanceUnit!)'
+            WHERE \(DBConstants.U_ID)='\(userId!)'
+            """;
+            var result = sqlite3_exec(db, sql, nil, nil, nil)
+            
+            var retryCount:Int = 0
+            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
+                sleep(1)
+                retryCount += 1
+                result = sqlite3_exec(db, sql, nil, nil, nil)
+            }
+            
+            if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            }
+            else {
+                let errStr = String(cString: sqlite3_errstr(result))
+                err = .SQLError(errStr)
+            }
+            
+            _ = superheroMatchDB.dbClose(db: db)
+            
+        }
+        
+        return (err, changes)
+    }
+    
+    // Update user looking for gender.
+    func updateUserLookingForGender(lookingForGender: Int!, userId: String!) -> (DBError, Int) {
+        var err:DBError = .NoError
+        var changes:Int = 0
+        
+        let superheroMatchDB = SuperheroMatchDB.sharedDB
+        
+        if let db = superheroMatchDB.dbOpen() {
+            let sql = """
+            UPDATE \(DBConstants.TABLE_USER) SET
+            \(DBConstants.USER_LOOKING_FOR_GENDER)='\(lookingForGender!)'
+            WHERE \(DBConstants.U_ID)='\(userId!)'
+            """;
+            var result = sqlite3_exec(db, sql, nil, nil, nil)
+            
+            var retryCount:Int = 0
+            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
+                sleep(1)
+                retryCount += 1
+                result = sqlite3_exec(db, sql, nil, nil, nil)
+            }
+            
+            if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            }
+            else {
+                let errStr = String(cString: sqlite3_errstr(result))
+                err = .SQLError(errStr)
+            }
+            
+            _ = superheroMatchDB.dbClose(db: db)
+            
+        }
+        
+        return (err, changes)
+    }
+    
+    // Update user looking for min and max age range.
+    func updateUserLookingForMinMaxAge(minAge: Int!, maxAge: Int!, userId: String!) -> (DBError, Int) {
+        var err:DBError = .NoError
+        var changes:Int = 0
+        
+        let superheroMatchDB = SuperheroMatchDB.sharedDB
+        
+        if let db = superheroMatchDB.dbOpen() {
+            let sql = """
+            UPDATE \(DBConstants.TABLE_USER) SET
+            \(DBConstants.USER_LOOKING_FOR_MIN_AGE)='\(minAge!)',
+            \(DBConstants.USER_LOOKING_FOR_MAX_AGE)='\(maxAge!)'
+            WHERE \(DBConstants.U_ID)='\(userId!)'
+            """;
+            var result = sqlite3_exec(db, sql, nil, nil, nil)
+            
+            var retryCount:Int = 0
+            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
+                sleep(1)
+                retryCount += 1
+                result = sqlite3_exec(db, sql, nil, nil, nil)
+            }
+            
+            if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            }
+            else {
+                let errStr = String(cString: sqlite3_errstr(result))
+                err = .SQLError(errStr)
+            }
+            
+            _ = superheroMatchDB.dbClose(db: db)
+            
+        }
+        
+        return (err, changes)
+    }
+    
+    // Update user looking for max distance.
+    func updateUserLookingForMaxDistance(lookingForMaxDistance: Int!, userId: String!) -> (DBError, Int) {
+        var err:DBError = .NoError
+        var changes:Int = 0
+        
+        let superheroMatchDB = SuperheroMatchDB.sharedDB
+        
+        if let db = superheroMatchDB.dbOpen() {
+            let sql = """
+            UPDATE \(DBConstants.TABLE_USER) SET
+            \(DBConstants.USER_LOOKING_FOR_MAX_DISTANCE)='\(lookingForMaxDistance!)'
+            WHERE \(DBConstants.U_ID)='\(userId!)'
+            """;
+            var result = sqlite3_exec(db, sql, nil, nil, nil)
+            
+            var retryCount:Int = 0
+            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
+                sleep(1)
+                retryCount += 1
+                result = sqlite3_exec(db, sql, nil, nil, nil)
+            }
+            
+            if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            }
+            else {
+                let errStr = String(cString: sqlite3_errstr(result))
+                err = .SQLError(errStr)
+            }
+            
+            _ = superheroMatchDB.dbClose(db: db)
+            
+        }
+        
+        return (err, changes)
+    }
+    
     // Update user account type.
     func updateUserAccountType(userId: String!, accountType: String!) -> (DBError, Int) {
         var err:DBError = .NoError
@@ -1319,7 +1506,7 @@ class UserDB {
         
         return (err, changes)
     }
-
+    
     // Saves new user profile piture.
     func insertProfilePic(userId: String!, picUrl: String!, picUri: String!) -> (DBError, Int) {
         var err:DBError = .NoError
@@ -1331,15 +1518,15 @@ class UserDB {
             let sql = """
             INSERT INTO \(DBConstants.TABLE_USER_PROFILE_PICTURE)
             (
-                \(DBConstants.USER_ID),
-                \(DBConstants.USER_PROFILE_PIC_URI),
-                \(DBConstants.USER_PROFILE_PIC_URL)
+            \(DBConstants.USER_ID),
+            \(DBConstants.USER_PROFILE_PIC_URI),
+            \(DBConstants.USER_PROFILE_PIC_URL)
             )
             VALUES
             (
-                '\(userId!)',
-                '\(picUri!)',
-                '\(picUrl!)'
+            '\(userId!)',
+            '\(picUri!)',
+            '\(picUrl!)'
             )
             """;
             
@@ -1366,6 +1553,6 @@ class UserDB {
         
         return (err, changes)
     }
-
+    
     
 }

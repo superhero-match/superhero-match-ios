@@ -170,7 +170,7 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         
         let distanceUnit = UserDefaults.standard.string(forKey: "distanceUnit") ?? ""
         
-        user = User(userID: userID, email: email, name: name, superheroName: superheroName, mainProfilePicUrl: "", profilePicsUrls: nil, gender: Int64(gender), lookingForGender: Int64(favoriteGender), age: Int64(age), lookingForAgeMin: ConstantRegistry.DEFAULT_MIN_AGE, lookingForAgeMax: ConstantRegistry.DEFAULT_MAX_AGE, lookingForDistanceMax: ConstantRegistry.DEFAULT_MAX_DISTANCE, distanceUnit: distanceUnit, lat: lat, lon: lon, birthday: birthday, country: country, city: city, superPower: superPower, accountType: ConstantRegistry.DEFAULT_ACCOUNT_TYPE)
+        user = User(userID: userID, email: email, name: name, superheroName: superheroName, mainProfilePicUrl: "", profilePicsUrls: nil, gender: Int(gender), lookingForGender: Int(favoriteGender), age: Int(age), lookingForAgeMin: ConstantRegistry.DEFAULT_MIN_AGE, lookingForAgeMax: ConstantRegistry.DEFAULT_MAX_AGE, lookingForDistanceMax: ConstantRegistry.DEFAULT_MAX_DISTANCE, distanceUnit: distanceUnit, lat: lat, lon: lon, birthday: birthday, country: country, city: city, superPower: superPower, accountType: ConstantRegistry.DEFAULT_ACCOUNT_TYPE)
         
         var params = [String: Any]()
         

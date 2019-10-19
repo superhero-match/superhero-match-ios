@@ -113,11 +113,17 @@ class UserProfileVC: UIViewController {
     }
     
     @objc func editInfoTapped() {
-        print("editInfoTapped")
+        
+        let editProfileInfoVC = EditProfileInfoVC()
+        self.navigationController?.pushViewController(editProfileInfoVC, animated: false)
+        
     }
     
     @objc func settingsTapped() {
-        print("settingsTapped")
+        
+        let profileSettingsVC = ProfileSettingsVC()
+        self.navigationController?.pushViewController(profileSettingsVC, animated: false)
+        
     }
     
 }

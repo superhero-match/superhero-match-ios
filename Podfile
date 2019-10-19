@@ -34,6 +34,8 @@ target 'SuperheroMatch' do
 
   pod 'PhoneNumberKit', '~> 2.6'
 
+  pod 'RangeSeekSlider'
+
   target 'SuperheroMatchTests' do
     inherit! :search_paths
     # Pods for testing

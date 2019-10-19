@@ -107,6 +107,7 @@ PODS:
     - PhoneNumberKit/PhoneNumberKitCore
   - pop (1.0.12)
   - ProgressHUD (2.60)
+  - RangeSeekSlider (1.8.0)
   - SCSiriWaveformView (1.1.1)
   - SDWebImage (4.0.0):
     - SDWebImage/Core (= 4.0.0)
@@ -131,11 +132,12 @@ DEPENDENCIES:
   - MBProgressHUD
   - PhoneNumberKit (~> 2.6)
   - ProgressHUD
+  - RangeSeekSlider
   - Socket.IO-Client-Swift (~> 14.0.0)
   - TrustKit
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - ActiveLabel
     - Alamofire
     - Crashlytics
@@ -167,6 +169,8 @@ SPEC REPOS:
     - Socket.IO-Client-Swift
     - Starscream
     - TrustKit
+  trunk:
+    - RangeSeekSlider
 
 SPEC CHECKSUMS:
   ActiveLabel: b8b2396fe25308d563601437d6605bf691c3b5db
@@ -195,12 +199,13 @@ SPEC CHECKSUMS:
   PhoneNumberKit: 167ee1f0bbb6efce7c62559e620eae745595532f
   pop: d582054913807fd11fd50bfe6a539d91c7e1a55a
   ProgressHUD: 4e4efbaf4f5de8bd32e0c4c3b6644a90ea1a8c3e
+  RangeSeekSlider: 650b11fa1edcb92e1e0ede797669d98622570fb5
   SCSiriWaveformView: 15b9dd6f94c7536e2032b34a35c6ff74d38c7411
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
   Socket.IO-Client-Swift: 21e6a8a23a7d367d5ddfab6cbbd3c679cf3c25d6
   Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
   TrustKit: 0660dd1ce827ae7c8f553f35502a8542e248188f
 
-PODFILE CHECKSUM: 9b83b05ae332531d9631743af80c6619859fc2ec
+PODFILE CHECKSUM: 810dfdd82493f55189aedb0f668a7d386427c869
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.8.4

@@ -51,6 +51,8 @@
 		117A57392337CFFE00EB3560 /* SuggestionsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117A57382337CFFE00EB3560 /* SuggestionsResponse.swift */; };
 		117A573B2337D0B500EB3560 /* Superhero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117A573A2337D0B500EB3560 /* Superhero.swift */; };
 		11827D1722F776660095B570 /* certificate.der in Resources */ = {isa = PBXBuildFile; fileRef = 11827D1622F7764D0095B570 /* certificate.der */; };
+		118E97B5235B13EC00B2F8BC /* EditProfileInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118E97B4235B13EC00B2F8BC /* EditProfileInfoVC.swift */; };
+		118E97B7235B146700B2F8BC /* ProfileSettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118E97B6235B146700B2F8BC /* ProfileSettingsVC.swift */; };
 		1191609A2349FFF80015912C /* SuperheroDistanceUnitVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119160992349FFF80015912C /* SuperheroDistanceUnitVC.swift */; };
 		119A3F20234B733200690ED4 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119A3F1F234B733200690ED4 /* ProfileVC.swift */; };
 		11B4494122E1D56500FD7122 /* DBConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B4494022E1D56500FD7122 /* DBConstants.swift */; };
@@ -142,6 +144,8 @@
 		117A57382337CFFE00EB3560 /* SuggestionsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsResponse.swift; sourceTree = "<group>"; };
 		117A573A2337D0B500EB3560 /* Superhero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Superhero.swift; sourceTree = "<group>"; };
 		11827D1622F7764D0095B570 /* certificate.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = certificate.der; sourceTree = "<group>"; };
+		118E97B4235B13EC00B2F8BC /* EditProfileInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileInfoVC.swift; sourceTree = "<group>"; };
+		118E97B6235B146700B2F8BC /* ProfileSettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingsVC.swift; sourceTree = "<group>"; };
 		119160992349FFF80015912C /* SuperheroDistanceUnitVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperheroDistanceUnitVC.swift; sourceTree = "<group>"; };
 		119A3F1F234B733200690ED4 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		11B4493E22E1D3E600FD7122 /* SuperheroMatch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SuperheroMatch-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -282,6 +286,8 @@
 			children = (
 				119A3F1F234B733200690ED4 /* ProfileVC.swift */,
 				11C6650D2351F966004E190E /* UserProfileVC.swift */,
+				118E97B4235B13EC00B2F8BC /* EditProfileInfoVC.swift */,
+				118E97B6235B146700B2F8BC /* ProfileSettingsVC.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -682,16 +688,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SuperheroMatch/Pods-SuperheroMatch-resources.sh",
-				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+				"${PODS_ROOT}/Target Support Files/Pods-SuperheroMatch/Pods-SuperheroMatch-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+				"${PODS_ROOT}/Target Support Files/Pods-SuperheroMatch/Pods-SuperheroMatch-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -726,52 +727,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SuperheroMatch/Pods-SuperheroMatch-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/ActiveLabel/ActiveLabel.framework",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/DACircularProgress/DACircularProgress.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
-				"${BUILT_PRODUCTS_DIR}/IDMPhotoBrowser/IDMPhotoBrowser.framework",
-				"${BUILT_PRODUCTS_DIR}/IQAudioRecorderController/IQAudioRecorderController.framework",
-				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
-				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
-				"${BUILT_PRODUCTS_DIR}/ProgressHUD/ProgressHUD.framework",
-				"${BUILT_PRODUCTS_DIR}/SCSiriWaveformView/SCSiriWaveformView.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/Socket.IO-Client-Swift/SocketIO.framework",
-				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
-				"${BUILT_PRODUCTS_DIR}/TrustKit/TrustKit.framework",
-				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
-				"${BUILT_PRODUCTS_DIR}/pop/pop.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-SuperheroMatch/Pods-SuperheroMatch-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ActiveLabel.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DACircularProgress.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IDMPhotoBrowser.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQAudioRecorderController.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProgressHUD.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SCSiriWaveformView.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketIO.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TrustKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/pop.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-SuperheroMatch/Pods-SuperheroMatch-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -818,6 +778,7 @@
 				11C8BC7622DF6A130089DCE0 /* SuperheroSuperPowerVC.swift in Sources */,
 				11B4494122E1D56500FD7122 /* DBConstants.swift in Sources */,
 				110D372D22E34C0700DE7405 /* Invite.swift in Sources */,
+				118E97B7235B146700B2F8BC /* ProfileSettingsVC.swift in Sources */,
 				110D371422E339CF00DE7405 /* CustomSessionDelegate.swift in Sources */,
 				11C8BC3822DF19BB0089DCE0 /* AppDelegate.swift in Sources */,
 				1130FD7222E0DCFC00B64C36 /* Message.swift in Sources */,
@@ -829,6 +790,7 @@
 				1150E61D22E4B088007D16CF /* NewMessageVC.swift in Sources */,
 				11B4494922E23C0600FD7122 /* ChatDB.swift in Sources */,
 				1150E62922E4B253007D16CF /* NewMessageCell.swift in Sources */,
+				118E97B5235B13EC00B2F8BC /* EditProfileInfoVC.swift in Sources */,
 				1150E62122E4B130007D16CF /* MessageCell.swift in Sources */,
 				1130FD7622E0E08700B64C36 /* ReceivedOnlineMessage.swift in Sources */,
 				1122491322FB41F70064F54C /* RegisterResponse.swift in Sources */,

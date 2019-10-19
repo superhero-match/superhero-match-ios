@@ -47,9 +47,9 @@ class MatchedUserDB {
                     let rawMainProfilePic = sqlite3_column_text(stmt, 2)
                     let mainProfilePic = String(cString:rawMainProfilePic!)
                     
-                    let userGender = sqlite3_column_int64(stmt, 3)
+                    let userGender = sqlite3_column_int(stmt, 3)
                     
-                    let userAge = sqlite3_column_int64(stmt, 4)
+                    let userAge = sqlite3_column_int(stmt, 4)
                     
                     let rawUserCountry = sqlite3_column_text(stmt, 5)
                     let userCountry = String(cString:rawUserCountry!)
@@ -69,9 +69,10 @@ class MatchedUserDB {
                     let rawMatchCreated = sqlite3_column_text(stmt, 10)
                     _ = String(cString:rawMatchCreated!)
                     
-                    matchedUser = User(userID: userId, email: nil, name: userName, superheroName: "Superhero 1", mainProfilePicUrl: mainProfilePic, profilePicsUrls: nil, gender: userGender, lookingForGender: nil, age: userAge, lookingForAgeMin: nil, lookingForAgeMax: nil, lookingForDistanceMax: nil, distanceUnit: nil, lat: nil, lon: nil, birthday: nil, country: userCountry, city: userCity, superPower: userSuperPower, accountType: userAccountType)
+                    matchedUser = User(userID: userId, email: nil, name: userName, superheroName: "Superhero 1", mainProfilePicUrl: mainProfilePic, profilePicsUrls: nil, gender: Int(userGender), lookingForGender: nil, age: Int(userAge), lookingForAgeMin: nil, lookingForAgeMax: nil, lookingForDistanceMax: nil, distanceUnit: nil, lat: nil, lon: nil, birthday: nil, country: userCountry, city: userCity, superPower: userSuperPower, accountType: userAccountType)
                     
                 }
+                
                 
                 sqlite3_finalize(stmt)
             } else {
@@ -123,9 +124,9 @@ class MatchedUserDB {
                     let rawMainProfilePic = sqlite3_column_text(stmt, 2)
                     let mainProfilePic = String(cString:rawMainProfilePic!)
                     
-                    let userGender = sqlite3_column_int64(stmt, 3)
+                    let userGender = sqlite3_column_int(stmt, 3)
                     
-                    let userAge = sqlite3_column_int64(stmt, 4)
+                    let userAge = sqlite3_column_int(stmt, 4)
                     
                     let rawUserCountry = sqlite3_column_text(stmt, 5)
                     let userCountry = String(cString:rawUserCountry!)
@@ -145,7 +146,7 @@ class MatchedUserDB {
                     let rawMatchCreated = sqlite3_column_text(stmt, 10)
                     _ = String(cString:rawMatchCreated!)
                     
-                    let matchedUser = User(userID: userId, email: nil, name: userName, superheroName: "Superhero 1", mainProfilePicUrl: mainProfilePic, profilePicsUrls: nil, gender: userGender, lookingForGender: nil, age: userAge, lookingForAgeMin: nil, lookingForAgeMax: nil, lookingForDistanceMax: nil, distanceUnit: nil, lat: nil, lon: nil, birthday: nil, country: userCountry, city: userCity, superPower: userSuperPower, accountType: userAccountType)
+                    let matchedUser = User(userID: userId, email: nil, name: userName, superheroName: "Superhero 1", mainProfilePicUrl: mainProfilePic, profilePicsUrls: nil, gender: Int(userGender), lookingForGender: nil, age: Int(userAge), lookingForAgeMin: nil, lookingForAgeMax: nil, lookingForDistanceMax: nil, distanceUnit: nil, lat: nil, lon: nil, birthday: nil, country: userCountry, city: userCity, superPower: userSuperPower, accountType: userAccountType)
                     
                     matchedUsers.append(matchedUser)
                     

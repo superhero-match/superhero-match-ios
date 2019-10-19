@@ -11,6 +11,8 @@ import RangeSeekSlider
 
 class ProfileSettingsVC: UIViewController {
     
+    let userDB = UserDB.sharedDB
+    var user: User?
     
     var genderSV: UIStackView!
     
@@ -120,6 +122,77 @@ class ProfileSettingsVC: UIViewController {
         configureAgeRange()
         configureDistance()
         
+        let (dbErr, user) = self.userDB.getUser()
+        if case .SQLError = dbErr {
+            print("###########  getUser dbErr  ##############")
+            print(dbErr)
+        }
+        
+        if user != nil {
+            self.user = user
+            
+            configureGenderButtons()
+            configureAgeRangeCurrentValues()
+            configureMaxDistanceValue()
+            
+        }
+        
+    }
+    
+    func configureGenderButtons() {
+        
+        switch self.user?.lookingForGender {
+        case ConstantRegistry.MALE:
+            maleBtn.setTitleColor(.white, for: .normal)
+            maleBtn.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
+            
+            femaleBtn.setTitleColor(.black, for: .normal)
+            femaleBtn.backgroundColor = .white
+            
+            bothBtn.setTitleColor(.black, for: .normal)
+            bothBtn.backgroundColor = .white
+            
+            break
+        case ConstantRegistry.FEMALE:
+            maleBtn.setTitleColor(.black, for: .normal)
+            maleBtn.backgroundColor = .white
+            
+            femaleBtn.setTitleColor(.white, for: .normal)
+            femaleBtn.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
+            
+            bothBtn.setTitleColor(.black, for: .normal)
+            bothBtn.backgroundColor = .white
+            
+            break
+        case ConstantRegistry.BOTH:
+            maleBtn.setTitleColor(.black, for: .normal)
+            maleBtn.backgroundColor = .white
+            
+            femaleBtn.setTitleColor(.black, for: .normal)
+            femaleBtn.backgroundColor = .white
+            
+            bothBtn.setTitleColor(.white, for: .normal)
+            bothBtn.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
+            
+            break
+        default:
+            
+            break
+        }
+        
+    }
+    
+    func configureAgeRangeCurrentValues() {
+        
+        ageRangeSlider.selectedMinValue = CGFloat(Float((self.user?.lookingForAgeMin!)!))
+        ageRangeSlider.selectedMaxValue = CGFloat(Float((self.user?.lookingForAgeMax!)!))
+        
+    }
+    
+    func configureMaxDistanceValue() {
+        
+        distanceSlider.selectedMaxValue = CGFloat(Float((self.user?.lookingForDistanceMax!)!))
+        
     }
     
     func configureFavoriteGender() {
@@ -150,7 +223,11 @@ class ProfileSettingsVC: UIViewController {
         bothBtn.setTitleColor(.black, for: .normal)
         bothBtn.backgroundColor = .white
         
-        // TO-DO: save to local db
+        let (spErr, _) = self.userDB.updateUserLookingForGender(lookingForGender: ConstantRegistry.MALE, userId: self.user?.userID)
+        if case .SQLError = spErr {
+            print("###########  updateUserSuperPower spErr  ##############")
+            print(spErr)
+        }
         
     }
     
@@ -166,7 +243,11 @@ class ProfileSettingsVC: UIViewController {
         bothBtn.setTitleColor(.black, for: .normal)
         bothBtn.backgroundColor = .white
         
-        // TO-DO: save to local db
+        let (spErr, _) = self.userDB.updateUserLookingForGender(lookingForGender: ConstantRegistry.FEMALE, userId: self.user?.userID)
+        if case .SQLError = spErr {
+            print("###########  updateUserSuperPower spErr  ##############")
+            print(spErr)
+        }
         
     }
     
@@ -182,7 +263,11 @@ class ProfileSettingsVC: UIViewController {
         bothBtn.setTitleColor(.white, for: .normal)
         bothBtn.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
         
-        // TO-DO: save to local db
+        let (spErr, _) = self.userDB.updateUserLookingForGender(lookingForGender: ConstantRegistry.BOTH, userId: self.user?.userID)
+        if case .SQLError = spErr {
+            print("###########  updateUserSuperPower spErr  ##############")
+            print(spErr)
+        }
         
     }
     
@@ -198,7 +283,11 @@ class ProfileSettingsVC: UIViewController {
     
     @objc func handleSelectAgeRange() {
         
-        // TO-DO: save to local db
+        let (spErr, _) = self.userDB.updateUserLookingForMinMaxAge(minAge: Int(ageRangeSlider.selectedMinValue), maxAge: Int(ageRangeSlider.selectedMaxValue), userId: self.user?.userID)
+        if case .SQLError = spErr {
+            print("###########  updateUserLookingForMinMaxAge spErr  ##############")
+            print(spErr)
+        }
         
     }
     
@@ -214,7 +303,11 @@ class ProfileSettingsVC: UIViewController {
     
     @objc func handleSelectDistance() {
         
-        // TO-DO: save to local db
+        let (spErr, _) = self.userDB.updateUserLookingForMaxDistance(lookingForMaxDistance: Int(distanceSlider.selectedMaxValue), userId: self.user?.userID)
+        if case .SQLError = spErr {
+            print("###########  updateUserLookingForMaxDistance spErr  ##############")
+            print(spErr)
+        }
         
     }
 }

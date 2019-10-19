@@ -18,9 +18,16 @@ class ConstantRegistry {
     static let SUPERHERO_MATCHMAKER_PORT: String = ":5000"
     static let SUPERHERO_CHAT_PORT: String = ":6000"
     
-    static let DEFAULT_MAX_DISTANCE: Int64 = 50
-    static let DEFAULT_MIN_AGE: Int64 = 25
-    static let DEFAULT_MAX_AGE: Int64 = 55
+    static let DEFAULT_MAX_DISTANCE: Int = 50
+    static let DEFAULT_MIN_AGE: Int = 25
+    static let DEFAULT_MAX_AGE: Int = 55
     static let DEFAULT_ACCOUNT_TYPE: String = "FREE"
+    
+    static let KILOMETERS: String = "km"
+    static let MILES: String = "mi"
+    
+    static let MALE: Int = 1
+    static let FEMALE: Int = 2
+    static let BOTH: Int = 3
     
 }

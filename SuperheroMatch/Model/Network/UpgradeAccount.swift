@@ -19,7 +19,7 @@ class UpgradeAccount {
     
     func upgradeAccount(userID: String!, upgradedAccountType: String!, closure: @escaping (_ json: Any?, _ error: Error?)->()) {
         self.networkManager.loadUrl(
-            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHEROVILLE_MUNICIPALITY_PORT + "/api/v1/superheroville_municipality/upgrade_account?userID=\(userID!)&upgradedAccountType=\(upgradedAccountType!)",
+            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHERO_UPGRADE_PORT + "/api/v1/superhero_upgrade/upgrade_account?userID=\(userID!)&upgradedAccountType=\(upgradedAccountType!)",
             params: nil,
             method: .post,
             encoding: nil

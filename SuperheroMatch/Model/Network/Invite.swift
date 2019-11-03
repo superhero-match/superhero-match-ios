@@ -18,7 +18,7 @@ class Invite {
     
     func inviteUser(userName: String!, inviteeName: String!, inviteeEmail: String!, closure: @escaping (_ json: Any?, _ error: Error?)->()) {
         self.networkManager.loadUrl(
-            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHEROVILLE_MUNICIPALITY_PORT + "/api/v1/superheroville_municipality/invite_user?userName=\(userName!)&inviteeName=\(inviteeName!)&inviteeEmail=\(inviteeEmail!)",
+            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHERO_INVITE_PORT + "/api/v1/superhero_invite/invite_user?userName=\(userName!)&inviteeName=\(inviteeName!)&inviteeEmail=\(inviteeEmail!)",
             params: nil,
             method: .post,
             encoding: nil

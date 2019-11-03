@@ -14,6 +14,7 @@ class CheckEmailResponse {
     var isRegistered: Bool!
     var isDeleted: Bool!
     var isBlocked: Bool!
+    var superhero: User?
     
     enum SerializationError: Error {
         case missing(String)
@@ -43,10 +44,19 @@ class CheckEmailResponse {
             throw SerializationError.missing("isBlocked")
         }
         
+        // Extract superhero
+        guard let superhero = json["superhero"] as? [String : Any] else {
+            throw SerializationError.missing("superhero")
+        }
+        
+        let user = try User(json: superhero)
+        
+        
         self.status = status
         self.isRegistered = isRegistered
         self.isDeleted = isDeleted
         self.isBlocked = isBlocked
+        self.superhero = user
         
     }
     

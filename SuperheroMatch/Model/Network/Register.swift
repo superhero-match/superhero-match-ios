@@ -19,7 +19,7 @@ class Register {
     
     func register(params: [String: Any]!, closure: @escaping (_ json: Any?, _ error: Error?)->()) {
         self.networkManager.loadUrl(
-            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHEROVILLE_MUNICIPALITY_PORT + "/api/v1/superheroville_municipality/register",
+            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHERO_REGISTER_PORT + "/api/v1/superhero_register/register",
             params: params!,
             method: .post,
             encoding: nil

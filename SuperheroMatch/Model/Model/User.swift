@@ -15,7 +15,7 @@ class User {
     var name: String!
     var superheroName: String!
     var mainProfilePicUrl: String!
-    var profilePicsUrls: [String]?
+    var profilePicsUrls: [String]!
     var gender: Int!
     var lookingForGender: Int!
     var age: Int!
@@ -85,7 +85,7 @@ class User {
     init(json: [String: Any]) throws {
 
         // Extract userID
-        guard let userID = json["userID"] as? String else {
+        guard let userID = json["id"] as? String else {
             throw SerializationError.missing("userID")
         }
 
@@ -98,8 +98,8 @@ class User {
         }
         
         // Extract superheroName
-        guard let superheroName = json["superheroName"] as? String else {
-            throw SerializationError.missing("superheroName")
+        guard let superheroName = json["superHeroName"] as? String else {
+            throw SerializationError.missing("superHeroName")
         }
 
         // Extract mainProfilePicUrl
@@ -108,9 +108,7 @@ class User {
         }
 
         // Extract profilePicsUrls
-        guard let profilePicsUrls = json["profilePicsUrls"] as? [String] else {
-            throw SerializationError.missing("profilePicsUrls")
-        }
+        let profilePicsUrls = ((json["profilePicsUrls"] as? [String]) != nil) ? json["profilePicsUrls"] as? [String] : [String]()
         
         // Extract gender
         guard let gender = json["gender"] as? Int else {

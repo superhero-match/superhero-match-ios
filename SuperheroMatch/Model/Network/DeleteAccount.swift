@@ -18,7 +18,7 @@ class DeleteAccount {
     
     func deleteAccount(userID: String!, closure: @escaping (_ json: Any?, _ error: Error?)->()) {
         self.networkManager.loadUrl(
-            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHEROVILLE_MUNICIPALITY_PORT + "/api/v1/superheroville_municipality/delete_account?userID=\(userID!)",
+            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHERO_DELETE_PORT + "/api/v1/superhero_delete/delete_account?userID=\(userID!)",
             params: nil,
             method: .post,
             encoding: nil

@@ -22,7 +22,7 @@ class Update {
             url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHERO_UPDATE_PORT + "/api/v1/superhero_update/update_superhero",
             params: params!,
             method: .post,
-            encoding: URLEncoding.httpBody
+            encoding: nil
         ) { json, error in
             closure(json, error)
         }

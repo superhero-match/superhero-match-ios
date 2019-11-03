@@ -14,6 +14,8 @@ class ProfileSettingsVC: UIViewController {
     let userDB = UserDB.sharedDB
     var user: User?
     
+    var update: Update?
+    
     var genderSV: UIStackView!
     
     let superheroFavoriteGenderLabel: UILabel = {
@@ -136,6 +138,8 @@ class ProfileSettingsVC: UIViewController {
             configureMaxDistanceValue()
             
         }
+        
+        update = Update()
         
     }
     
@@ -310,4 +314,73 @@ class ProfileSettingsVC: UIViewController {
         }
         
     }
+    
+    func configureUpdateProfileRequest() -> [String: Any]? {
+        
+        let (dbErr, user) = self.userDB.getUser()
+        if case .SQLError = dbErr {
+            print("###########  getUser dbErr  ##############")
+            print(dbErr)
+        }
+        
+        if user != nil {
+            var params = [String: Any]()
+            
+            params["id"] = user!.userID
+            params["email"] = user!.email
+            params["name"] = user!.name
+            params["superheroName"] = user!.superheroName
+            params["mainProfilePicUrl"] = user!.mainProfilePicUrl
+            params["gender"] = user!.gender
+            params["lookingForGender"] = user!.lookingForGender
+            params["age"] = user!.age
+            params["lookingForAgeMin"] = user!.lookingForAgeMin
+            params["lookingForAgeMax"] = user!.lookingForAgeMax
+            params["lookingForDistanceMax"] = user!.lookingForDistanceMax
+            params["distanceUnit"] = user!.distanceUnit
+            params["lat"] = user!.lat
+            params["lon"] = user!.lon
+            params["birthday"] = user!.birthday
+            params["country"] = user!.country
+            params["city"] = user!.city
+            params["superPower"] = user!.superPower
+            params["accountType"] = user!.accountType
+            
+            return params
+        }
+        
+       
+        return nil
+    }
+    
+    func update(update: Update, params: [String: Any]) {
+        
+        update.update(params: params) { json, error in
+            do {
+                
+                //Convert to Data
+                let jsonData = try JSONSerialization.data(withJSONObject: json!, options: JSONSerialization.WritingOptions.prettyPrinted)
+                
+                //In production, you usually want to try and cast as the root data structure. Here we are casting as a dictionary. If the root object is an array cast as [Any].
+                let updateResponse = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? AnyObject
+                
+                let response = try UpdateProfileResponse(json: updateResponse as! [String : Any])
+
+                if !response.updated {
+                    print("Something went wrong!")
+                } else {
+                    print("All good!")
+                }
+                
+            } catch {
+                print("update catch")
+            }
+        }
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        update(update: self.update!, params: self.configureUpdateProfileRequest()!)
+    }
+    
 }

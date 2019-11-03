@@ -13,6 +13,7 @@ import GoogleSignIn
 class VerifyIdentityVC: UIViewController, GIDSignInUIDelegate {
     
     var checkEmail: CheckEmail?
+    let userDB = UserDB.sharedDB
     
     let logoContainerView: UIView = {
         let view = UIView()
@@ -54,7 +55,7 @@ class VerifyIdentityVC: UIViewController, GIDSignInUIDelegate {
         
         return btn
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -75,7 +76,7 @@ class VerifyIdentityVC: UIViewController, GIDSignInUIDelegate {
         GIDSignIn.sharedInstance().uiDelegate = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(didSignIn), name: NSNotification.Name("SuccessfulSignInNotification"), object: nil)
-
+        
     }
     
     func configureComponents() {
@@ -117,23 +118,72 @@ class VerifyIdentityVC: UIViewController, GIDSignInUIDelegate {
             do {
                 
                 //Convert to Data
+                print("before jsonData")
                 let jsonData = try JSONSerialization.data(withJSONObject: json!, options: JSONSerialization.WritingOptions.prettyPrinted)
                 
                 //In production, you usually want to try and cast as the root data structure. Here we are casting as a dictionary. If the root object is an array cast as [Any].
+                print("before checkEmailResponse")
                 let checkEmailResponse = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? AnyObject
                 
+                print("before response")
                 let response = try CheckEmailResponse(json: checkEmailResponse as! [String : Any])
-
+                
                 print(response.isRegistered)
                 print(response.isDeleted)
                 print(response.isBlocked)
+                print(response.superhero)
                 
                 if !response.isRegistered {
                     let superheroNameVC = SuperheroNameVC()
                     self.navigationController?.pushViewController(superheroNameVC, animated: true)
+                } else if response.isDeleted || response.isBlocked {
+                    self.showDeletedOrBlockedAlert()
                 } else {
-                    let mainTabVC = MainTabVC()
-                    self.present(mainTabVC, animated: true, completion: nil)
+                    let (uerr, userId) = self.userDB.getUserId()
+                    if case .SQLError = uerr {
+                        print("###########  getUserId uerr  ##############")
+                        print(uerr)
+                    }
+                    
+                    // User is already registered, save to local db.
+                    if userId == "default" || userId != nil {
+                        // This means that the default user is in the db.
+                        // So, in this case use update method.
+                        let (err, changes) = self.userDB.updateDefaultUser(user: response.superhero!)
+                        if case .SQLError = err {
+                            print("###########  updateDefaultUser err  ##############")
+                            print(err)
+                        }
+                        
+                        print("###########  updateDefaultUser changes  ##############")
+                        print(changes)
+                    } else {
+                        // This means that the default user is not in db yet.
+                        // So, in this case insert new user.
+                        let (err, changes) = self.userDB.insertUser(user: response.superhero!)
+                        if case .SQLError = err {
+                            print("###########  insertUser err  ##############")
+                            print(err)
+                        }
+                        
+                        print("###########  insertUser changes  ##############")
+                        print(changes)
+                    }
+                    
+                    self.navigationController?.dismiss(animated: false, completion: { () -> Void in
+                        DispatchQueue.global(qos: .background).async {
+
+                            // Background Thread
+
+                            DispatchQueue.main.async {
+                                // Run UI Updates
+                                let mainTabVC = MainTabVC()
+                                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                                appDelegate.window?.rootViewController! = mainTabVC
+                            }
+                        }
+                    })
+
                 }
                 
             } catch {
@@ -142,5 +192,17 @@ class VerifyIdentityVC: UIViewController, GIDSignInUIDelegate {
         }
         
     }
-
+    
+    func showDeletedOrBlockedAlert() {
+        
+        let alert = UIAlertController(title: "Something is wrong with your account", message: "Please get in touch with our customer support", preferredStyle: UIAlertController.Style.alert)
+        
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { _ in
+            //Cancel Action
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
 }

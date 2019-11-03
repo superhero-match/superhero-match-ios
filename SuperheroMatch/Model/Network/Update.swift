@@ -19,7 +19,7 @@ class Update {
     
     func update(params: [String: Any]!, closure: @escaping (_ json: Any?, _ error: Error?)->()) {
         self.networkManager.loadUrl(
-            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHEROVILLE_MUNICIPALITY_PORT + "/api/v1/superheroville_municipality/update",
+            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHERO_UPDATE_PORT + "/api/v1/superhero_update/update_superhero",
             params: params!,
             method: .post,
             encoding: URLEncoding.httpBody

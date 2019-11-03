@@ -1044,8 +1044,7 @@ class UserDB {
             
             if SQLITE_OK == result {
                 changes = Int(sqlite3_changes(db))
-            }
-            else {
+            } else {
                 let errStr = String(cString: sqlite3_errstr(result))
                 err = .SQLError(errStr)
             }
@@ -1068,45 +1067,45 @@ class UserDB {
             let sql = """
             INSERT INTO \(DBConstants.TABLE_USER)
             (
-            \(DBConstants.U_ID),
-            \(DBConstants.USER_EMAIL),
-            \(DBConstants.USER_NAME),
-            \(DBConstants.USER_MAIN_PROFILE_PIC_URL),
-            \(DBConstants.USER_GENDER),
-            \(DBConstants.USER_LOOKING_FOR_GENDER),
-            \(DBConstants.USER_AGE),
-            \(DBConstants.USER_LOOKING_FOR_MIN_AGE),
-            \(DBConstants.USER_LOOKING_FOR_MAX_AGE),
-            \(DBConstants.USER_LOOKING_FOR_MAX_DISTANCE),
-            \(DBConstants.USER_DISTANCE_UNIT),
-            \(DBConstants.USER_LATEST_LATITUDE),
-            \(DBConstants.USER_LATEST_LONGITUDE),
-            \(DBConstants.USER_BIRTHDAY),
-            \(DBConstants.USER_COUNTRY),
-            \(DBConstants.USER_CITY),
-            \(DBConstants.USER_SUPER_POWER),
-            \(DBConstants.USER_ACCOUNT_TYPE)
+                \(DBConstants.U_ID),
+                \(DBConstants.USER_EMAIL),
+                \(DBConstants.USER_NAME),
+                \(DBConstants.USER_MAIN_PROFILE_PIC_URL),
+                \(DBConstants.USER_GENDER),
+                \(DBConstants.USER_LOOKING_FOR_GENDER),
+                \(DBConstants.USER_AGE),
+                \(DBConstants.USER_LOOKING_FOR_MIN_AGE),
+                \(DBConstants.USER_LOOKING_FOR_MAX_AGE),
+                \(DBConstants.USER_LOOKING_FOR_MAX_DISTANCE),
+                \(DBConstants.USER_DISTANCE_UNIT),
+                \(DBConstants.USER_LATEST_LATITUDE),
+                \(DBConstants.USER_LATEST_LONGITUDE),
+                \(DBConstants.USER_BIRTHDAY),
+                \(DBConstants.USER_COUNTRY),
+                \(DBConstants.USER_CITY),
+                \(DBConstants.USER_SUPER_POWER),
+                \(DBConstants.USER_ACCOUNT_TYPE)
             )
             VALUES
             (
-            '\(user.userID!)',
-            '\(user.email!)',
-            '\(user.name!)',
-            '\(user.mainProfilePicUrl!)',
-            \(user.gender!),
-            \(user.lookingForGender!),
-            \(user.age!),
-            \(user.lookingForAgeMin!),
-            \(user.lookingForAgeMax!),
-            \(user.lookingForDistanceMax!),
-            '\(user.distanceUnit!)',
-            \(user.lat!),
-            \(user.lon!),
-            '\(user.birthday!)',
-            '\(user.country!)',
-            '\(user.city!)',
-            '\(user.superPower!)',
-            '\(user.accountType!)'
+                '\(user.userID!)',
+                '\(user.email!)',
+                '\(user.name!)',
+                '\(user.mainProfilePicUrl!)',
+                \(user.gender!),
+                \(user.lookingForGender!),
+                \(user.age!),
+                \(user.lookingForAgeMin!),
+                \(user.lookingForAgeMax!),
+                \(user.lookingForDistanceMax!),
+                '\(user.distanceUnit!)',
+                \(user.lat!),
+                \(user.lon!),
+                '\(user.birthday!)',
+                '\(user.country!)',
+                '\(user.city!)',
+                '\(user.superPower!)',
+                '\(user.accountType!)'
             )
             """;
             
@@ -1121,8 +1120,7 @@ class UserDB {
             
             if SQLITE_OK == result {
                 changes = Int(sqlite3_changes(db))
-            }
-            else {
+            } else {
                 let errStr = String(cString: sqlite3_errstr(result))
                 err = .SQLError(errStr)
             }

@@ -111,7 +111,7 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         selectPicBtn.setImage(profileImage.withRenderingMode(.alwaysOriginal), for: .normal)
         
         // TO-DO: convert image to bytes array or base64 encoded string and send it to the server
-        // there it is going ot be uploaded to S3, and from there the CloudFront will cache it
+        // there it is going to be uploaded to S3, and from there the CloudFront will cache it
         
         self.dismiss(animated: true, completion: nil)
         

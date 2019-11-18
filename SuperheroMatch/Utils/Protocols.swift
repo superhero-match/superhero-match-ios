@@ -16,8 +16,8 @@ protocol ProfileHeaderDelegate {
 }
 
 protocol SuggestionCellDelegate {
-    func handleImageTapped(for cell: SuggestionCell)
-    func handleUsernameTapped(for cell: SuggestionCell)
+//    func handleImageTapped(for cell: SuggestionCell)
+//    func handleUsernameTapped(for cell: SuggestionCell)
 }
 
 protocol Printable {

@@ -34,7 +34,7 @@ class SuggestionsVC: UICollectionViewController , UICollectionViewDelegateFlowLa
         self.collectionView?.backgroundColor = .white
         
         // Register cell classes
-        self.collectionView!.register(SuggestionCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+       //  self.collectionView!.register(SuggestionCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
         self.collectionView?.backgroundColor = .white
         self.navigationItem.title = "Suggestions"
@@ -78,7 +78,7 @@ class SuggestionsVC: UICollectionViewController , UICollectionViewDelegateFlowLa
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! SuggestionCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)// as! SuggestionCell
         
         // cell.imageURL = user?.profilePicsUrls[indexPath.row]
         
@@ -105,14 +105,14 @@ class SuggestionsVC: UICollectionViewController , UICollectionViewDelegateFlowLa
 
     }
     
-    func handleImageTapped(for cell: SuggestionCell) {
-        print("handleImageTapped")
-    }
-    
-    func handleUsernameTapped(for cell: SuggestionCell){
-        print("handleUsernameTapped")
-    }
-    
+//    func handleImageTapped(for cell: SuggestionCell) {
+//        print("handleImageTapped")
+//    }
+//
+//    func handleUsernameTapped(for cell: SuggestionCell){
+//        print("handleUsernameTapped")
+//    }
+//
     
     func fetchSuggestions() {
         

@@ -283,7 +283,7 @@ class EditProfileInfoVC: UIViewController, UITextViewDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        update(update: self.update!, params: self.configureUpdateProfileRequest()!)
+        // update(update: self.update!, params: self.configureUpdateProfileRequest()!)
     }
     
     // override func view

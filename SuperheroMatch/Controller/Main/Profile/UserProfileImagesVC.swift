@@ -1,36 +1,36 @@
 //
-//  SuggestionProfileImagesVC.swift
+//  UserProfileImagesVC.swift
 //  SuperheroMatch
 //
-//  Created by Nikolajus Karpovas on 18/11/2019.
+//  Created by Nikolajus Karpovas on 24/11/2019.
 //  Copyright © 2019 Nikolajus Karpovas. All rights reserved.
 //
 
 import UIKit
 
-private let reuseIdentifier = "SuggestionImagesCell"
+private let reuseIdentifier = "ProfileImageCell"
 
-class SuggestionProfileImagesVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class UserProfileImagesVC: UICollectionViewController , UICollectionViewDelegateFlowLayout {
     
-    var suggestion: Superhero?
-    var loadedSuggestion: Superhero?
+    var user: User?
+    var loadedUser: User?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Register cell classes
-        self.collectionView!.register(SuggestionImageCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        self.collectionView!.register(ProfileImageCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
         self.collectionView?.backgroundColor = .white
         
         self.collectionView?.isPagingEnabled = true
 
         // Do any additional setup after loading the view.
-        if let loadedSuggestion = self.loadedSuggestion {
-            self.suggestion = loadedSuggestion
+        if let loadedUser = self.loadedUser {
+            self.user = loadedUser
         } else {
-            // Display error message.
-            print("SuggestionProfileImagesVC  -->  did not load suggestion")
+            // Display an error message
+            print("UserProfileImagesVC  -->  did not load user")
         }
     }
 
@@ -42,7 +42,7 @@ class SuggestionProfileImagesVC: UICollectionViewController, UICollectionViewDel
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (self.suggestion?.profilePicsUrls!.count)!
+        return (self.user?.profilePicsUrls!.count)!
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -50,12 +50,12 @@ class SuggestionProfileImagesVC: UICollectionViewController, UICollectionViewDel
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! SuggestionImageCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ProfileImageCell
     
-        cell.imageUrl = self.suggestion?.profilePicsUrls![indexPath.item]
-        cell.nameAndAge = self.suggestion!.superheroName + ", \(self.suggestion?.age ?? 0)"
-        cell.location = self.suggestion!.city
-        cell.superpower = self.suggestion?.superpower
+        cell.imageUrl = self.user?.profilePicsUrls![indexPath.item]
+        cell.nameAndAge = self.user!.superheroName + ", \(self.user?.age ?? 0)"
+        cell.location = self.user!.city
+        cell.superpower = self.user?.superPower
     
         return cell
     }
@@ -63,5 +63,4 @@ class SuggestionProfileImagesVC: UICollectionViewController, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-
 }

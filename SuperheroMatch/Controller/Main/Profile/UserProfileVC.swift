@@ -10,55 +10,18 @@ import UIKit
 
 class UserProfileVC: UIViewController {
     
-    let profileImageView: UIImageView = {
-        let piv = UIImageView(image: UIImage(named: "test"))
-        piv.contentMode = .scaleAspectFill
-        piv.clipsToBounds = true
-        piv.tappable = true
-        
-        return piv
-    }()
-    
-    let userName: UILabel = {
-        let userName = UILabel()
-        userName.font = UIFont(name: "Gotham Book", size: 22)
-        userName.textAlignment = .center
-        
-        return userName
-    }()
-    
-    let genderAge: UILabel = {
-        let lbl = UILabel()
-        lbl.font = UIFont(name: "Gotham Book", size: 16)
-        lbl.textAlignment = .center
-        
-        return lbl
-    }()
-    
-    let superPowerImageView: UIImageView = {
-        let piv = UIImageView(image: UIImage(named: "superpower"))
-        piv.contentMode = .scaleAspectFill
-        piv.clipsToBounds = true
-        
-        return piv
-    }()
-    
-    let superPower: UILabel = {
-        let lbl = UILabel()
-        lbl.font = UIFont(name: "Gotham Book", size: 18)
-        lbl.textAlignment = .left
-        lbl.text = "Awesome Super Power that I have and it is just test to see how it looks like on the screen when character length is maxed out."
-        lbl.numberOfLines = 0
-        lbl.lineBreakMode = .byWordWrapping
-        lbl.sizeToFit()
-        
-        return lbl
-    }()
-    
     lazy var settingsButton: UIButton = {
         var btn = UIButton(type: .system)
         btn.setImage(UIImage(named: "settings")?.withRenderingMode(.alwaysOriginal), for: .normal)
         btn.addTarget(self, action: #selector(settingsTapped), for: .touchUpInside)
+        
+        return btn
+    }()
+    
+    lazy var imageGalleryButton: UIButton = {
+        var btn = UIButton(type: .system)
+        btn.setImage(UIImage(named: "profile_images")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        btn.addTarget(self, action: #selector(imageGalleryTapped), for: .touchUpInside)
         
         return btn
     }()
@@ -70,6 +33,10 @@ class UserProfileVC: UIViewController {
         
         return btn
     }()
+    
+    var user: User?
+    
+    var userProfileImagesVC: UserProfileImagesVC?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,31 +47,36 @@ class UserProfileVC: UIViewController {
         self.navigationItem.title = "Profile"
         
         navigationController?.navigationBar.isTranslucent = false
-
-        view.addSubview(profileImageView)
-        profileImageView.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height * 0.5)
-        profileImageView.callback = handleMainProfileImageTapped
         
-        view.addSubview(userName)
-        userName.anchor(top: profileImageView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 5, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
+        let profilePicUrls = ["test", "test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9", "test10", "test11"]
+        self.user = User(userID: "userID", email: "email@email.com", name: "Test Superhero", superheroName: "Superhero", mainProfilePicUrl: "test", profilePicsUrls: profilePicUrls, gender: 1, lookingForGender: 2, age: 34, lookingForAgeMin: 25, lookingForAgeMax: 55, lookingForDistanceMax: 20, distanceUnit: "km", lat: 5.1, lon: 51.12, birthday: "1985-05-30", country: "Country", city: "City", superPower: "Awesome Super Power that I have and it is just test to see how it looks like on the screen when character length is maxed out.", accountType: "FREE")
+            
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        self.userProfileImagesVC = UserProfileImagesVC(collectionViewLayout: layout)
+        self.userProfileImagesVC!.user = self.user
         
-        view.addSubview(genderAge)
-        genderAge.anchor(top: userName.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 5, paddingRight: 0, width: 0, height: 25)
-
-        userName.text = "Superhero"
-        genderAge.text = "Gender, Age"
+        configureUI()
         
-        view.addSubview(superPowerImageView)
-        superPowerImageView.anchor(top: genderAge.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 25, paddingLeft: 5, paddingBottom: 0, paddingRight: 0, width: 40, height: 40)
+    }
+    
+    func configureUI() {
         
-        view.addSubview(superPower)
-        superPower.anchor(top: genderAge.bottomAnchor, left: superPowerImageView.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 5, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: view.frame.width, height: 80)
+        addChild(self.userProfileImagesVC!)
+        view.addSubview(self.userProfileImagesVC!.view)
+        self.userProfileImagesVC!.didMove(toParent: self)
+        self.userProfileImagesVC!.view.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 5, paddingLeft: 5, paddingBottom: 0, paddingRight: 5, width: view.frame.width-10, height: view.frame.height * 0.70)
+        self.userProfileImagesVC!.view.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         view.addSubview(settingsButton)
-        settingsButton.anchor(top: superPower.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 40, width: 40, height: 40)
+        settingsButton.anchor(top: userProfileImagesVC!.view.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 40, width: 40, height: 40)
+        
+        view.addSubview(imageGalleryButton)
+        imageGalleryButton.anchor(top: userProfileImagesVC!.view.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
+        imageGalleryButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         view.addSubview(editInfoButton)
-        editInfoButton.anchor(top: superPower.bottomAnchor, left: nil, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 40, paddingBottom: 0, paddingRight: 20, width: 40, height: 40)
+        editInfoButton.anchor(top: userProfileImagesVC!.view.bottomAnchor, left: nil, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 40, paddingBottom: 0, paddingRight: 20, width: 40, height: 40)
         
     }
     
@@ -116,6 +88,12 @@ class UserProfileVC: UIViewController {
         
         let editProfileInfoVC = EditProfileInfoVC()
         self.navigationController?.pushViewController(editProfileInfoVC, animated: false)
+        
+    }
+    
+    @objc func imageGalleryTapped() {
+        
+        print("imageGalleryTapped")
         
     }
     

@@ -373,34 +373,3 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     
     
 }
-
-
-//        view.addSubview(profileImageView)
-//        profileImageView.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 5, paddingLeft: 5, paddingBottom: 0, paddingRight: 5, width: view.frame.width-10, height: view.frame.height * 0.70)
-//        profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-//        profileImageView.callback = handleMainProfileImageTapped
-//
-//        view.addSubview(gradientView)
-//        gradientView.anchor(top: nil, left: nil, bottom: profileImageView.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 10, paddingBottom: 5, paddingRight: 10, width: view.frame.width-10, height: 115)
-//        gradientView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-//
-//        let gradientLayer = CAGradientLayer()
-//        gradientLayer.colors = [UIColor.clear.cgColor, UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0.1).cgColor]
-//        gradientLayer.startPoint = CGPoint(x: 0.5, y: 1.0)
-//        gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.0)
-//        gradientLayer.locations = [0, 1]
-//        gradientLayer.frame = CGRect(x: 0, y: 0, width: view.frame.width-10, height: 115)
-//
-//        gradientView.layer.insertSublayer(gradientLayer, at: 0)
-//
-//        view.addSubview(superPower)
-//        superPower.anchor(top: nil, left: view.leftAnchor, bottom: profileImageView.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: view.frame.width, height: 60)
-//        superPower.text = "Awesome Super Power that I have and it is just test to see how it looks like on the screen when character length is maxed out."
-//
-//        view.addSubview(city)
-//        city.anchor(top: nil, left: view.leftAnchor, bottom: superPower.topAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 5, paddingRight: 0, width: 0, height: 25)
-//        city.text = "Somewhere"
-//
-//        view.addSubview(userNameAge)
-//        userNameAge.anchor(top: nil, left: view.leftAnchor, bottom: city.topAnchor, right: view.rightAnchor, paddingTop: 5, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 30)
-//        userNameAge.text = "Superhero, 34"

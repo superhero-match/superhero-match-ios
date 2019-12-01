@@ -93,7 +93,13 @@ class UserProfileVC: UIViewController {
     
     @objc func imageGalleryTapped() {
         
-        print("imageGalleryTapped")
+        let profileImagesSettingsVC = ProfileImagesSettingsVC()
+        profileImagesSettingsVC.mainImageUrl = "test"
+        profileImagesSettingsVC.profileImage1Url = "test1"
+        profileImagesSettingsVC.profileImage2Url = "test2"
+        profileImagesSettingsVC.profileImage3Url = "test3"
+        profileImagesSettingsVC.profileImage4Url = "test4"
+        self.navigationController?.pushViewController(profileImagesSettingsVC, animated: false)
         
     }
     

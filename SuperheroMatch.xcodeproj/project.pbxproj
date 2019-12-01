@@ -36,6 +36,7 @@
 		1130FD7622E0E08700B64C36 /* ReceivedOnlineMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1130FD7522E0E08700B64C36 /* ReceivedOnlineMessage.swift */; };
 		1130FD7B22E0E33900B64C36 /* ProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1130FD7A22E0E33900B64C36 /* ProfileHeader.swift */; };
 		113C1A2D22F741F300FFCAE6 /* CheckEmailResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C1A2C22F741F300FFCAE6 /* CheckEmailResponse.swift */; };
+		1148554E2393C70600845AC9 /* ProfileImagesSettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1148554D2393C70600845AC9 /* ProfileImagesSettingsVC.swift */; };
 		114B7E27236F3C6A003081C0 /* UpdateProfileResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114B7E26236F3C6A003081C0 /* UpdateProfileResponse.swift */; };
 		1150E60822E499EE007D16CF /* MatchesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E60722E499EE007D16CF /* MatchesTableViewCell.swift */; };
 		1150E61522E4A619007D16CF /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E61422E4A619007D16CF /* Camera.swift */; };
@@ -134,6 +135,7 @@
 		1130FD7522E0E08700B64C36 /* ReceivedOnlineMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedOnlineMessage.swift; sourceTree = "<group>"; };
 		1130FD7A22E0E33900B64C36 /* ProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeader.swift; sourceTree = "<group>"; };
 		113C1A2C22F741F300FFCAE6 /* CheckEmailResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckEmailResponse.swift; sourceTree = "<group>"; };
+		1148554D2393C70600845AC9 /* ProfileImagesSettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImagesSettingsVC.swift; sourceTree = "<group>"; };
 		114B7E26236F3C6A003081C0 /* UpdateProfileResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileResponse.swift; sourceTree = "<group>"; };
 		1150E60722E499EE007D16CF /* MatchesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesTableViewCell.swift; sourceTree = "<group>"; };
 		1150E61422E4A619007D16CF /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
@@ -301,6 +303,7 @@
 				118E97B4235B13EC00B2F8BC /* EditProfileInfoVC.swift */,
 				118E97B6235B146700B2F8BC /* ProfileSettingsVC.swift */,
 				11144720238AA46F0057350F /* UserProfileImagesVC.swift */,
+				1148554D2393C70600845AC9 /* ProfileImagesSettingsVC.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -831,6 +834,7 @@
 				1150E60822E499EE007D16CF /* MatchesTableViewCell.swift in Sources */,
 				11C8BC7422DF535E0089DCE0 /* SuperheroFavoriteGenderVC.swift in Sources */,
 				11C8BC6922DF1B8F0089DCE0 /* VerifyIdentityVC.swift in Sources */,
+				1148554E2393C70600845AC9 /* ProfileImagesSettingsVC.swift in Sources */,
 				1191E3F52382B6C30077FA99 /* SuggestionProfileImagesVC.swift in Sources */,
 				110D372922E349C200DE7405 /* Choice.swift in Sources */,
 				110D371A22E33C4400DE7405 /* NetworkManager.swift in Sources */,

@@ -36,4 +36,10 @@ class ConstantRegistry {
     static let FEMALE: Int = 2
     static let BOTH: Int = 3
     
+    static let MAIN_PROFILE_IMAGE_VIEW: Int = 1
+    static let FIRST_PROFILE_IMAGE_VIEW: Int = 2
+    static let SECOND_PROFILE_IMAGE_VIEW: Int = 3
+    static let THIRD_PROFILE_IMAGE_VIEW: Int = 4
+    static let FOURTH_PROFILE_IMAGE_VIEW: Int = 5
+    
 }

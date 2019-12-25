@@ -42,4 +42,6 @@ class ConstantRegistry {
     static let THIRD_PROFILE_IMAGE_VIEW: Int = 4
     static let FOURTH_PROFILE_IMAGE_VIEW: Int = 5
     
+    static let PAGE_SIZE: Int = 10
+    
 }

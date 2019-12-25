@@ -14,6 +14,7 @@ class SuggestionProfileImagesVC: UICollectionViewController, UICollectionViewDel
     
     var suggestion: Superhero?
     var loadedSuggestion: Superhero?
+    var profilePicturesUrls: [String] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +29,40 @@ class SuggestionProfileImagesVC: UICollectionViewController, UICollectionViewDel
         // Do any additional setup after loading the view.
         if let loadedSuggestion = self.loadedSuggestion {
             self.suggestion = loadedSuggestion
+            
+            self.profilePicturesUrls.append(self.suggestion!.mainProfilePicUrl)
+            
+            for profilePicture in self.suggestion!.profilePictures {
+                self.profilePicturesUrls.append(profilePicture.profilePicUrl)
+            }
         } else {
             // Display error message.
             print("SuggestionProfileImagesVC  -->  did not load suggestion")
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(loadNextSuggestion), name: NSNotification.Name("LoadNextSuggestionNotification"), object: nil)
+        
+    }
+    
+    @objc func loadNextSuggestion() {
+        print("LoadNextSuggestionNotification has been received")
+        // Do any additional setup after loading the view.
+        if let loadedSuggestion = self.loadedSuggestion {
+            self.suggestion = loadedSuggestion
+            
+            self.profilePicturesUrls = []
+            
+            self.profilePicturesUrls.append(self.suggestion!.mainProfilePicUrl)
+            
+            for profilePicture in self.suggestion!.profilePictures {
+                self.profilePicturesUrls.append(profilePicture.profilePicUrl)
+            }
+        } else {
+            // Display error message.
+            print("SuggestionProfileImagesVC  -->  did not load suggestion")
+        }
+        
+        self.collectionView?.reloadData()
     }
 
     // MARK: UICollectionViewDataSource
@@ -42,7 +73,7 @@ class SuggestionProfileImagesVC: UICollectionViewController, UICollectionViewDel
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (self.suggestion?.profilePicsUrls!.count)!
+        return self.profilePicturesUrls.count
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -52,7 +83,7 @@ class SuggestionProfileImagesVC: UICollectionViewController, UICollectionViewDel
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! SuggestionImageCell
     
-        cell.imageUrl = self.suggestion?.profilePicsUrls![indexPath.item]
+        cell.imageUrl = self.profilePicturesUrls.count > 0 ? self.profilePicturesUrls[indexPath.item] : ""
         cell.nameAndAge = self.suggestion!.superheroName + ", \(self.suggestion?.age ?? 0)"
         cell.location = self.suggestion!.city
         cell.superpower = self.suggestion?.superpower

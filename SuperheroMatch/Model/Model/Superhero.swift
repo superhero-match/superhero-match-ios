@@ -13,7 +13,7 @@ class Superhero {
     var userID: String!
     var superheroName: String!
     var mainProfilePicUrl: String!
-    var profilePicsUrls: [String]?
+    var profilePictures: [ProfilePicture] = []
     var gender: Int64!
     var age: Int64!
     var birthday: String?
@@ -32,7 +32,7 @@ class Superhero {
         userID: String!,
         superheroName: String!,
         mainProfilePicUrl: String!,
-        profilePicsUrls: [String]!,
+        profilePictures: [ProfilePicture]!,
         gender: Int64!,
         age: Int64!,
         lat: Double?,
@@ -46,7 +46,7 @@ class Superhero {
             self.userID = userID
             self.superheroName = superheroName
             self.mainProfilePicUrl = mainProfilePicUrl
-            self.profilePicsUrls = profilePicsUrls
+            self.profilePictures = profilePictures
             self.gender = gender
             self.age = age
             self.birthday = birthday
@@ -74,8 +74,13 @@ class Superhero {
             throw SerializationError.missing("mainProfilePicUrl")
         }
 
-        // Extract profilePicsUrls
-        let profilePicsUrls = ((json["profilePicsUrls"] as? [String]) != nil) ? json["profilePicsUrls"] as? [String]  : [""]
+        // Extract profilePictures
+        let profilePictures = ((json["profilePictures"] as? [[String : Any]]) != nil) ? json["profilePictures"] as? [[String : Any]]  : []
+        
+        for profilePicture in profilePictures! {
+            let result = try ProfilePicture(json: profilePicture)
+            self.profilePictures.append(result)
+        }
         
         // Extract gender
         guard let gender = json["gender"] as? Int64 else {
@@ -106,12 +111,10 @@ class Superhero {
             throw SerializationError.missing("accountType")
         }
         
-
         // Initialize properties
         self.userID = userID
         self.superheroName = superheroName
         self.mainProfilePicUrl = mainProfilePicUrl
-        self.profilePicsUrls = profilePicsUrls
         self.gender = gender
         self.age = age
         self.birthday = birthday

@@ -15,6 +15,10 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     let userDB = UserDB.sharedDB
     var user: User?
     var suggestion: Superhero?
+    var suggestions : [Superhero] = []
+    var superheroIds : [String] = []
+    var retrievedSuperheroIds : [String] = []
+    var currentSuggestion: Int = 0
     
     // Used to start getting the users location
     let locationManager = CLLocationManager()
@@ -93,6 +97,8 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     
     var suggestionprofileImagesVC: SuggestionProfileImagesVC?
     
+    var noSuggestionsVC: NoSuggestionsVC?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -103,14 +109,9 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         
         navigationController?.navigationBar.isTranslucent = false
         
-        let profilePicUrls = ["test", "test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9", "test10", "test11"]
-        self.suggestion = Superhero(userID: "userID", superheroName: "Superhero", mainProfilePicUrl: "test", profilePicsUrls: profilePicUrls, gender: 1, age: 34, lat: 5.1, lon: 51.12, birthday: "1985-05-30", country: "Country", city: "City", superpower: "Awesome Super Power that I have and it is just test to see how it looks like on the screen when character length is maxed out.", accountType: "FREE")
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         self.suggestionprofileImagesVC = SuggestionProfileImagesVC(collectionViewLayout: layout)
-        self.suggestionprofileImagesVC!.suggestion = self.suggestion
-        
-        configureUI()
         
         let (dbErr, user) = self.userDB.getUser()
         if case .SQLError = dbErr {
@@ -137,17 +138,27 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
             
         }
         
-        fetchSuggestions()
+        let params = configureSuggestionsRequestParameters()
+        
+        fetchSuggestions(params: params, isInitialRequest: true)
+        
+    }
+
+    func configureUIForNoSuggestions() {
+        
+        view.addSubview(dislikeButton)
+        dislikeButton.anchor(top: noSuggestionsVC!.view.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 40, width: 50, height: 50)
+        
+        view.addSubview(superPowerButton)
+        superPowerButton.anchor(top: noSuggestionsVC!.view.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
+        superPowerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        view.addSubview(likeButton)
+        likeButton.anchor(top: noSuggestionsVC!.view.bottomAnchor, left: nil, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 40, paddingBottom: 0, paddingRight: 20, width: 50, height: 50)
         
     }
     
-    func configureUI() {
-        
-        addChild(suggestionprofileImagesVC!)
-        view.addSubview(suggestionprofileImagesVC!.view)
-        suggestionprofileImagesVC!.didMove(toParent: self)
-        suggestionprofileImagesVC!.view.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 5, paddingLeft: 5, paddingBottom: 0, paddingRight: 5, width: view.frame.width-10, height: view.frame.height * 0.70)
-        suggestionprofileImagesVC!.view.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    func configureUIWithSuggestions() {
         
         view.addSubview(dislikeButton)
         dislikeButton.anchor(top: suggestionprofileImagesVC!.view.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 40, width: 50, height: 50)
@@ -163,6 +174,18 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         
     }
     
+    func configureUI(hasSuggestions: Bool) {
+        
+        if !hasSuggestions {
+            configureUIForNoSuggestions()
+            
+            return
+        }
+        
+        configureUIWithSuggestions()
+        
+    }
+    
     func configureSuggestionDetailsView() {
         
         view.addSubview(suggestionDetailsView)
@@ -174,18 +197,18 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         
         suggestionDetailsView.addSubview(suggestionNameAge)
         suggestionNameAge.anchor(top: closeSuggestionDetailsViewButton.bottomAnchor, left: suggestionDetailsView.leftAnchor, bottom: nil, right: suggestionDetailsView.rightAnchor, paddingTop: 5, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: 0, height: 30)
-        suggestionNameAge.text = "Superhero, 34"
+        suggestionNameAge.text = self.suggestions.count > 0 ? self.suggestions[self.currentSuggestion].superheroName + " \(self.suggestions[self.currentSuggestion].age ?? 0)" : ""
         
         suggestionDetailsView.addSubview(suggestionCity)
         suggestionCity.anchor(top: suggestionNameAge.bottomAnchor, left: suggestionDetailsView.leftAnchor, bottom: nil, right: suggestionDetailsView.rightAnchor, paddingTop: 0, paddingLeft: 10, paddingBottom: 5, paddingRight: 10, width: 0, height: 25)
-        suggestionCity.text = "Somewhere"
+        suggestionCity.text = self.suggestions.count > 0 ? self.suggestions[self.currentSuggestion].city : ""
         
         suggestionDetailsView.addSubview(suggestionSuperPower)
         suggestionSuperPower.anchor(top: suggestionCity.bottomAnchor, left: suggestionDetailsView.leftAnchor, bottom: nil, right: suggestionDetailsView.rightAnchor, paddingTop: 0, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: suggestionDetailsView.frame.width, height: 60)
-        suggestionSuperPower.text = "Awesome Super Power that I have and it is just test to see how it looks like on the screen when character length is maxed out."
+        suggestionSuperPower.text = self.suggestions.count > 0 ? self.suggestions[self.currentSuggestion].superpower : ""
         
         self.suggestionDetailsView.isHidden = true
-    
+        
     }
     
     func viewSlideInFromTopToBottom(view: UIView) {
@@ -210,6 +233,45 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         
     }
     
+    func configureNoSuggestionsVC() {
+        
+        self.noSuggestionsVC = NoSuggestionsVC()
+        
+        self.suggestionprofileImagesVC?.removeFromParent()
+        self.suggestionDetailsView.removeFromSuperview()
+        
+        addChild(self.noSuggestionsVC!)
+        view.addSubview(self.noSuggestionsVC!.view)
+        self.noSuggestionsVC!.didMove(toParent: self)
+        self.noSuggestionsVC!.view.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 5, paddingLeft: 5, paddingBottom: 0, paddingRight: 5, width: view.frame.width-10, height: view.frame.height * 0.70)
+        self.noSuggestionsVC!.view.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+    }
+    
+    func configureSuggestionProfilePicVC(isInitialRequest: Bool) {
+        
+        self.noSuggestionsVC?.removeFromParent()
+        
+        if !isInitialRequest {
+            self.suggestionprofileImagesVC?.removeFromParent()
+        }
+        
+        self.suggestionprofileImagesVC!.loadedSuggestion = self.suggestions[self.currentSuggestion]
+        
+        addChild(suggestionprofileImagesVC!)
+        view.addSubview(suggestionprofileImagesVC!.view)
+        suggestionprofileImagesVC!.didMove(toParent: self)
+        suggestionprofileImagesVC!.view.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 5, paddingLeft: 5, paddingBottom: 0, paddingRight: 5, width: view.frame.width-10, height: view.frame.height * 0.70)
+        suggestionprofileImagesVC!.view.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        suggestionDetailsView.removeFromSuperview()
+        
+        configureSuggestionDetailsView()
+        
+        NotificationCenter.default.post(name: Notification.Name("LoadNextSuggestionNotification"), object: nil, userInfo: nil)
+        
+    }
+    
     @objc func closeSuggestionDetailsViewTapped() {
         
         viewSlideInFromTopToBottom(view: self.suggestionDetailsView)
@@ -225,11 +287,24 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     @objc func likeTapped() {
         print("likeTapped")
         
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
+        if (self.suggestions.count - 1) > self.currentSuggestion {
             
-            // TO-DO: load next suggestion
+            self.currentSuggestion += 1
             
-        }, completion: nil)
+            self.configureSuggestionProfilePicVC(isInitialRequest: false)
+            
+        } else {
+            
+            let params = self.configureSuggestionsRequestParameters()
+            
+            self.fetchSuggestions(params: params, isInitialRequest: false)
+            
+        }
+        
+//        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
+//
+//
+//        }, completion: nil)
         
     }
     
@@ -243,15 +318,27 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     @objc func dislikeTapped() {
         print("dislikeTapped")
         
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
+//        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
+//
+//        }, completion: nil)
+        
+        if (self.suggestions.count - 1) > self.currentSuggestion {
             
-            // TO-DO: load next suggestion
+            self.currentSuggestion += 1
             
-        }, completion: nil)
+            self.configureSuggestionProfilePicVC(isInitialRequest: false)
+            
+        } else {
+            
+            let params = self.configureSuggestionsRequestParameters()
+            
+            self.fetchSuggestions(params: params, isInitialRequest: false)
+            
+        }
         
     }
     
-    func fetchSuggestions() {
+    func configureSuggestionsRequestParameters() -> [String: Any] {
         
         var params = [String: Any]()
         
@@ -264,34 +351,117 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         params["distanceUnit"] = self.user?.distanceUnit
         params["lat"] = self.user?.lat
         params["lon"] = self.user?.lon
-        params["offset"] = 0
-        params["size"] = 10
+        
+        // 1. Check if superherosIds is empty. If so, that means it is ES request.
+        params["isEsRequest"] = false
+        
+        if superheroIds.count == 0 {
+            params["isEsRequest"] = true
+        }
+        
+        // 2. If superheroIds is not empty, then pop maximum first 10 ids from superheroIds
+        // and put them in params --> superheroIds.
+        var superherosToBeFetched : [String] = []
+        var indicesToBeDeleted : [Int] = []
+        
+        if superheroIds.count > 0 {
+            
+            var index: Int = 0
+            
+            for superheroId in superheroIds {
+                
+                if superherosToBeFetched.count == ConstantRegistry.PAGE_SIZE {
+                    break
+                }
+                
+                superherosToBeFetched.append(superheroId)
+                
+                // After superhero id has been added to the list of ids to be fetched
+                // it can be removed as there is no need to fetch the same suggestions.
+                indicesToBeDeleted.append(index)
+                
+                index += 1
+                
+            }
+            
+            for _ in indicesToBeDeleted {
+                superheroIds.remove(at: 0)
+            }
+            
+        }
+        
+        params["superheroIds"] = superherosToBeFetched
+        params["retrievedSuperheroIds"] = retrievedSuperheroIds
+        
         
         print(params)
         
+        return params
         
-        //        self.sgs = Suggestions()
-        //        self.sgs!.suggestions(params: params) { json, error in
-        //            do {
-        //
-        //                //Convert to Data
-        //                let jsonData = try JSONSerialization.data(withJSONObject: json!, options: JSONSerialization.WritingOptions.prettyPrinted)
-        //
-        //                //In production, you usually want to try and cast as the root data structure. Here we are casting as a dictionary. If the root object is an array cast as [Any].
-        //                let suggestionsResponse = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? AnyObject
-        //
-        //                let response = try SuggestionsResponse(json: suggestionsResponse as! [String : AnyObject])
-        //
-        //                if response.status != 200  {
-        //                    print("Error!")
-        //                } else {
-        //                    print("All good!")
-        //                }
-        //
-        //            } catch {
-        //                print("catch")
-        //            }
-        //        }
+    }
+    
+    func fetchSuggestions(params: [String: Any], isInitialRequest: Bool!) {
+        
+        self.sgs = Suggestions()
+        self.sgs!.suggestions(params: params) { json, error in
+            do {
+                
+                //Convert to Data
+                let jsonData = try JSONSerialization.data(withJSONObject: json!, options: JSONSerialization.WritingOptions.prettyPrinted)
+                
+                //In production, you usually want to try and cast as the root data structure. Here we are casting as a dictionary. If the root object is an array cast as [Any].
+                let suggestionsResponse = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? AnyObject
+                
+                let response = try SuggestionsResponse(json: suggestionsResponse as! [String : AnyObject])
+                
+                if response.status != 200  {
+                    print("Error!")
+                    
+                    return
+                }
+                
+                // These are ids of cached suggestions. When the next request to fetch more
+                // suggestions will be made, maximum 10 of these ids will be passed to request
+                // so that the next batch of suggestions could be retrieved.
+                for superheroId in response.superheroIds {
+                    self.superheroIds.append(superheroId)
+                }
+                
+                for suggestion in response.suggestions {
+                    
+                    // These are ids of the suggestions that were already retrieved and viewed.
+                    // So if user will make more requests where all the cached suggestions
+                    // were shown and the request to the lasticsearch will have to be made again
+                    // the users who were shown will be excluded from Elasticsearch results.
+                    self.retrievedSuperheroIds.append(suggestion.userID)
+                    
+                    // These are the actual suggestions that will be shown to the user.
+                    self.suggestions.append(suggestion)
+                    
+                }
+                
+                if response.suggestions.count > 0 {
+                    
+                    if !isInitialRequest {
+                        self.currentSuggestion += 1
+                    }
+                    
+                    self.configureSuggestionProfilePicVC(isInitialRequest: isInitialRequest)
+                    
+                } else {
+                    self.configureNoSuggestionsVC()
+                }
+                
+                if isInitialRequest {
+                    self.configureUI(hasSuggestions: response.suggestions.count > 0)
+                }
+                
+                
+            } catch {
+                // TO-DO: Show alert that something went wrong
+                print("catch")
+            }
+        }
         
     }
     
@@ -313,7 +483,7 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
             geocoder.reverseGeocodeLocation(location, completionHandler: {(placemarks, error) in
                 if (error != nil) {
                     print("Error in reverseGeocode")
-                    print(error)
+                    print(error as Any)
                 }
                 
                 let placemark = placemarks! as [CLPlacemark]

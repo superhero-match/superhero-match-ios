@@ -11,7 +11,8 @@ import Foundation
 class SuggestionsResponse {
     
     var status: Int64!
-    var suggestions: [Superhero]?
+    var suggestions: [Superhero] = []
+    var superheroIds: [String] = []
     
     enum SerializationError: Error {
         case missing(String)
@@ -33,7 +34,16 @@ class SuggestionsResponse {
         
         for suggestion in sgs {
             let s = try Superhero(json: suggestion)
-            self.suggestions?.append(s)
+            self.suggestions.append(s)
+        }
+        
+        // Extract superheroIds
+        guard let sIds = json["superheroIds"] as? [String] else {
+            throw SerializationError.missing("superheroIds")
+        }
+        
+        for superheroId in sIds {
+            self.superheroIds.append(superheroId)
         }
         
         self.status = status

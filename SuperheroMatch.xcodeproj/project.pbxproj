@@ -64,7 +64,6 @@
 		11B4494122E1D56500FD7122 /* DBConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B4494022E1D56500FD7122 /* DBConstants.swift */; };
 		11B4494322E1DEDF00FD7122 /* SuperheroMatchDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B4494222E1DEDF00FD7122 /* SuperheroMatchDB.swift */; };
 		11B4494522E1F62F00FD7122 /* UserDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B4494422E1F62F00FD7122 /* UserDB.swift */; };
-		11B4494722E2263600FD7122 /* MatchedUserDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B4494622E2263500FD7122 /* MatchedUserDB.swift */; };
 		11B4494922E23C0600FD7122 /* ChatDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B4494822E23C0600FD7122 /* ChatDB.swift */; };
 		11B8A1FD23B3C26500244E1F /* ProfilePicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B8A1FC23B3C26500244E1F /* ProfilePicture.swift */; };
 		11B8A1FF23B412EE00244E1F /* NoSuggestionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B8A1FE23B412EB00244E1F /* NoSuggestionsVC.swift */; };
@@ -85,6 +84,7 @@
 		11C8BC7622DF6A130089DCE0 /* SuperheroSuperPowerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C8BC7522DF6A130089DCE0 /* SuperheroSuperPowerVC.swift */; };
 		11C8BC7822DF6C4A0089DCE0 /* SuperheroProfilePicVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C8BC7722DF6C4A0089DCE0 /* SuperheroProfilePicVC.swift */; };
 		11C8BC7B22DF83C90089DCE0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11C8BC7A22DF83C90089DCE0 /* GoogleService-Info.plist */; };
+		11DAB6D323BBBD0900881573 /* ItIsAMatchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DAB6D223BBBD0900881573 /* ItIsAMatchVC.swift */; };
 		13771A5756DCFA9DE7F49235 /* Pods_SuperheroMatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEB1BC6B65AB1EB9B4604B32 /* Pods_SuperheroMatch.framework */; };
 		3FCFFC296B003D6CD391E827 /* Pods_SuperheroMatchTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E77D9B26C1D651171341CCE /* Pods_SuperheroMatchTests.framework */; };
 		EB84F46F089DF5E915A50EDB /* Pods_SuperheroMatchUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DD572D8A3A75AD91A6C8667 /* Pods_SuperheroMatchUITests.framework */; };
@@ -166,7 +166,6 @@
 		11B4494022E1D56500FD7122 /* DBConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBConstants.swift; sourceTree = "<group>"; };
 		11B4494222E1DEDF00FD7122 /* SuperheroMatchDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperheroMatchDB.swift; sourceTree = "<group>"; };
 		11B4494422E1F62F00FD7122 /* UserDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDB.swift; sourceTree = "<group>"; };
-		11B4494622E2263500FD7122 /* MatchedUserDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchedUserDB.swift; sourceTree = "<group>"; };
 		11B4494822E23C0600FD7122 /* ChatDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDB.swift; sourceTree = "<group>"; };
 		11B8A1FC23B3C26500244E1F /* ProfilePicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePicture.swift; sourceTree = "<group>"; };
 		11B8A1FE23B412EB00244E1F /* NoSuggestionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoSuggestionsVC.swift; sourceTree = "<group>"; };
@@ -193,6 +192,7 @@
 		11C8BC7522DF6A130089DCE0 /* SuperheroSuperPowerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperheroSuperPowerVC.swift; sourceTree = "<group>"; };
 		11C8BC7722DF6C4A0089DCE0 /* SuperheroProfilePicVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperheroProfilePicVC.swift; sourceTree = "<group>"; };
 		11C8BC7A22DF83C90089DCE0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		11DAB6D223BBBD0900881573 /* ItIsAMatchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItIsAMatchVC.swift; sourceTree = "<group>"; };
 		11F722416851569C1C7FBC5F /* Pods-SuperheroMatchUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SuperheroMatchUITests.release.xcconfig"; path = "Target Support Files/Pods-SuperheroMatchUITests/Pods-SuperheroMatchUITests.release.xcconfig"; sourceTree = "<group>"; };
 		1E77D9B26C1D651171341CCE /* Pods_SuperheroMatchTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SuperheroMatchTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DD572D8A3A75AD91A6C8667 /* Pods_SuperheroMatchUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SuperheroMatchUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -289,6 +289,7 @@
 				11C6650F23522C8F004E190E /* UserSuggestionsVC.swift */,
 				1191E3F42382B6C30077FA99 /* SuggestionProfileImagesVC.swift */,
 				11B8A1FE23B412EB00244E1F /* NoSuggestionsVC.swift */,
+				11DAB6D223BBBD0900881573 /* ItIsAMatchVC.swift */,
 			);
 			path = Suggestions;
 			sourceTree = "<group>";
@@ -393,7 +394,6 @@
 				11B4494022E1D56500FD7122 /* DBConstants.swift */,
 				11B4494222E1DEDF00FD7122 /* SuperheroMatchDB.swift */,
 				11B4494422E1F62F00FD7122 /* UserDB.swift */,
-				11B4494622E2263500FD7122 /* MatchedUserDB.swift */,
 				11B4494822E23C0600FD7122 /* ChatDB.swift */,
 			);
 			path = Database;
@@ -799,7 +799,6 @@
 				114B7E27236F3C6A003081C0 /* UpdateProfileResponse.swift in Sources */,
 				1130FD6622E0A48600B64C36 /* MatchesVC.swift in Sources */,
 				1191609A2349FFF80015912C /* SuperheroDistanceUnitVC.swift in Sources */,
-				11B4494722E2263600FD7122 /* MatchedUserDB.swift in Sources */,
 				11C8BC7622DF6A130089DCE0 /* SuperheroSuperPowerVC.swift in Sources */,
 				11B4494122E1D56500FD7122 /* DBConstants.swift in Sources */,
 				110D372D22E34C0700DE7405 /* Invite.swift in Sources */,
@@ -832,6 +831,7 @@
 				110D372F22E34F9C00DE7405 /* Register.swift in Sources */,
 				11C8BC7022DF495A0089DCE0 /* SuperheroBirthdayVC.swift in Sources */,
 				1150E62D22E4D03E007D16CF /* ProfileImage.swift in Sources */,
+				11DAB6D323BBBD0900881573 /* ItIsAMatchVC.swift in Sources */,
 				110D373522E3541400DE7405 /* UpdateMessagingToken.swift in Sources */,
 				11C8BC7222DF4BBF0089DCE0 /* SuperheroGenderVC.swift in Sources */,
 				1130FD6E22E0C81500B64C36 /* User.swift in Sources */,

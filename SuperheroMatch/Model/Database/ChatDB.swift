@@ -45,7 +45,7 @@ class ChatDB {
     }
     
     // Fetch unread messages count for chat with id.
-    func getUnreadMessageCountByChatId(chatId: Int64!) -> (DBError, String?) {
+    func getUnreadMessageCountByChatId(chatId: String!) -> (DBError, String?) {
         var err:DBError = .NoError
         var unreadMessageCount:String? = nil
         
@@ -53,7 +53,7 @@ class ChatDB {
         SELECT COUNT (*) AS c
         FROM \(DBConstants.TABLE_MESSAGE)
         WHERE \(DBConstants.MESSAGE_HAS_BEEN_READ)=0
-        AND \(DBConstants.MESSAGE_CHAT_ID)=\(chatId!)
+        AND \(DBConstants.MESSAGE_CHAT_ID)='\(chatId!)'
         """;
         
         let superheroMatchDB = SuperheroMatchDB.sharedDB
@@ -93,7 +93,7 @@ class ChatDB {
     }
     
     // Fetch last message in chat with id.
-    func getLastChatMessageByChatId(chatId: Int64!) -> (DBError, Message?) {
+    func getLastChatMessageByChatId(chatId: String!) -> (DBError, Message?) {
         var err:DBError = .NoError
         var message:Message? = nil
         
@@ -103,7 +103,7 @@ class ChatDB {
             
             let query = """
             SELECT * FROM \(DBConstants.TABLE_MESSAGE)
-            WHERE \(DBConstants.MESSAGE_CHAT_ID) =\(chatId!)
+            WHERE \(DBConstants.MESSAGE_CHAT_ID) ='\(chatId!)'
             ORDER BY \(DBConstants.MESSAGE_ID)
             DESC LIMIT 1
             """;
@@ -124,7 +124,8 @@ class ChatDB {
                     
                     let messageId:Int64 = sqlite3_column_int64(stmt, 0)
                     
-                    let messageChatId = sqlite3_column_int64(stmt, 1)// next is 4 not 3 because it is chat message not group chat
+                    let rawMessageChatId = sqlite3_column_text(stmt, 1)
+                    let messageChatId = String(cString:rawMessageChatId!)
                     
                     let rawMessageSenderId = sqlite3_column_text(stmt, 2)
                     let messageSenderId = String(cString:rawMessageSenderId!)
@@ -161,7 +162,7 @@ class ChatDB {
     }
     
     // Fetch all messages for chat with id.
-    func getAllMessagesForChatWithId(chatId: Int64!) -> (DBError, Array<Message>) {
+    func getAllMessagesForChatWithId(chatId: String!) -> (DBError, Array<Message>) {
         var err:DBError = .NoError
         var messages:Array<Message> = Array<Message>()
         
@@ -171,7 +172,7 @@ class ChatDB {
             
             let query = """
             SELECT * FROM \(DBConstants.TABLE_MESSAGE)
-            WHERE \(DBConstants.MESSAGE_CHAT_ID) =\(chatId!)
+            WHERE \(DBConstants.MESSAGE_CHAT_ID) ='\(chatId!)'
             """;
             
             var stmt:OpaquePointer? = nil
@@ -190,7 +191,8 @@ class ChatDB {
                     
                     let messageId:Int64 = sqlite3_column_int64(stmt, 0)
                     
-                    let messageChatId = sqlite3_column_int64(stmt, 1)
+                    let rawMessageChatId = sqlite3_column_text(stmt, 1)
+                    let messageChatId = String(cString:rawMessageChatId!)
                     
                     let rawMessageSenderId = sqlite3_column_text(stmt, 2)
                     let messageSenderId = String(cString:rawMessageSenderId!)
@@ -228,9 +230,9 @@ class ChatDB {
     }
     
     // Fetch unread messages count for chat with id.
-    func getChatIdByChatName(chatName: String!) -> (DBError, Int64?) {
+    func getChatIdByChatName(chatName: String!) -> (DBError, String?) {
         var err:DBError = .NoError
-        var chatId:Int64? = nil
+        var chatId:String? = nil
         
         let query = """
         SELECT \(DBConstants.CHAT_ID) FROM \(DBConstants.TABLE_CHAT)
@@ -254,8 +256,9 @@ class ChatDB {
             if SQLITE_OK == result {
                 result = sqlite3_step(stmt)
                 if SQLITE_ROW == result {
-                    
-                    chatId = sqlite3_column_int64(stmt, 0)
+
+                    let rawChatId = sqlite3_column_text(stmt, 0)
+                    chatId = String(cString:rawChatId!)
                     
                 }
                 
@@ -297,18 +300,36 @@ class ChatDB {
                 result = sqlite3_step(stmt)
                 while SQLITE_ROW == result {
                     
-                    let chatId: Int64 = sqlite3_column_int64(stmt, 0)
+                    let rawChatId = sqlite3_column_text(stmt, 0)
+                    let chatId = String(cString:rawChatId!)
                     
                     let rawChatName = sqlite3_column_text(stmt, 1)
                     let chatName = String(cString:rawChatName!)
                     
-                    let rawMatchName = sqlite3_column_text(stmt, 2)
-                    let matchName = String(cString:rawMatchName!)
+                    let rawMatchedUserId = sqlite3_column_text(stmt, 2)
+                    let matchedUserId = String(cString:rawMatchedUserId!)
                     
-                    let rawChatCreated = sqlite3_column_text(stmt, 3)
+                    let rawMatchedUserMainProfilePic = sqlite3_column_text(stmt, 3)
+                    let matchedUserMainProfilePic = String(cString:rawMatchedUserMainProfilePic!)
+                    
+                    let rawChatCreated = sqlite3_column_text(stmt, 4)
                     let chatCreated = String(cString:rawChatCreated!)
                     
-                    let chat = Chat(chatID: chatId, chatName: chatName, matchName: matchName, lastActivityMessage: "TO-DO:", lastActivityDate: "TO-DO:", unreadMessageCount: 5)
+                    let (dbErr, lastActivityMessage) = getLastChatMessageByChatId(chatId: chatId)
+                    if case .SQLError = dbErr {
+                        print("###########  lastActivityMessage dbErr  ##############")
+                        print(dbErr)
+                    }
+                    
+                    let (err, unreadMessageCount) = getUnreadMessageCountByChatId(chatId: chatId)
+                    if case .SQLError = err {
+                        print("###########  unreadMessageCount dbErr  ##############")
+                        print(dbErr)
+                    }
+                    
+                    
+                    let chat = Chat(chatID: chatId, chatName: chatName, matchedUserId: matchedUserId, matchedUserMainProfilePic: matchedUserMainProfilePic, lastActivityMessage: lastActivityMessage?.messageChatId, lastActivityDate: lastActivityMessage?.messageCreated, unreadMessageCount: Int64(unreadMessageCount ?? ""))
+                    
                     
                     chats.append(chat)
                     
@@ -326,64 +347,8 @@ class ChatDB {
         return (err, chats)
     }
     
-    // Fetch chat by contact id.
-    func getChatByMatchName(matchName: String!) -> (DBError, Chat?) {
-        var err:DBError = .NoError
-        var chat:Chat? = nil
-        
-        let superheroMatchDB = SuperheroMatchDB.sharedDB
-        
-        if let db = superheroMatchDB.dbOpen() {
-            
-            let query = """
-            SELECT * FROM \(DBConstants.TABLE_CHAT)
-            WHERE \(DBConstants.MATCH_NAME)='\(matchName!)'
-            """;
-            
-            var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, query, -1, &stmt, nil)
-            
-            var retryCount:Int = 0
-            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
-                sleep(1)
-                retryCount += 1
-                result = sqlite3_prepare_v2(db, query, -1, &stmt, nil)
-            }
-            
-            if SQLITE_OK == result {
-                result = sqlite3_step(stmt)
-                if SQLITE_ROW == result {
-                    
-                    let chatId: Int64 = sqlite3_column_int64(stmt, 0)
-                    
-                    let rawChatName = sqlite3_column_text(stmt, 1)
-                    let chatName = String(cString:rawChatName!)
-                    
-                    let rawMatchName = sqlite3_column_text(stmt, 2)
-                    let matchName = String(cString:rawMatchName!)
-                    
-                    let rawChatCreated = sqlite3_column_text(stmt, 3)
-                    let chatCreated = String(cString:rawChatCreated!)
-                    
-                    chat = Chat(chatID: chatId, chatName: chatName, matchName: matchName, lastActivityMessage: "TO-DO:", lastActivityDate: "TO-DO:", unreadMessageCount: 5)
-                    
-                }
-                
-                sqlite3_finalize(stmt)
-            } else {
-                let errStr = String(cString: sqlite3_errstr(result))
-                err = .SQLError(errStr)
-            }
-            
-            _ = superheroMatchDB.dbClose(db: db)
-            
-        }
-        
-        return (err, chat)
-    }
-    
     // Fetch chat by chat id.
-    func getChatById(chatId: Int!) -> (DBError, Chat?) {
+    func getChatById(chatId: String!) -> (DBError, Chat?) {
         var err:DBError = .NoError
         var chat:Chat? = nil
         
@@ -393,7 +358,7 @@ class ChatDB {
             
             let query = """
             SELECT * FROM \(DBConstants.TABLE_CHAT)
-            WHERE \(DBConstants.CHAT_ID)=\(chatId!)
+            WHERE \(DBConstants.CHAT_ID)='\(chatId!)'
             """;
             
             var stmt:OpaquePointer? = nil
@@ -410,18 +375,34 @@ class ChatDB {
                 result = sqlite3_step(stmt)
                 if SQLITE_ROW == result {
                     
-                    let chatId: Int64 = sqlite3_column_int64(stmt, 0)
+                    let rawChatId = sqlite3_column_text(stmt, 0)
+                    let chatId = String(cString:rawChatId!)
                     
                     let rawChatName = sqlite3_column_text(stmt, 1)
                     let chatName = String(cString:rawChatName!)
                     
-                    let rawMatchName = sqlite3_column_text(stmt, 2)
-                    let matchName = String(cString:rawMatchName!)
+                    let rawMatchedUserId = sqlite3_column_text(stmt, 2)
+                    let matchedUserId = String(cString:rawMatchedUserId!)
                     
-                    let rawChatCreated = sqlite3_column_text(stmt, 3)
+                    let rawMatchedUserMainProfilePic = sqlite3_column_text(stmt, 3)
+                    let matchedUserMainProfilePic = String(cString:rawMatchedUserMainProfilePic!)
+                    
+                    let rawChatCreated = sqlite3_column_text(stmt, 4)
                     let chatCreated = String(cString:rawChatCreated!)
                     
-                    chat = Chat(chatID: chatId, chatName: chatName, matchName: matchName, lastActivityMessage: "TO-DO:", lastActivityDate: "TO-DO:", unreadMessageCount: 5)
+                    let (dbErr, lastActivityMessage) = getLastChatMessageByChatId(chatId: chatId)
+                    if case .SQLError = dbErr {
+                        print("###########  lastActivityMessage dbErr  ##############")
+                        print(dbErr)
+                    }
+                    
+                    let (err, unreadMessageCount) = getUnreadMessageCountByChatId(chatId: chatId)
+                    if case .SQLError = err {
+                        print("###########  unreadMessageCount dbErr  ##############")
+                        print(dbErr)
+                    }
+                    
+                    chat = Chat(chatID: chatId, chatName: chatName, matchedUserId: matchedUserId, matchedUserMainProfilePic: matchedUserMainProfilePic, lastActivityMessage: lastActivityMessage?.messageChatId, lastActivityDate: lastActivityMessage?.messageCreated, unreadMessageCount: Int64(unreadMessageCount ?? ""))
                     
                 }
                 
@@ -439,7 +420,7 @@ class ChatDB {
     }
     
     // Delete chat by id.
-    func deleteChatById(chatId: Int64!) -> (DBError, Int) {
+    func deleteChatById(chatId: String!) -> (DBError, Int) {
         var err:DBError = .NoError
         var changes:Int = 0
         
@@ -447,7 +428,7 @@ class ChatDB {
         
         if let db = superheroMatchDB.dbOpen() {
             
-            let sql = "DELETE FROM \(DBConstants.TABLE_CHAT) WHERE \(DBConstants.CHAT_ID) = \(chatId!)"
+            let sql = "DELETE FROM \(DBConstants.TABLE_CHAT) WHERE \(DBConstants.CHAT_ID) = '\(chatId!)'"
             var result = sqlite3_exec(db, sql, nil, nil, nil)
             
             var retryCount:Int = 0
@@ -541,7 +522,7 @@ class ChatDB {
     }
     
     // Create new chat,
-    func insertChat(matchName: String!, chatName: String!) -> (DBError, Int) {
+    func insertChat(chatId: String!, chatName: String!, matchedUserId: String!, matchedUserProfilePicUrl: String!) -> (DBError, Int) {
         var err:DBError = .NoError
         var changes:Int = 0
         
@@ -550,9 +531,9 @@ class ChatDB {
         if let db = superheroMatchDB.dbOpen() {
             
             let sql = """
-            INSERT INTO \(DBConstants.TABLE_CHAT) (\(DBConstants.MATCH_NAME), \(DBConstants.CHAT_NAME))
+            INSERT INTO \(DBConstants.TABLE_CHAT) (\(DBConstants.CHAT_ID), \(DBConstants.CHAT_NAME), \(DBConstants.CHAT_MATCHED_USER_ID), \(DBConstants.CHAT_MATCHED_USER_MAIN_PROFILE_PIC))
             VALUES
-            ('\(matchName!)', '\(chatName!)')
+            ('\(chatId!)', '\(chatName!)', '\(matchedUserId!)', '\(matchedUserProfilePicUrl!)')
             """;
             var result = sqlite3_exec(db, sql, nil, nil, nil)
             
@@ -655,7 +636,8 @@ class ChatDB {
                     
                     let messageId:Int64 = sqlite3_column_int64(stmt, 0)
                     
-                    let messageChatId = sqlite3_column_int64(stmt, 1)
+                    let rawMessageChatId = sqlite3_column_text(stmt, 1)
+                    let messageChatId = String(cString:rawMessageChatId!)
                     
                     let rawMessageSenderId = sqlite3_column_text(stmt, 2)
                     let messageSenderId = String(cString:rawMessageSenderId!)
@@ -729,7 +711,7 @@ class ChatDB {
     }
     
     // Create new chat message.
-    func insertChatMessage(messageSenderId: String!, messageChatId: Int64!, messageHasBeenRead: Int64!, messageUUID: String!, messageCreated: String!, messagetText: String!) -> (DBError, Int) {
+    func insertChatMessage(messageSenderId: String!, messageChatId: String!, messageHasBeenRead: Int64!, messageUUID: String!, messageCreated: String!, messagetText: String!) -> (DBError, Int) {
         var err:DBError = .NoError
         var changes:Int = 0
         
@@ -750,7 +732,7 @@ class ChatDB {
             VALUES
             (
                 '\(messageSenderId!)',
-                \(messageChatId!),
+                '\(messageChatId!)',
                 \(messageHasBeenRead!),
                 '\(messageUUID!)',
                 '\(messageCreated!)',

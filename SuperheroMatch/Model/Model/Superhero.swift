@@ -21,6 +21,8 @@ class Superhero {
     var city: String?
     var superpower: String!
     var accountType: String!
+    var hasLikedMe: Bool!
+    var createdAt: String!
     
     
     enum SerializationError: Error {
@@ -41,24 +43,28 @@ class Superhero {
         country: String?,
         city: String?,
         superpower: String!,
-        accountType: String!
+        accountType: String!,
+        hasLikedMe: Bool!,
+        createdAt: String!
     ) {
-            self.userID = userID
-            self.superheroName = superheroName
-            self.mainProfilePicUrl = mainProfilePicUrl
-            self.profilePictures = profilePictures
-            self.gender = gender
-            self.age = age
-            self.birthday = birthday
-            self.country = country
-            self.city = city
-            self.superpower = superpower
-            self.accountType = accountType
+        self.userID = userID
+        self.superheroName = superheroName
+        self.mainProfilePicUrl = mainProfilePicUrl
+        self.profilePictures = profilePictures
+        self.gender = gender
+        self.age = age
+        self.birthday = birthday
+        self.country = country
+        self.city = city
+        self.superpower = superpower
+        self.accountType = accountType
+        self.hasLikedMe = hasLikedMe
+        self.createdAt = createdAt
     }
     
     
     init(json: [String: Any]) throws {
-
+        
         // Extract userID
         guard let userID = json["id"] as? String else {
             throw SerializationError.missing("id")
@@ -73,7 +79,7 @@ class Superhero {
         guard let mainProfilePicUrl = json["mainProfilePicUrl"] as? String else {
             throw SerializationError.missing("mainProfilePicUrl")
         }
-
+        
         // Extract profilePictures
         let profilePictures = ((json["profilePictures"] as? [[String : Any]]) != nil) ? json["profilePictures"] as? [[String : Any]]  : []
         
@@ -111,6 +117,16 @@ class Superhero {
             throw SerializationError.missing("accountType")
         }
         
+        // Extract hasLikedMe
+        guard let hasLikedMe = json["hasLikedMe"] as? Bool else {
+            throw SerializationError.missing("hasLikedMe")
+        }
+        
+        // Extract createdAt
+        guard let createdAt = json["createdAt"] as? String else {
+            throw SerializationError.missing("createdAt")
+        }
+        
         // Initialize properties
         self.userID = userID
         self.superheroName = superheroName
@@ -122,7 +138,9 @@ class Superhero {
         self.city = city
         self.superpower = superpower
         self.accountType = accountType
-
+        self.hasLikedMe = hasLikedMe
+        self.createdAt = createdAt
+        
     }
     
 }

@@ -11,7 +11,7 @@ import Foundation
 class Message {
     
     var messageId: Int64!
-    var messageChatId: Int64!
+    var messageChatId: String!
     var messageSenderId: String!
     var messageReceiverId: String!
     var messageText: String!
@@ -25,7 +25,7 @@ class Message {
     
     init(
         messageId: Int64!,
-        messageChatId: Int64!,
+        messageChatId: String!,
         messageSenderId: String!,
         messageReceiverId: String!,
         messageText: String!,
@@ -49,7 +49,7 @@ class Message {
         }
         
         // Extract messageChatId
-        guard let messageChatId = json["messageChatId"] as? Int64 else {
+        guard let messageChatId = json["messageChatId"] as? String else {
             throw SerializationError.missing("messageChatId")
         }
         

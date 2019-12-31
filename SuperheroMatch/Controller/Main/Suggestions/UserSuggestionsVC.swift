@@ -287,6 +287,23 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     @objc func likeTapped() {
         print("likeTapped")
         
+        let suggestion = self.suggestions[self.currentSuggestion]
+        
+        if suggestion.hasLikedMe {
+            print("It's a match!!!")
+            
+            // Don't move to the next suggestions unless user choses to chat with match later.
+            
+            // 1. Insert match into local DB.
+            // 2. Send match to server.
+            // 3. Show user it's amatch dialog.
+            var itIsAMatchVC = ItIsAMatchVC()
+            itIsAMatchVC.mainImageUrl = suggestion.mainProfilePicUrl
+            navigationController?.modalPresentationStyle = .fullScreen
+            navigationController?.pushViewController(itIsAMatchVC, animated: true)
+            
+        }
+        
         if (self.suggestions.count - 1) > self.currentSuggestion {
             
             self.currentSuggestion += 1

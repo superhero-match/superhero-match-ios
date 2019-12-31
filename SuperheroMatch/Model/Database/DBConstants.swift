@@ -97,72 +97,23 @@ class DBConstants {
     ")"
     
     //=======================================================================================================================
-    // matched user table
-    //=======================================================================================================================
-    static let TABLE_MATCHED_USER = "matched_user"
-    static let MATCHED_USER_ID = "_id"
-    static let MATCHED_USER_NAME = "matched_user_name"
-    static let MATCHED_USER_MAIN_PROFILE_PIC_URL = "matched_user_main_profile_pic_url"
-    static let MATCHED_USER_GENDER = "matched_user_gender"
-    static let MATCHED_USER_AGE = "matched_user_age"
-    static let MATCHED_USER_COUNTRY = "matched_user_country"
-    static let MATCHED_USER_CITY = "matched_user_city"
-    static let MATCHED_USER_SUPER_POWER = "matched_user_super_power"
-    static let MATCHED_USER_ACCOUNT_TYPE = "matched_user_account_type"
-    static let MATCHED_WITH_USER_ID = "matched_with_user_id"
-    static let MATCH_CREATED = "match_created"
-    
-    // SQL to create table date_match
-    static let TABLE_CREATE_MATCHED_USER =
-    "CREATE TABLE IF NOT EXISTS " + TABLE_MATCHED_USER + " (" +
-    MATCHED_USER_ID + " TEXT PRIMARY KEY, " +
-    MATCHED_USER_NAME + " TEXT NOT NULL," +
-    MATCHED_USER_MAIN_PROFILE_PIC_URL + " TEXT NOT NULL," +
-    MATCHED_USER_GENDER + " TEXT NOT NULL," +
-    MATCHED_USER_AGE + " INTEGER NOT NULL," +
-    MATCHED_USER_COUNTRY + " TEXT NOT NULL," +
-    MATCHED_USER_CITY + " TEXT NOT NULL," +
-    MATCHED_USER_SUPER_POWER + " TEXT NOT NULL, " +
-    MATCHED_USER_ACCOUNT_TYPE + " TEXT NOT NULL," +
-    MATCHED_WITH_USER_ID + " TEXT NOT NULL," +
-    MATCH_CREATED + " TEXT default CURRENT_TIMESTAMP)"
-    
-    
-    //=======================================================================================================================
-    // match profile picture table
-    //=======================================================================================================================
-    static let TABLE_MATCH_PROFILE_PICTURE = "match_profile_picture"
-    static let MATCH_PROFILE_PICTURE_ID = "_id"
-    static let PICTURE_MATCH_ID = "match_id"
-    static let MATCH_PROFILE_PIC_URL = "profile_pic_url"
-    
-    // SQL to create table user
-    static let TABLE_CREATE_MATCH_PROFILE_PICTURE =
-    "CREATE TABLE IF NOT EXISTS " + TABLE_MATCH_PROFILE_PICTURE + " (" +
-    MATCH_PROFILE_PICTURE_ID + "  INTEGER PRIMARY KEY AUTOINCREMENT, " +
-    PICTURE_MATCH_ID + " TEXT NOT NULL," +
-    MATCH_PROFILE_PIC_URL + " TEXT NOT NULL, " +
-    " FOREIGN KEY(" + PICTURE_MATCH_ID + ") REFERENCES " + TABLE_MATCHED_USER + "(" + MATCHED_USER_ID + ")" +
-    ")"
-    
-    
-    //=======================================================================================================================
     // chat table
     //=======================================================================================================================
     static let TABLE_CHAT = "chat"
     static let CHAT_ID = "_id"
     static let CHAT_NAME = "chat_name"
-    static let MATCH_NAME = "match_name"
+    static let CHAT_MATCHED_USER_ID = "chat_matched_user_id"
+    static let CHAT_MATCHED_USER_MAIN_PROFILE_PIC = "chat_matched_user_main_profile_pic"
     static let CHAT_CREATED = "chat_created"
     
     // SQL to create table chat
     static let TABLE_CREATE_MATCH_CHAT =
     "CREATE TABLE IF NOT EXISTS " + TABLE_CHAT + " (" +
-    CHAT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    CHAT_ID + " TEXT PRIMARY KEY, " +
     CHAT_NAME + " TEXT NOT NULL," +
-    MATCH_NAME + " TEXT NOT NULL," +
-    CHAT_CREATED + " TEXT default CURRENT_TIMESTAMP , " +
-    " FOREIGN KEY(" + MATCH_NAME + ") REFERENCES " + TABLE_MATCHED_USER + "(" + MATCHED_USER_ID + ") " +
+    CHAT_MATCHED_USER_ID + " TEXT NOT NULL," +
+    CHAT_MATCHED_USER_MAIN_PROFILE_PIC + " TEXT NOT NULL," +
+    CHAT_CREATED + " TEXT default CURRENT_TIMESTAMP " +
     ")"
     
     
@@ -183,7 +134,7 @@ class DBConstants {
     static let TABLE_CREATE_CHAT_MESSAGE =
     "CREATE TABLE IF NOT EXISTS " + TABLE_MESSAGE + " (" +
     MESSAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-    MESSAGE_CHAT_ID + " INTEGER," +
+    MESSAGE_CHAT_ID + " TEXT NOT NULL," +
     MESSAGE_SENDER_ID + " TEXT NOT NULL," +
     MESSAGE_RECEIVER_ID + " TEXT NOT NULL," +
     TEXT_MESSAGE + " TEXT," +

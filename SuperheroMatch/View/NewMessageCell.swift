@@ -12,21 +12,20 @@ class NewMessageCell: UITableViewCell {
     
     // MARK: - Properties
     
-    var user: User? {
+    var chat: Chat? {
         
         didSet {
-            //guard let profileImageUrl = user?.profileImageUrl else { return }
-            guard let username = user?.name else { return }
-            guard let fullname = user?.name else { return }
+            guard let profileImageUrl = chat?.matchedUserMainProfilePic else { return }
+            guard let chatname = chat?.chatName else { return }
             
-            //profileImageView.loadImage(with: profileImageUrl)
-            textLabel?.text = username
-            detailTextLabel?.text = fullname
+            // profileImageView.loadImage(with: profileImageUrl)
+            profileImageView.image = UIImage(named: profileImageUrl)
+            textLabel?.text = chatname
         }
     }
     
     let profileImageView: CustomImageView = {
-        let iv = CustomImageView(image: UIImage(named: "avatarPlaceholder"))
+        let iv = CustomImageView()
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.backgroundColor = .lightGray

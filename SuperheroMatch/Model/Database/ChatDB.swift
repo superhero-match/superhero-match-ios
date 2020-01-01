@@ -10,6 +10,8 @@ import Foundation
 
 class ChatDB {
     
+    static let sharedDB = ChatDB()
+    
     // Updates message status to has been read.
     func updateMessageHasBeenReadByMessageId(messageId: Int64!) -> (DBError, Int) {
         var err:DBError = .NoError
@@ -31,8 +33,7 @@ class ChatDB {
             
             if SQLITE_OK == result {
                 changes = Int(sqlite3_changes(db))
-            }
-            else {
+            } else {
                 let errStr = String(cString: sqlite3_errstr(result))
                 err = .SQLError(errStr)
             }
@@ -256,7 +257,7 @@ class ChatDB {
             if SQLITE_OK == result {
                 result = sqlite3_step(stmt)
                 if SQLITE_ROW == result {
-
+                    
                     let rawChatId = sqlite3_column_text(stmt, 0)
                     chatId = String(cString:rawChatId!)
                     
@@ -428,7 +429,7 @@ class ChatDB {
         
         if let db = superheroMatchDB.dbOpen() {
             
-            let sql = "DELETE FROM \(DBConstants.TABLE_CHAT) WHERE \(DBConstants.CHAT_ID) = '\(chatId!)'"
+            let sql = "DELETE FROM \(DBConstants.TABLE_CHAT) WHERE \(DBConstants.CHAT_ID)='\(chatId!)'"
             var result = sqlite3_exec(db, sql, nil, nil, nil)
             
             var retryCount:Int = 0
@@ -439,11 +440,10 @@ class ChatDB {
             }
             
             if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            } else {
                 let errStr = String(cString: sqlite3_errstr(result))
                 err = .SQLError(errStr)
-            }
-            else {
-                changes = Int(sqlite3_changes(db))
             }
             
             _ = superheroMatchDB.dbClose(db: db)
@@ -473,11 +473,10 @@ class ChatDB {
             }
             
             if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            } else {
                 let errStr = String(cString: sqlite3_errstr(result))
                 err = .SQLError(errStr)
-            }
-            else {
-                changes = Int(sqlite3_changes(db))
             }
             
             _ = superheroMatchDB.dbClose(db: db)
@@ -507,11 +506,10 @@ class ChatDB {
             }
             
             if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            } else {
                 let errStr = String(cString: sqlite3_errstr(result))
                 err = .SQLError(errStr)
-            }
-            else {
-                changes = Int(sqlite3_changes(db))
             }
             
             _ = superheroMatchDB.dbClose(db: db)
@@ -545,11 +543,10 @@ class ChatDB {
             }
             
             if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            } else {
                 let errStr = String(cString: sqlite3_errstr(result))
                 err = .SQLError(errStr)
-            }
-            else {
-                changes = Int(sqlite3_changes(db))
             }
             
             _ = superheroMatchDB.dbClose(db: db)
@@ -571,8 +568,8 @@ class ChatDB {
             let sql = """
             INSERT INTO \(DBConstants.TABLE_MESSAGE_QUEUE)
             (
-                \(DBConstants.MESSAGE_QUEUE_MESSAGE_UUID),
-                \(DBConstants.MESSAGE_QUEUE_MESSAGE_RECEIVER_ID)
+            \(DBConstants.MESSAGE_QUEUE_MESSAGE_UUID),
+            \(DBConstants.MESSAGE_QUEUE_MESSAGE_RECEIVER_ID)
             )
             VALUES
             ('\(messageUUID!)', '\(receiverId!)')
@@ -587,11 +584,10 @@ class ChatDB {
             }
             
             if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            } else {
                 let errStr = String(cString: sqlite3_errstr(result))
                 err = .SQLError(errStr)
-            }
-            else {
-                changes = Int(sqlite3_changes(db))
             }
             
             _ = superheroMatchDB.dbClose(db: db)
@@ -603,7 +599,7 @@ class ChatDB {
     
     //
     // TO-DO: MessageQueueItem getMessageQueueItemChat
-
+    
     
     // Fetch chat message by uuid
     func getChatMessageByUUID(uuid: String!) -> (DBError, Message?) {
@@ -696,11 +692,10 @@ class ChatDB {
             }
             
             if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            } else {
                 let errStr = String(cString: sqlite3_errstr(result))
                 err = .SQLError(errStr)
-            }
-            else {
-                changes = Int(sqlite3_changes(db))
             }
             
             _ = superheroMatchDB.dbClose(db: db)
@@ -722,21 +717,21 @@ class ChatDB {
             let sql = """
             INSERT INTO \(DBConstants.TABLE_MESSAGE)
             (
-                \(DBConstants.MESSAGE_SENDER_ID),
-                \(DBConstants.MESSAGE_CHAT_ID),
-                \(DBConstants.MESSAGE_HAS_BEEN_READ),
-                \(DBConstants.MESSAGE_UUID),
-                \(DBConstants.MESSAGE_CREATED),
-                \(DBConstants.TEXT_MESSAGE)
+            \(DBConstants.MESSAGE_SENDER_ID),
+            \(DBConstants.MESSAGE_CHAT_ID),
+            \(DBConstants.MESSAGE_HAS_BEEN_READ),
+            \(DBConstants.MESSAGE_UUID),
+            \(DBConstants.MESSAGE_CREATED),
+            \(DBConstants.TEXT_MESSAGE)
             )
             VALUES
             (
-                '\(messageSenderId!)',
-                '\(messageChatId!)',
-                \(messageHasBeenRead!),
-                '\(messageUUID!)',
-                '\(messageCreated!)',
-                '\(messagetText!)'
+            '\(messageSenderId!)',
+            '\(messageChatId!)',
+            \(messageHasBeenRead!),
+            '\(messageUUID!)',
+            '\(messageCreated!)',
+            '\(messagetText!)'
             )
             """;
             var result = sqlite3_exec(db, sql, nil, nil, nil)
@@ -749,11 +744,10 @@ class ChatDB {
             }
             
             if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            } else {
                 let errStr = String(cString: sqlite3_errstr(result))
                 err = .SQLError(errStr)
-            }
-            else {
-                changes = Int(sqlite3_changes(db))
             }
             
             _ = superheroMatchDB.dbClose(db: db)
@@ -788,11 +782,10 @@ class ChatDB {
             }
             
             if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            } else {
                 let errStr = String(cString: sqlite3_errstr(result))
                 err = .SQLError(errStr)
-            }
-            else {
-                changes = Int(sqlite3_changes(db))
             }
             
             _ = superheroMatchDB.dbClose(db: db)
@@ -825,11 +818,10 @@ class ChatDB {
             }
             
             if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            } else {
                 let errStr = String(cString: sqlite3_errstr(result))
                 err = .SQLError(errStr)
-            }
-            else {
-                changes = Int(sqlite3_changes(db))
             }
             
             _ = superheroMatchDB.dbClose(db: db)

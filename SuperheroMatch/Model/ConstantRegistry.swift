@@ -21,8 +21,10 @@ class ConstantRegistry {
     static let FIREBASE_TOKEN_PORT: String = ":3500"
     static let SUPERHERO_INVITE_PORT: String = ":3600"
     static let SUPERHERO_SUGGESTIONS_PORT: String = ":4000"
-    static let SUPERHERO_MATCHMAKER_PORT: String = ":5000"
-    static let SUPERHERO_CHAT_PORT: String = ":6000"
+    static let SUPERHERO_CHOICE_PORT: String = ":4100"
+    static let SUPERHERO_MATCH_PORT: String = ":4200"
+    static let SUPERHERO_DELETE_MATCH_PORT: String = ":4300"
+    static let SUPERHERO_CHAT_PORT: String = ":5000"
     
     static let DEFAULT_MAX_DISTANCE: Int = 50
     static let DEFAULT_MIN_AGE: Int = 25

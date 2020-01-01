@@ -250,70 +250,6 @@ class SuperheroMatchDB: NSObject {
         
     }
     
-    func createMatchedUserTable() -> DBError {
-        
-        var err:DBError = .NoError
-        
-        if let db = dbOpen() {
-            
-            var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, DBConstants.TABLE_CREATE_MATCHED_USER, -1, &stmt, nil)
-            
-            var retryCount:Int = 0
-            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
-                sleep(1)
-                retryCount += 1
-                result = sqlite3_prepare_v2(db, DBConstants.TABLE_CREATE_MATCHED_USER, -1, &stmt, nil)
-            }
-            
-            if SQLITE_OK == result {
-                result = sqlite3_step(stmt)
-                sqlite3_finalize(stmt)
-            } else {
-                let errStr = String(cString: sqlite3_errstr(result))
-                err = .SQLError(errStr)
-            }
-            
-            _ = self.dbClose(db: db)
-            
-        }
-        
-        return err
-        
-    }
-    
-    func createMatchProfilePictureTable() -> DBError {
-        
-        var err:DBError = .NoError
-        
-        if let db = dbOpen() {
-            
-            var stmt:OpaquePointer? = nil
-            var result = sqlite3_prepare_v2(db, DBConstants.TABLE_CREATE_MATCH_PROFILE_PICTURE, -1, &stmt, nil)
-            
-            var retryCount:Int = 0
-            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
-                sleep(1)
-                retryCount += 1
-                result = sqlite3_prepare_v2(db, DBConstants.TABLE_CREATE_MATCH_PROFILE_PICTURE, -1, &stmt, nil)
-            }
-            
-            if SQLITE_OK == result {
-                result = sqlite3_step(stmt)
-                sqlite3_finalize(stmt)
-            } else {
-                let errStr = String(cString: sqlite3_errstr(result))
-                err = .SQLError(errStr)
-            }
-            
-            _ = self.dbClose(db: db)
-            
-        }
-        
-        return err
-        
-    }
-    
     func createChatTable() -> DBError {
         
         var err:DBError = .NoError
@@ -499,16 +435,6 @@ class SuperheroMatchDB: NSObject {
         }
         
         err = createUserPictureTable()
-        if case .SQLError = err {
-            return err
-        }
-        
-        err = createMatchedUserTable()
-        if case .SQLError = err {
-            return err
-        }
-        
-        err = createMatchProfilePictureTable()
         if case .SQLError = err {
             return err
         }

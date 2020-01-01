@@ -17,7 +17,7 @@ class MessagesVC: UITableViewController {
     
     var messages = [Message]()
     var messagesDictionary = [String: Message]()
-    var user: User?
+    var chat: Chat?
     
     // MARK: - Init
     
@@ -25,7 +25,7 @@ class MessagesVC: UITableViewController {
         super.viewDidLoad()
         
         // load from local db
-        self.user = User(userID: "id1", email: "email", name: "Superhero 1", superheroName: "Superhero 1", mainProfilePicUrl: "main profile pic", profilePicsUrls: ["pic 1", "pic 2"], gender: 1, lookingForGender: nil, age: 25, lookingForAgeMin: nil, lookingForAgeMax: nil, lookingForDistanceMax: nil, distanceUnit: nil, lat: nil, lon: nil, birthday: nil, country: nil, city: nil, superPower: "Super Power 1", accountType: "FREE")
+       
         
         configureNavigationBar()
         
@@ -80,7 +80,7 @@ class MessagesVC: UITableViewController {
         let message = messages[indexPath.row]
         let chatPartnerId = message.messageReceiverId
         let cell = tableView.cellForRow(at: indexPath) as! MessageCell
-        self.showChatController(forUser: self.user!)
+        self.showChatController(forChat: self.chat!)
         cell.messageTextLabel.font = UIFont.systemFont(ofSize: 12)
     }
     
@@ -93,9 +93,9 @@ class MessagesVC: UITableViewController {
         self.present(navigationController, animated: true, completion: nil)
     }
     
-    func showChatController(forUser user: User) {
+    func showChatController(forChat chat: Chat) {
         let chatController = ChatController(collectionViewLayout: UICollectionViewFlowLayout())
-        chatController.user = user
+        chatController.chat = chat
         navigationController?.pushViewController(chatController, animated: true)
     }
     
@@ -120,11 +120,11 @@ class MessagesVC: UITableViewController {
     
     func fetchMessage(withMessageId messageId: String) {
         
-        let message1 = Message(messageId: 1, messageChatId: 1, messageSenderId: "Superhero 1", messageReceiverId: "Superhero 2", messageText: "Awesome", messageCreated: "17:04 2019-07-21", messageUUID: "uuid1")
+        let message1 = Message(messageId: 1, messageChatId: "1", messageSenderId: "Superhero 1", messageReceiverId: "Superhero 2", messageText: "Awesome", messageCreated: "17:04 2019-07-21", messageUUID: "uuid1")
         let chatPartnerId1 = message1.messageSenderId!
         self.messagesDictionary[chatPartnerId1] = message1
         
-        let message2 = Message(messageId: 2, messageChatId: 1, messageSenderId: "Superhero 1", messageReceiverId: "Superhero 2", messageText: "More awesome", messageCreated: "17:06 2019-07-21", messageUUID: "uuid1")
+        let message2 = Message(messageId: 2, messageChatId: "1", messageSenderId: "Superhero 1", messageReceiverId: "Superhero 2", messageText: "More awesome", messageCreated: "17:06 2019-07-21", messageUUID: "uuid1")
         let chatPartnerId2 = message2.messageSenderId!
         self.messagesDictionary[chatPartnerId2] = message2
         
@@ -145,7 +145,7 @@ extension MessagesVC: MessageCellDelegate {
         guard (cell.message?.messageSenderId) != nil else { return }
         
         //cell.profileImageView.loadImage(with: user.profileImageUrl)
-        cell.usernameLabel.text = self.user!.name
+        cell.usernameLabel.text = self.chat!.chatName
         
     }
 }

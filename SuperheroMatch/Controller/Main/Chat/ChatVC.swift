@@ -17,7 +17,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     // MARK: - Properties
     
-    var user: User?
+    var chat: Chat?
     var messages = [Message]()
     var player: AVPlayer?
     var playerLayer: AVPlayerLayer?
@@ -95,9 +95,11 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     // MARK: - Handlers
     
     @objc func handleInfoTapped() {
-        let profileController = ProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
-        profileController.user = user
-        navigationController?.pushViewController(profileController, animated: true)
+        // Add network call to fetch suggestions profile data
+        print("handleInfoTapped")
+//        let profileController = ProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
+//        profileController.user = user
+//        navigationController?.pushViewController(profileController, animated: true)
     }
     
     @objc func handleKeyboardDidShow() {
@@ -135,9 +137,9 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     func configureNavigationBar() {
-        guard let user = self.user else { return }
+        guard let chat = self.chat else { return }
         
-        navigationItem.title = user.name
+        navigationItem.title = chat.chatName
         
         let infoButton = UIButton(type: .infoLight)
         infoButton.tintColor = .black
@@ -162,10 +164,10 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     func uploadMessageToServer(withProperties properties: [String: AnyObject]) {
         let currentUid = "1"
-        guard let user = self.user else { return }
+        guard let chat = self.chat else { return }
         let creationDate = Int(NSDate().timeIntervalSince1970)
         
-        var values: [String: AnyObject] = ["toId": user.userID as AnyObject, "fromId": currentUid as AnyObject, "creationDate": creationDate as AnyObject, "read": false as AnyObject]
+        var values: [String: AnyObject] = ["toId": chat.matchedUserId as AnyObject, "fromId": currentUid as AnyObject, "creationDate": creationDate as AnyObject, "read": false as AnyObject]
         
         properties.forEach({values[$0] = $1})
         
@@ -177,7 +179,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     func fetchMessage(withMessageId messageId: String) {
-        let message = Message(messageId: 3, messageChatId: 1, messageSenderId: "Superhero 1", messageReceiverId: "Superhero 2", messageText: "Super message", messageCreated: "17:10 2019-07-21", messageUUID: "uuid3")
+        let message = Message(messageId: 3, messageChatId: "1", messageSenderId: "Superhero 1", messageReceiverId: "Superhero 2", messageText: "Super message", messageCreated: "17:10 2019-07-21", messageUUID: "uuid3")
         self.messages.append(message)
         
         DispatchQueue.main.async(execute: {
@@ -191,7 +193,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     func uploadMessageNotification(isImageMessage: Bool, isVideoMessage: Bool, isTextMessage: Bool) {
         print("uploadMessageNotification")
         
-        let message = Message(messageId: 4, messageChatId: 1, messageSenderId: "Superhero 1", messageReceiverId: "Superhero 2", messageText: "Another super message", messageCreated: "17:15 2019-07-21", messageUUID: "uuid4")
+        let message = Message(messageId: 4, messageChatId: "1", messageSenderId: "Superhero 1", messageReceiverId: "Superhero 2", messageText: "Another super message", messageCreated: "17:15 2019-07-21", messageUUID: "uuid4")
         self.messages.append(message)
         
         self.collectionView?.reloadData()

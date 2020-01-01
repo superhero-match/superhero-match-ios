@@ -15,16 +15,16 @@ class NewMessageVC: UITableViewController {
     
     // MARK: - Properties
     
-    var users = [User]()
+    var chats = [Chat]()
     var messagesController: MessagesVC?
-    var user: User?
+    var chat: Chat?
     
     // MARK: - Init
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // load from local db
-        self.user = User(userID: "id1", email: "email", name: "Superhero 1", superheroName: "Superhero 1", mainProfilePicUrl: "main profile pic", profilePicsUrls: ["pic 1", "pic 2"], gender: 1, lookingForGender: nil, age: 25, lookingForAgeMin: nil, lookingForAgeMax: nil, lookingForDistanceMax: nil, distanceUnit: nil, lat: nil, lon: nil, birthday: nil, country: nil, city: nil, superPower: "Super Power 1", accountType: "FREE")
+
         
         configureNavigationBar()
         
@@ -34,7 +34,7 @@ class NewMessageVC: UITableViewController {
         // removes separator views from unused rows
         tableView.tableFooterView = UIView(frame: .zero)
         
-        fetchUsers()
+        fetchChats()
     }
     
     // MARK: - UITableView
@@ -44,13 +44,13 @@ class NewMessageVC: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users.count
+        return chats.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! NewMessageCell
         
-        cell.user = users[indexPath.row]
+        cell.chat = chats[indexPath.row]
         
         return cell
     }
@@ -58,8 +58,8 @@ class NewMessageVC: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         self.dismiss(animated: true) {
-            let user = self.users[indexPath.row]
-            self.messagesController?.showChatController(forUser: user)
+            let chat = self.chats[indexPath.row]
+            self.messagesController?.showChatController(forChat: chat)
         }
     }
     
@@ -78,8 +78,8 @@ class NewMessageVC: UITableViewController {
     
     // MARK: - API
     
-    func fetchUsers() {
-        self.users.append(self.user!)
+    func fetchChats() {
+        self.chats.append(self.chat!)
         self.tableView.reloadData()
     }
 }

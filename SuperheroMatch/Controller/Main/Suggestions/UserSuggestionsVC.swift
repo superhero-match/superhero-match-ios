@@ -12,7 +12,10 @@ import CoreLocation
 class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     
     var sgs: Suggestions?
+    var uploadMatch: UploadMatch?
+    var uploadChoice: Choice?
     let userDB = UserDB.sharedDB
+    let chatDB = ChatDB.sharedDB
     var user: User?
     var suggestion: Superhero?
     var suggestions : [Superhero] = []
@@ -285,24 +288,37 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     }
     
     @objc func likeTapped() {
-        print("likeTapped")
+        
+        if self.suggestions.count == 0 {
+            return
+        }
         
         let suggestion = self.suggestions[self.currentSuggestion]
         
         if suggestion.hasLikedMe {
-            print("It's a match!!!")
-            
             // Don't move to the next suggestions unless user choses to chat with match later.
             
             // 1. Insert match into local DB.
+            let matchId = UUID().uuidString.replacingOccurrences(of: "-", with: "")
+            
+            let (dbErr, _) = self.chatDB.insertChat(chatId: matchId, chatName: suggestion.superheroName, matchedUserId: suggestion.userID, matchedUserProfilePicUrl: suggestion.mainProfilePicUrl)
+            if case .SQLError = dbErr {
+                print("###########  insertChat dbErr  ##############")
+                print(dbErr)
+            }
+
             // 2. Send match to server.
+            let params = configureUploadMatchRequestParameters(matchId: matchId, superheroId: self.user?.userID, matchedSuperheroId: suggestion.userID)
+            self.uploadMatch(params: params) 
+            
             // 3. Show user it's amatch dialog.
-            var itIsAMatchVC = ItIsAMatchVC()
+            let itIsAMatchVC = ItIsAMatchVC()
             itIsAMatchVC.mainImageUrl = suggestion.mainProfilePicUrl
             navigationController?.modalPresentationStyle = .fullScreen
             navigationController?.pushViewController(itIsAMatchVC, animated: true)
             
         }
+        
         
         if (self.suggestions.count - 1) > self.currentSuggestion {
             
@@ -316,6 +332,11 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
             
             self.fetchSuggestions(params: params, isInitialRequest: false)
             
+        }
+        
+        if !suggestion.hasLikedMe {
+            let params = self.configureUploadChoiceRequestParameters(superheroID: self.user?.userID, chosenSuperheroID: suggestion.userID, choice: 1)
+            self.uploadChoice(params: params, suggestion: suggestion)
         }
         
 //        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
@@ -333,11 +354,19 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     }
     
     @objc func dislikeTapped() {
-        print("dislikeTapped")
+        
+        if self.suggestions.count == 0 {
+            return
+        }
         
 //        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
 //
 //        }, completion: nil)
+        
+        let suggestion = self.suggestions[self.currentSuggestion]
+        
+        let params = self.configureUploadChoiceRequestParameters(superheroID: self.user?.userID, chosenSuperheroID: suggestion.userID, choice: 2)
+        self.uploadChoice(params: params, suggestion: suggestion)
         
         if (self.suggestions.count - 1) > self.currentSuggestion {
             
@@ -352,6 +381,30 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
             self.fetchSuggestions(params: params, isInitialRequest: false)
             
         }
+        
+    }
+    
+    func configureUploadChoiceRequestParameters(superheroID: String!, chosenSuperheroID: String!, choice: Int!) -> [String: Any] {
+        
+        var params = [String: Any]()
+        
+        params["superheroID"] = superheroID
+        params["chosenSuperheroID"] = chosenSuperheroID
+        params["choice"] = choice
+        
+        return params
+        
+    }
+    
+    func configureUploadMatchRequestParameters(matchId: String!, superheroId: String!, matchedSuperheroId: String!) -> [String: Any] {
+        
+        var params = [String: Any]()
+        
+        params["matchId"] = matchId
+        params["superheroId"] = superheroId
+        params["matchedSuperheroId"] = matchedSuperheroId
+        
+        return params
         
     }
     
@@ -476,7 +529,86 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
                 
             } catch {
                 // TO-DO: Show alert that something went wrong
-                print("catch")
+                print("catch in fetchSuggestions")
+            }
+        }
+        
+    }
+    
+    func uploadChoice(params: [String: Any], suggestion: Superhero!) {
+        
+        self.uploadChoice = Choice()
+        self.uploadChoice!.uploadChoice(params: params) { json, error in
+            do {
+                
+                //Convert to Data
+                let jsonData = try JSONSerialization.data(withJSONObject: json!, options: JSONSerialization.WritingOptions.prettyPrinted)
+                
+                //In production, you usually want to try and cast as the root data structure. Here we are casting as a dictionary. If the root object is an array cast as [Any].
+                let uploadChoiceResponse = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? AnyObject
+                
+                let response = try ChoiceResponse(json: uploadChoiceResponse as! [String : AnyObject])
+                
+                if response.status != 200  {
+                    print("Error!")
+                    
+                    return
+                }
+                
+                if response.isMatch {
+                    
+                    // 1. Insert match into local DB.
+                    let matchId = UUID().uuidString.replacingOccurrences(of: "-", with: "")
+                    
+                    let (dbErr, _) = self.chatDB.insertChat(chatId: matchId, chatName: suggestion.superheroName, matchedUserId: suggestion.userID, matchedUserProfilePicUrl: suggestion.mainProfilePicUrl)
+                    if case .SQLError = dbErr {
+                        print("###########  insertChat dbErr  ##############")
+                        print(dbErr)
+                    }
+
+                    // 2. Send match to server.
+                    let params = self.configureUploadMatchRequestParameters(matchId: matchId, superheroId: self.user?.userID, matchedSuperheroId: suggestion.userID)
+                    self.uploadMatch(params: params)
+                    
+                    // 3. Show user it's amatch dialog.
+                    let itIsAMatchVC = ItIsAMatchVC()
+                    itIsAMatchVC.mainImageUrl = suggestion.mainProfilePicUrl
+                    self.navigationController?.modalPresentationStyle = .fullScreen
+                    self.navigationController?.pushViewController(itIsAMatchVC, animated: true)
+
+                }
+                
+            } catch {
+                // TO-DO: Show alert that something went wrong
+                print("catch in uploadChoice")
+            }
+        }
+        
+    }
+    
+    func uploadMatch(params: [String: Any]) {
+        
+        self.uploadMatch = UploadMatch()
+        self.uploadMatch!.uploadMatch(params: params) { json, error in
+            do {
+                
+                //Convert to Data
+                let jsonData = try JSONSerialization.data(withJSONObject: json!, options: JSONSerialization.WritingOptions.prettyPrinted)
+                
+                //In production, you usually want to try and cast as the root data structure. Here we are casting as a dictionary. If the root object is an array cast as [Any].
+                let uploadMatchResponse = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? AnyObject
+                
+                let response = uploadMatchResponse as! [String : Int]
+                
+                if response["status"] != 200  {
+                    print("Error!")
+                    
+                    return
+                }
+                
+            } catch {
+                // TO-DO: Show alert that something went wrong
+                print("catch in uploadMatch")
             }
         }
         

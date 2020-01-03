@@ -111,6 +111,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1102B44623BFD98900083409 /* SuperheroMatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SuperheroMatch.entitlements; sourceTree = "<group>"; };
 		110D371122E3397700DE7405 /* superheromatch.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = superheromatch.crt; sourceTree = "<group>"; };
 		110D371322E339CF00DE7405 /* CustomSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSessionDelegate.swift; sourceTree = "<group>"; };
 		110D371522E33A4F00DE7405 /* CustomServerTrustPolicyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomServerTrustPolicyManager.swift; sourceTree = "<group>"; };
@@ -433,6 +434,7 @@
 		11C8BC3622DF19BB0089DCE0 /* SuperheroMatch */ = {
 			isa = PBXGroup;
 			children = (
+				1102B44623BFD98900083409 /* SuperheroMatch.entitlements */,
 				11C8BC6A22DF1FFE0089DCE0 /* Utils */,
 				11C8BC6522DF1A400089DCE0 /* Model */,
 				11C8BC6622DF1A4C0089DCE0 /* View */,
@@ -1049,16 +1051,19 @@
 			baseConfigurationReference = 41D1BE672D6CA64DA8BFC364 /* Pods-SuperheroMatch.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3BU57K4Q53;
+				CODE_SIGN_ENTITLEMENTS = SuperheroMatch/SuperheroMatch.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 5JKZKL324M;
 				INFOPLIST_FILE = SuperheroMatch/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = nl.mwsoft.SuperheroMatch;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mwsoft.SuperheroMatch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = SuperheroMatch;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1069,16 +1074,19 @@
 			baseConfigurationReference = 5F24855FEF5D12DDCACF82F5 /* Pods-SuperheroMatch.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3BU57K4Q53;
+				CODE_SIGN_ENTITLEMENTS = SuperheroMatch/SuperheroMatch.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 5JKZKL324M;
 				INFOPLIST_FILE = SuperheroMatch/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = nl.mwsoft.SuperheroMatch;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mwsoft.SuperheroMatch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = SuperheroMatch;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

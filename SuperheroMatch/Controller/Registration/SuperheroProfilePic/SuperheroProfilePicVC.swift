@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -199,8 +200,17 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     @objc func handleNext() {
-        let params = configureRegisterRequest()
-        register(register: register!, params: params)
+        
+        InstanceID.instanceID().instanceID { (result, error) in
+          if let error = error {
+            print("Error fetching remote instance ID: \(error)")
+          } else if let result = result {
+            var params = self.configureRegisterRequest()
+            params["firebaseToken"] = result.token
+            self.register(register: self.register!, params: params)
+          }
+        }
+        
     }
     
     @objc func handlePrevious() {

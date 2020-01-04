@@ -17,10 +17,10 @@ class UpdateMessagingToken {
         self.networkManager = NetworkManager()
     }
     
-    func updateMessagingToken(userID: String!, messagingToken: String!, closure: @escaping (_ json: Any?, _ error: Error?)->()) {
+    func updateMessagingToken(params: [String: Any]!, closure: @escaping (_ json: Any?, _ error: Error?)->()) {
         self.networkManager.loadUrl(
-            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.FIREBASE_TOKEN_PORT + "/api/v1/firebase_token/update_user_messaging_token?userID=\(userID!)&messagingToken=\(messagingToken!)",
-            params: nil,
+            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.FIREBASE_TOKEN_PORT + "/api/v1/firebase_token/update_messaging_token",
+            params: params,
             method: .post,
             encoding: nil
         ) { json, error in

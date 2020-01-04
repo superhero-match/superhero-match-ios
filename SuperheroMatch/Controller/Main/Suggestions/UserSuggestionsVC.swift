@@ -8,12 +8,14 @@
 
 import UIKit
 import CoreLocation
+import Firebase
 
 class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     
     var sgs: Suggestions?
     var uploadMatch: UploadMatch?
     var uploadChoice: Choice?
+    var updateMessagingToken: UpdateMessagingToken?
     let userDB = UserDB.sharedDB
     let chatDB = ChatDB.sharedDB
     var user: User?
@@ -139,6 +141,15 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         timer.invalidate()   // just in case you had existing `Timer`, `invalidate` it before we lose our reference to it
         timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
             
+        }
+        
+        InstanceID.instanceID().instanceID { (result, error) in
+          if let error = error {
+            print("Error fetching remote instance ID: \(error)")
+          } else if let result = result {
+            let params = self.configureUpdateTokenRequestParameters(userId: self.user?.userID, token: result.token)
+            self.updateToken(params: params)
+          }
         }
         
         let params = configureSuggestionsRequestParameters()
@@ -384,6 +395,17 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         
     }
     
+    func configureUpdateTokenRequestParameters(userId: String!, token: String!) -> [String: Any] {
+        
+        var params = [String: Any]()
+        
+        params["userId"] = userId
+        params["token"] = token
+        
+        return params
+        
+    }
+    
     func configureUploadChoiceRequestParameters(superheroID: String!, chosenSuperheroID: String!, choice: Int!) -> [String: Any] {
         
         var params = [String: Any]()
@@ -609,6 +631,34 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
             } catch {
                 // TO-DO: Show alert that something went wrong
                 print("catch in uploadMatch")
+            }
+        }
+        
+    }
+    
+    func updateToken(params: [String: Any]) {
+        
+        self.updateMessagingToken = UpdateMessagingToken()
+        self.updateMessagingToken!.updateMessagingToken(params: params) { json, error in
+            do {
+                
+                //Convert to Data
+                let jsonData = try JSONSerialization.data(withJSONObject: json!, options: JSONSerialization.WritingOptions.prettyPrinted)
+                
+                //In production, you usually want to try and cast as the root data structure. Here we are casting as a dictionary. If the root object is an array cast as [Any].
+                let updateTokenResponse = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? AnyObject
+                
+                let response = updateTokenResponse as! [String : Int]
+                
+                if response["status"] != 200  {
+                    print("Error!")
+                    
+                    return
+                }
+                
+            } catch {
+                // TO-DO: Show alert that something went wrong
+                print("catch in updateTokenResponse")
             }
         }
         

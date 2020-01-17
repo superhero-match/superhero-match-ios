@@ -18,6 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     var verifyIdentityVC: VerifyIdentityVC?
     let gcmMessageIDKey = "gcm.message_id"
     var updateMessagingToken: UpdateMessagingToken?
+    var getMatch: GetMatch?
+    let userDB = UserDB.sharedDB
+    let superheroMatchDB = SuperheroMatchDB.sharedDB
+    let chatDB = ChatDB.sharedDB
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -25,6 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         FirebaseApp.configure()
         
         Messaging.messaging().delegate = self
+        
+        Messaging.messaging().shouldEstablishDirectChannel = true
         
         if #available(iOS 10.0, *) {
             // For iOS 10 display notification (sent via APNS)
@@ -47,12 +53,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
         window = UIWindow()
         
-        let superheroMatchDB = SuperheroMatchDB.sharedDB
-        let userDB = UserDB.sharedDB
-        
         DispatchQueue.global().async {
             
-            let (err, dbVersion) = superheroMatchDB.getDBVersion()
+            let (err, dbVersion) = self.superheroMatchDB.getDBVersion()
             if case .SQLError = err {
                 print("###########  getDBVersion err  ##############")
                 print(err)
@@ -61,7 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             switch dbVersion {
             case nil:
                 print("###########  database does not exist -> create database  ##############")
-                let dberr = superheroMatchDB.createDB()
+                let dberr = self.superheroMatchDB.createDB()
                 if case .SQLError = dberr {
                     print(dberr)
                 }
@@ -142,23 +145,113 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         // ...
     }
     
+    func configureGetMatchRequestParameters(superheroId: String!, matchedSuperheroId: String!) -> [String: Any] {
+        
+        var params = [String: Any]()
+        
+        params["superheroId"] = superheroId
+        params["matchedSuperheroId"] = matchedSuperheroId
+        
+        return params
+        
+    }
+    
+    
+    func getMatch(params: [String: Any]) {
+        
+        self.getMatch = GetMatch()
+        self.getMatch!.getMatch(params: params) { json, error in
+            do {
+                
+                //Convert to Data
+                let jsonData = try JSONSerialization.data(withJSONObject: json!, options: JSONSerialization.WritingOptions.prettyPrinted)
+                
+                //In production, you usually want to try and cast as the root data structure. Here we are casting as a dictionary. If the root object is an array cast as [Any].
+                let getMatchResponse = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? AnyObject
+                
+                let response = try GetMatchResponse(json: getMatchResponse as! [String : Any])
+
+                if response.status != 200 {
+                    print("Something went wrong!")
+                    
+                    return
+                }
+                
+                print("All good!")
+                let matchId = UUID().uuidString.replacingOccurrences(of: "-", with: "")
+                
+                let (err, _) = self.chatDB.insertChat(chatId: matchId, chatName: response.match!.superheroName, matchedUserId: response.match!.userID, matchedUserProfilePicUrl: response.match!.mainProfilePicUrl)
+                if case .SQLError = err {
+                    print("###########  insertChat uerr  ##############")
+                    print(err)
+                    
+                    return
+                }
+                
+            } catch {
+                // TO-DO: Show alert that something went wrong
+                print("catch in getMatch")
+            }
+        }
+        
+    }
+    
     // [START receive_message]
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         // If you are receiving a notification message while your app is in the background,
         // this callback will not be fired till the user taps on the notification launching the application.
-        // TODO: Handle data of notification
+        
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         // Messaging.messaging().appDidReceiveMessage(userInfo)
         
         // Print full message.
         print(userInfo)
+        
+        switch userInfo["data_type"] as? String {
+        case "new_match":
+            let matchedSuperheroId = userInfo["superhero_id"] as? String
+            
+            let (uerr, userId) = self.userDB.getUserId()
+            if case .SQLError = uerr {
+                print("###########  getUserId uerr  ##############")
+                print(uerr)
+                
+                return
+            }
+            
+            let params = configureGetMatchRequestParameters(superheroId: userId, matchedSuperheroId: matchedSuperheroId)
+            
+            self.getMatch(params: params)
+        case "delete_match":
+            let matchedSuperheroId = userInfo["superhero_id"] as? String
+            
+            let (err, chat) = self.chatDB.getChatByMatchedUserId(matchedUserId: matchedSuperheroId)
+            if case .SQLError = err {
+                print("###########  getUserId getChatIdByChatName  ##############")
+                print(err)
+                
+                return
+            }
+            
+            let (cerr, _) = self.chatDB.deleteChatById(chatId: chat?.chatID)
+            if case .SQLError = cerr {
+                print("###########  getUserId deleteChatById  ##############")
+                print(cerr)
+                
+                return
+            }
+            
+        default:
+            print("###########  unknown message  ##############")
+        }
+
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // If you are receiving a notification message while your app is in the background,
         // this callback will not be fired till the user taps on the notification launching the application.
-        // TODO: Handle data of notification
+
         // With swizzling disabled you must let Messaging know about the message, for Analytics
         // Messaging.messaging().appDidReceiveMessage(userInfo)
         

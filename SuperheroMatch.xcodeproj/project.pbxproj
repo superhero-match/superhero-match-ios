@@ -36,6 +36,8 @@
 		1130FD7422E0DFCF00B64C36 /* MessageQueueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1130FD7322E0DFCF00B64C36 /* MessageQueueItem.swift */; };
 		1130FD7622E0E08700B64C36 /* ReceivedOnlineMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1130FD7522E0E08700B64C36 /* ReceivedOnlineMessage.swift */; };
 		1130FD7B22E0E33900B64C36 /* ProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1130FD7A22E0E33900B64C36 /* ProfileHeader.swift */; };
+		1131857123D0A34D0094BF9D /* GetMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1131857023D0A34D0094BF9D /* GetMatch.swift */; };
+		1131857323D0A7510094BF9D /* GetMatchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1131857223D0A7500094BF9D /* GetMatchResponse.swift */; };
 		113C1A2D22F741F300FFCAE6 /* CheckEmailResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113C1A2C22F741F300FFCAE6 /* CheckEmailResponse.swift */; };
 		1148554E2393C70600845AC9 /* ProfileImagesSettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1148554D2393C70600845AC9 /* ProfileImagesSettingsVC.swift */; };
 		114B7E27236F3C6A003081C0 /* UpdateProfileResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114B7E26236F3C6A003081C0 /* UpdateProfileResponse.swift */; };
@@ -141,6 +143,8 @@
 		1130FD7322E0DFCF00B64C36 /* MessageQueueItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageQueueItem.swift; sourceTree = "<group>"; };
 		1130FD7522E0E08700B64C36 /* ReceivedOnlineMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedOnlineMessage.swift; sourceTree = "<group>"; };
 		1130FD7A22E0E33900B64C36 /* ProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeader.swift; sourceTree = "<group>"; };
+		1131857023D0A34D0094BF9D /* GetMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMatch.swift; sourceTree = "<group>"; };
+		1131857223D0A7500094BF9D /* GetMatchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMatchResponse.swift; sourceTree = "<group>"; };
 		113C1A2C22F741F300FFCAE6 /* CheckEmailResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckEmailResponse.swift; sourceTree = "<group>"; };
 		1148554D2393C70600845AC9 /* ProfileImagesSettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImagesSettingsVC.swift; sourceTree = "<group>"; };
 		114B7E26236F3C6A003081C0 /* UpdateProfileResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileResponse.swift; sourceTree = "<group>"; };
@@ -255,6 +259,7 @@
 				114B7E26236F3C6A003081C0 /* UpdateProfileResponse.swift */,
 				11B8A1FC23B3C26500244E1F /* ProfilePicture.swift */,
 				1119700023BD4061004D167C /* ChoiceResponse.swift */,
+				1131857223D0A7500094BF9D /* GetMatchResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -274,6 +279,7 @@
 				110D373622E3550800DE7405 /* UpgradeAccount.swift */,
 				1173E96923BCEE9F00C6DDD0 /* UploadMatch.swift */,
 				1173E96B23BD1F7500C6DDD0 /* DeleteMatch.swift */,
+				1131857023D0A34D0094BF9D /* GetMatch.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -841,6 +847,7 @@
 				11B8A1FF23B412EE00244E1F /* NoSuggestionsVC.swift in Sources */,
 				1150E62322E4B172007D16CF /* MessageInputAccesoryView.swift in Sources */,
 				1130FD6222E0A3C300B64C36 /* SuggestionsVC.swift in Sources */,
+				1131857323D0A7510094BF9D /* GetMatchResponse.swift in Sources */,
 				110D372F22E34F9C00DE7405 /* Register.swift in Sources */,
 				11C8BC7022DF495A0089DCE0 /* SuperheroBirthdayVC.swift in Sources */,
 				1150E62D22E4D03E007D16CF /* ProfileImage.swift in Sources */,
@@ -853,6 +860,7 @@
 				117A573B2337D0B500EB3560 /* Superhero.swift in Sources */,
 				117A57392337CFFE00EB3560 /* SuggestionsResponse.swift in Sources */,
 				1150E60822E499EE007D16CF /* MatchesTableViewCell.swift in Sources */,
+				1131857123D0A34D0094BF9D /* GetMatch.swift in Sources */,
 				11C8BC7422DF535E0089DCE0 /* SuperheroFavoriteGenderVC.swift in Sources */,
 				11C8BC6922DF1B8F0089DCE0 /* VerifyIdentityVC.swift in Sources */,
 				1148554E2393C70600845AC9 /* ProfileImagesSettingsVC.swift in Sources */,

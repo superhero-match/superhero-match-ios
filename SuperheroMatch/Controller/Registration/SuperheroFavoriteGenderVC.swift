@@ -24,24 +24,33 @@ class SuperheroFavoriteGenderVC: UIViewController {
     }()
     
     let maleBtn: UIButton = {
-        let btn = UIButton(type: .custom)
-        btn.setImage(UIImage(named: "male_inactive")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        let btn = UIButton(type: .system)
+        btn.backgroundColor = .white
+        btn.setTitle("Male", for: .normal)
+        btn.setTitleColor(.black, for: .normal)
+        btn.layer.cornerRadius = 5
         btn.addTarget(self, action: #selector(handleSelectMale), for: .touchUpInside)
         
         return btn
     }()
     
     let femaleBtn: UIButton = {
-        let btn = UIButton(type: .custom)
-        btn.setImage(UIImage(named: "female_inactive")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        let btn = UIButton(type: .system)
+        btn.backgroundColor = .white
+        btn.setTitle("Female", for: .normal)
+        btn.setTitleColor(.black, for: .normal)
+        btn.layer.cornerRadius = 5
         btn.addTarget(self, action: #selector(handleSelectFemale), for: .touchUpInside)
         
         return btn
     }()
     
     let bothBtn: UIButton = {
-        let btn = UIButton(type: .custom)
-        btn.setImage(UIImage(named: "both_inactive")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        let btn = UIButton(type: .system)
+        btn.backgroundColor = .white
+        btn.setTitle("Both", for: .normal)
+        btn.setTitleColor(.black, for: .normal)
+        btn.layer.cornerRadius = 5
         btn.addTarget(self, action: #selector(handleSelectBoth), for: .touchUpInside)
         
         return btn
@@ -143,9 +152,14 @@ class SuperheroFavoriteGenderVC: UIViewController {
     @objc func handleSelectMale() {
         
         // Configure buttons
-        maleBtn.setImage(UIImage(named: "male")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        femaleBtn.setImage(UIImage(named: "female_inactive")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        bothBtn.setImage(UIImage(named: "both_inactive")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        maleBtn.setTitleColor(.white, for: .normal)
+        maleBtn.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
+        
+        femaleBtn.setTitleColor(.black, for: .normal)
+        femaleBtn.backgroundColor = .white
+        
+        bothBtn.setTitleColor(.black, for: .normal)
+        bothBtn.backgroundColor = .white
         
         // Enable next button
         nextBtn.isEnabled = true
@@ -159,9 +173,14 @@ class SuperheroFavoriteGenderVC: UIViewController {
     @objc func handleSelectFemale() {
         
         // Configure buttons
-        maleBtn.setImage(UIImage(named: "male_inactive")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        femaleBtn.setImage(UIImage(named: "female")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        bothBtn.setImage(UIImage(named: "both_inactive")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        femaleBtn.setTitleColor(.white, for: .normal)
+        femaleBtn.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
+        
+        maleBtn.setTitleColor(.black, for: .normal)
+        maleBtn.backgroundColor = .white
+        
+        bothBtn.setTitleColor(.black, for: .normal)
+        bothBtn.backgroundColor = .white
         
         // Enable next button
         nextBtn.isEnabled = true
@@ -175,9 +194,14 @@ class SuperheroFavoriteGenderVC: UIViewController {
     @objc func handleSelectBoth() {
         
         // Configure buttons
-        maleBtn.setImage(UIImage(named: "male_inactive")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        femaleBtn.setImage(UIImage(named: "female_inactive")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        bothBtn.setImage(UIImage(named: "both")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        bothBtn.setTitleColor(.white, for: .normal)
+        bothBtn.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
+        
+        maleBtn.setTitleColor(.black, for: .normal)
+        maleBtn.backgroundColor = .white
+        
+        femaleBtn.setTitleColor(.black, for: .normal)
+        femaleBtn.backgroundColor = .white
         
         // Enable next button
         nextBtn.isEnabled = true

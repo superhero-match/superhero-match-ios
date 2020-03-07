@@ -1,3 +1,4 @@
 .DS_Store
 /Pods
 /SuperheroMatch/Utils/superheromatch.crt
+/SuperheroMatch/GoogleService-Info.plist

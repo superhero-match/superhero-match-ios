@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		110D371222E3397700DE7405 /* superheromatch.crt in Resources */ = {isa = PBXBuildFile; fileRef = 110D371122E3397700DE7405 /* superheromatch.crt */; };
 		110D371422E339CF00DE7405 /* CustomSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110D371322E339CF00DE7405 /* CustomSessionDelegate.swift */; };
 		110D371622E33A4F00DE7405 /* CustomServerTrustPolicyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110D371522E33A4F00DE7405 /* CustomServerTrustPolicyManager.swift */; };
 		110D371A22E33C4400DE7405 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110D371922E33C4400DE7405 /* NetworkManager.swift */; };
@@ -114,7 +113,6 @@
 
 /* Begin PBXFileReference section */
 		1102B44623BFD98900083409 /* SuperheroMatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SuperheroMatch.entitlements; sourceTree = "<group>"; };
-		110D371122E3397700DE7405 /* superheromatch.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = superheromatch.crt; sourceTree = "<group>"; };
 		110D371322E339CF00DE7405 /* CustomSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSessionDelegate.swift; sourceTree = "<group>"; };
 		110D371522E33A4F00DE7405 /* CustomServerTrustPolicyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomServerTrustPolicyManager.swift; sourceTree = "<group>"; };
 		110D371922E33C4400DE7405 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
@@ -517,7 +515,6 @@
 			isa = PBXGroup;
 			children = (
 				11827D1622F7764D0095B570 /* certificate.der */,
-				110D371122E3397700DE7405 /* superheromatch.crt */,
 				11C8BC6B22DF206B0089DCE0 /* Extensions.swift */,
 				1130FD6B22E0C46C00B64C36 /* Protocols.swift */,
 				110D371322E339CF00DE7405 /* CustomSessionDelegate.swift */,
@@ -680,7 +677,6 @@
 				11C8BC7B22DF83C90089DCE0 /* GoogleService-Info.plist in Resources */,
 				11C8BC3F22DF19C60089DCE0 /* Assets.xcassets in Resources */,
 				11C8BC3D22DF19BB0089DCE0 /* Main.storyboard in Resources */,
-				110D371222E3397700DE7405 /* superheromatch.crt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

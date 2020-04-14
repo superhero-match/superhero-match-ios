@@ -88,6 +88,7 @@
 		11C8BC7622DF6A130089DCE0 /* SuperheroSuperPowerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C8BC7522DF6A130089DCE0 /* SuperheroSuperPowerVC.swift */; };
 		11C8BC7822DF6C4A0089DCE0 /* SuperheroProfilePicVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C8BC7722DF6C4A0089DCE0 /* SuperheroProfilePicVC.swift */; };
 		11C8BC7B22DF83C90089DCE0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11C8BC7A22DF83C90089DCE0 /* GoogleService-Info.plist */; };
+		11D9330B2445DD5700F241F6 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D9330A2445DD5700F241F6 /* SpinnerViewController.swift */; };
 		11DAB6D323BBBD0900881573 /* ItIsAMatchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DAB6D223BBBD0900881573 /* ItIsAMatchVC.swift */; };
 		13771A5756DCFA9DE7F49235 /* Pods_SuperheroMatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEB1BC6B65AB1EB9B4604B32 /* Pods_SuperheroMatch.framework */; };
 		3FCFFC296B003D6CD391E827 /* Pods_SuperheroMatchTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E77D9B26C1D651171341CCE /* Pods_SuperheroMatchTests.framework */; };
@@ -201,6 +202,7 @@
 		11C8BC7522DF6A130089DCE0 /* SuperheroSuperPowerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperheroSuperPowerVC.swift; sourceTree = "<group>"; };
 		11C8BC7722DF6C4A0089DCE0 /* SuperheroProfilePicVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperheroProfilePicVC.swift; sourceTree = "<group>"; };
 		11C8BC7A22DF83C90089DCE0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		11D9330A2445DD5700F241F6 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SpinnerViewController.swift; path = SuperheroMatch/Controller/SpinnerViewController.swift; sourceTree = SOURCE_ROOT; };
 		11DAB6D223BBBD0900881573 /* ItIsAMatchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItIsAMatchVC.swift; sourceTree = "<group>"; };
 		11F722416851569C1C7FBC5F /* Pods-SuperheroMatchUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SuperheroMatchUITests.release.xcconfig"; path = "Target Support Files/Pods-SuperheroMatchUITests/Pods-SuperheroMatchUITests.release.xcconfig"; sourceTree = "<group>"; };
 		1E77D9B26C1D651171341CCE /* Pods_SuperheroMatchTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SuperheroMatchTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -535,6 +537,7 @@
 				1150E60E22E4A1BD007D16CF /* SuperheroFavoriteGender */,
 				1150E60F22E4A1D0007D16CF /* SuperheroSuperPower */,
 				1150E61022E4A1DF007D16CF /* SuperheroProfilePic */,
+				11D9330A2445DD5700F241F6 /* SpinnerViewController.swift */,
 			);
 			path = Registration;
 			sourceTree = "<group>";
@@ -808,6 +811,7 @@
 				110D371622E33A4F00DE7405 /* CustomServerTrustPolicyManager.swift in Sources */,
 				113C1A2D22F741F300FFCAE6 /* CheckEmailResponse.swift in Sources */,
 				119A3F20234B733200690ED4 /* ProfileVC.swift in Sources */,
+				11D9330B2445DD5700F241F6 /* SpinnerViewController.swift in Sources */,
 				1173E96C23BD1F7500C6DDD0 /* DeleteMatch.swift in Sources */,
 				110D373122E3515100DE7405 /* Suggestions.swift in Sources */,
 				114B7E27236F3C6A003081C0 /* UpdateProfileResponse.swift in Sources */,

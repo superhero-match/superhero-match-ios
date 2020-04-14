@@ -1,5 +1,4 @@
 PODS:
-  - ActiveLabel (1.0.1)
   - Alamofire (4.8.2)
   - Crashlytics (3.12.0):
     - Fabric (~> 1.9.0)
@@ -127,13 +126,12 @@ PODS:
   - SDWebImage (4.0.0):
     - SDWebImage/Core (= 4.0.0)
   - SDWebImage/Core (4.0.0)
-  - Socket.IO-Client-Swift (14.0.0):
-    - Starscream (~> 3.0.6)
-  - Starscream (3.0.6)
+  - Socket.IO-Client-Swift (15.2.0):
+    - Starscream (~> 3.1)
+  - Starscream (3.1.1)
   - TrustKit (1.6.1)
 
 DEPENDENCIES:
-  - ActiveLabel
   - Alamofire
   - Crashlytics
   - Fabric
@@ -148,12 +146,11 @@ DEPENDENCIES:
   - PhoneNumberKit (~> 2.6)
   - ProgressHUD
   - RangeSeekSlider
-  - Socket.IO-Client-Swift (~> 14.0.0)
+  - Socket.IO-Client-Swift (~> 15.2.0)
   - TrustKit
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
-    - ActiveLabel
     - Alamofire
     - Crashlytics
     - DACircularProgress
@@ -168,8 +165,6 @@ SPEC REPOS:
     - ProgressHUD
     - SCSiriWaveformView
     - SDWebImage
-    - Socket.IO-Client-Swift
-    - Starscream
     - TrustKit
   trunk:
     - Firebase
@@ -190,9 +185,10 @@ SPEC REPOS:
     - nanopb
     - Protobuf
     - RangeSeekSlider
+    - Socket.IO-Client-Swift
+    - Starscream
 
 SPEC CHECKSUMS:
-  ActiveLabel: b8b2396fe25308d563601437d6605bf691c3b5db
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
@@ -225,10 +221,10 @@ SPEC CHECKSUMS:
   RangeSeekSlider: 650b11fa1edcb92e1e0ede797669d98622570fb5
   SCSiriWaveformView: 15b9dd6f94c7536e2032b34a35c6ff74d38c7411
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
-  Socket.IO-Client-Swift: 21e6a8a23a7d367d5ddfab6cbbd3c679cf3c25d6
-  Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
+  Socket.IO-Client-Swift: 1e3e3a1f09f3312a167f0d781eb2f383d477357c
+  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   TrustKit: 0660dd1ce827ae7c8f553f35502a8542e248188f
 
-PODFILE CHECKSUM: 9f5e9289068605aadc73e7bf9ecac47eb1506391
+PODFILE CHECKSUM: 1dccf05446321dc8142cd2a38031acd2aa9f8936
 
 COCOAPODS: 1.8.4

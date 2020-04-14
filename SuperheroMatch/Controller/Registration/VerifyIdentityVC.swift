@@ -20,7 +20,8 @@ class VerifyIdentityVC: UIViewController, GIDSignInUIDelegate {
     
     var checkEmail: CheckEmail?
     let userDB = UserDB.sharedDB
-    
+    let child = SpinnerViewController()
+
     let logoContainerView: UIView = {
         let view = UIView()
         let logo = UIImageView(image: UIImage(named: "logo"))
@@ -118,10 +119,32 @@ class VerifyIdentityVC: UIViewController, GIDSignInUIDelegate {
         NotificationCenter.default.removeObserver(self)
     }
     
+    func createSpinnerView(){
+        
+        // Add the spinner view controller
+        addChild(self.child)
+        self.child.view.frame = view.frame
+        view.addSubview(self.child.view)
+        self.child.didMove(toParent: self)
+        
+    }
+    
+    func removeSpinnerView() {
+        
+        self.child.willMove(toParent: nil)
+        self.child.view.removeFromSuperview()
+        self.child.removeFromParent()
+        
+    }
+    
     func checkEmailRegistered(checkEmail: CheckEmail, email: String) {
+        
+        createSpinnerView()
         
         checkEmail.checkEmail(email: email) { json, error in
             do {
+                
+                self.removeSpinnerView()
                 
                 //Convert to Data
                 print("before jsonData")
@@ -133,11 +156,6 @@ class VerifyIdentityVC: UIViewController, GIDSignInUIDelegate {
                 
                 print("before response")
                 let response = try CheckEmailResponse(json: checkEmailResponse as! [String : Any])
-                
-                print(response.isRegistered)
-                print(response.isDeleted)
-                print(response.isBlocked)
-                print(response.superhero)
                 
                 if !response.isRegistered {
                     let superheroNameVC = SuperheroNameVC()

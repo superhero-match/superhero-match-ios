@@ -16,7 +16,7 @@ import Foundation
 
 class ConstantRegistry {
     
-    static let BASE_SERVER_URL: String = "https://192.168.178.13"
+    static let BASE_SERVER_URL: String = "https://192.168.0.101"
     static let IMAGE_URL_PREFIX: String = "https:"
     
     static let SUPERHERO_REGISTER_PORT: String = ":3000"
@@ -31,6 +31,7 @@ class ConstantRegistry {
     static let SUPERHERO_DELETE_MATCH_PORT: String = ":4300"
     static let SUPERHERO_CHAT_PORT: String = ":5000"
     static let FIREBASE_TOKEN_PORT: String = ":6000"
+    static let SUPERHERO_REGISTER_MEDIA_PORT: String = ":7000"
     
     static let DEFAULT_MAX_DISTANCE: Int = 50
     static let DEFAULT_MIN_AGE: Int = 25
@@ -51,5 +52,8 @@ class ConstantRegistry {
     static let FOURTH_PROFILE_IMAGE_VIEW: Int = 5
     
     static let PAGE_SIZE: Int = 10
+    
+    static let ON_UPLOAD_MAIN_PROFILE_PICTURE: String = "onUploadMainProfilePicture"
+    static let MAIN_PROFILE_PICTURE_URL: String = "mainProfilePictureURL"
     
 }

@@ -24,9 +24,7 @@ target 'SuperheroMatch' do
   pod 'IDMPhotoBrowser'
 
 
-  pod 'Socket.IO-Client-Swift', '~> 14.0.0'
-
-  pod 'ActiveLabel'
+  pod 'Socket.IO-Client-Swift', '~> 15.2.0'
 
   pod 'TrustKit'
 

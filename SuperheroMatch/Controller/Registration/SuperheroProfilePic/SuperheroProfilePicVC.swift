@@ -14,13 +14,19 @@
 
 import UIKit
 import Firebase
+import SocketIO
 
 class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var imageIsSelected: Bool!
     var register: Register?
     var user: User?
+    var userID: String!
+    var userMainProfilePicURL: String!
     let userDB = UserDB.sharedDB
+    var manager: SocketManager!
+    var socket: SocketIOClient!
+    let child = SpinnerViewController()
     
     let superheroProfilePicLabel: UILabel = {
         let lbl = UILabel()
@@ -83,6 +89,8 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         // hide nav bar
         navigationController?.navigationBar.isHidden = true
         
+        userID = UUID().uuidString.lowercased().replacingOccurrences(of: "-", with: "")
+        
         view.addSubview(superheroProfilePicLabel)
         superheroProfilePicLabel.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 50, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
         
@@ -96,6 +104,44 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         termsAndPoliciesBtn.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
         
         register = Register()
+        
+        self.manager = SocketManager(socketURL: URL(string: "\(ConstantRegistry.BASE_SERVER_URL)\(ConstantRegistry.SUPERHERO_REGISTER_MEDIA_PORT)")!, config: [.log(true), .forceWebsockets(true), .secure(true), .selfSigned(true), .sessionDelegate(CustomSessionDelegate())])
+        
+        self.socket = self.manager.defaultSocket
+        
+        self.socket.on(clientEvent: .connect) {data, ack in
+            print("socket connected")
+        }
+        
+        self.socket.on(ConstantRegistry.MAIN_PROFILE_PICTURE_URL) {[weak self] data, ack in
+            
+            self!.removeSpinnerView()
+            
+            if let url = data[0] as? String {
+                self!.userMainProfilePicURL = url
+            }
+            
+        }
+        
+        self.socket.connect()
+    }
+    
+    func createSpinnerView(){
+        
+        // Add the spinner view controller
+        addChild(self.child)
+        self.child.view.frame = view.frame
+        view.addSubview(self.child.view)
+        self.child.didMove(toParent: self)
+        
+    }
+    
+    func removeSpinnerView() {
+        
+        self.child.willMove(toParent: nil)
+        self.child.view.removeFromSuperview()
+        self.child.removeFromParent()
+        
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -117,8 +163,11 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         selectPicBtn.layer.borderWidth = 1
         selectPicBtn.setImage(profileImage.withRenderingMode(.alwaysOriginal), for: .normal)
         
-        // TO-DO: convert image to bytes array or base64 encoded string and send it to the server
-        // there it is going to be uploaded to S3, and from there the CloudFront will cache it
+        let imageData: Data = profileImage.pngData()!
+        let strBase64 = imageData.base64EncodedString(options: .lineLength64Characters)
+        
+        self.socket.emit(ConstantRegistry.ON_UPLOAD_MAIN_PROFILE_PICTURE, userID, strBase64)
+        createSpinnerView()
         
         self.dismiss(animated: true, completion: nil)
         
@@ -165,8 +214,6 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         
         let superPower = UserDefaults.standard.string(forKey: "superPower") ?? ""
         
-        let userID = UUID().uuidString.lowercased().replacingOccurrences(of: "-", with: "")
-        
         let lat = UserDefaults.standard.double(forKey: "lat")
         
         let lon = UserDefaults.standard.double(forKey: "lon")
@@ -177,7 +224,7 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         
         let distanceUnit = UserDefaults.standard.string(forKey: "distanceUnit") ?? ""
         
-        user = User(userID: userID, email: email, name: name, superheroName: superheroName, mainProfilePicUrl: "test", profilePicsUrls: nil, gender: Int(gender), lookingForGender: Int(favoriteGender), age: Int(age), lookingForAgeMin: ConstantRegistry.DEFAULT_MIN_AGE, lookingForAgeMax: ConstantRegistry.DEFAULT_MAX_AGE, lookingForDistanceMax: ConstantRegistry.DEFAULT_MAX_DISTANCE, distanceUnit: distanceUnit, lat: lat, lon: lon, birthday: birthday, country: country, city: city, superPower: superPower, accountType: ConstantRegistry.DEFAULT_ACCOUNT_TYPE)
+        user = User(userID: userID, email: email, name: name, superheroName: superheroName, mainProfilePicUrl: self.userMainProfilePicURL, profilePicsUrls: nil, gender: Int(gender), lookingForGender: Int(favoriteGender), age: Int(age), lookingForAgeMin: ConstantRegistry.DEFAULT_MIN_AGE, lookingForAgeMax: ConstantRegistry.DEFAULT_MAX_AGE, lookingForDistanceMax: ConstantRegistry.DEFAULT_MAX_DISTANCE, distanceUnit: distanceUnit, lat: lat, lon: lon, birthday: birthday, country: country, city: city, superPower: superPower, accountType: ConstantRegistry.DEFAULT_ACCOUNT_TYPE)
         
         var params = [String: Any]()
         

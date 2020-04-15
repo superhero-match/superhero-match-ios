@@ -200,4 +200,22 @@ class DBConstants {
     " FOREIGN KEY(" + RECEIVED_ONLINE_MESSAGE_UUID + ") REFERENCES " + TABLE_MESSAGE + "(" + MESSAGE_UUID + ")" +
     ")"
     
+    //=======================================================================================================================
+    // user choice(like/dislike) table
+    //=======================================================================================================================
+    static let TABLE_CHOICE = "choice"
+    static let CHOICE_ID = "_id"
+    static let CHOSEN_USER_ID = "chosen_user_id"
+    static let CHOICE = "choice"
+    static let CHOICE_CREATED_AT = "created_at"
+    
+    // SQL to create table choice
+    static let TABLE_CREATE_CHOICE =
+    "CREATE TABLE IF NOT EXISTS " + TABLE_CHOICE + " (" +
+    CHOICE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    CHOSEN_USER_ID + " TEXT NOT NULL," +
+    CHOICE + " INTEGER NOT NULL, " +
+    CHOICE_CREATED_AT + " TEXT DEFAULT CURRENT_TIMESTAMP " +
+    ")"
+    
 }

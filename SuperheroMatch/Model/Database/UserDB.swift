@@ -1,16 +1,16 @@
 /*
-  Copyright (C) 2019 - 2020 MWSOFT
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ Copyright (C) 2019 - 2020 MWSOFT
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 import Foundation
 
@@ -1008,6 +1008,62 @@ class UserDB {
         return (err, accountType)
     }
     
+    // Fetch all messages for chat with id.
+    func getAllChoices() -> (DBError, Array<ChoiceItem>) {
+        var err:DBError = .NoError
+        var choices:Array<ChoiceItem> = Array<ChoiceItem>()
+        
+        let superheroMatchDB = SuperheroMatchDB.sharedDB
+        
+        if let db = superheroMatchDB.dbOpen() {
+            
+            let query = """
+            SELECT * FROM \(DBConstants.TABLE_CHOICE)
+            """;
+            
+            var stmt:OpaquePointer? = nil
+            var result = sqlite3_prepare_v2(db, query, -1, &stmt, nil)
+            
+            var retryCount:Int = 0
+            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
+                sleep(1)
+                retryCount += 1
+                result = sqlite3_prepare_v2(db, query, -1, &stmt, nil)
+            }
+            
+            if SQLITE_OK == result {
+                result = sqlite3_step(stmt)
+                while SQLITE_ROW == result {
+                    
+                    let choiceId:Int64 = sqlite3_column_int64(stmt, 0)
+                    
+                    let rawChosenUserId = sqlite3_column_text(stmt, 1)
+                    let chosenUserId = String(cString:rawChosenUserId!)
+                    
+                    let choiceMade:Int64 = sqlite3_column_int64(stmt, 2)
+                    
+                    let rawCreatedAt = sqlite3_column_text(stmt, 3)
+                    let createdAt = String(cString:rawCreatedAt!)
+                    
+                    let choice = ChoiceItem(choiceId: choiceId, chosenUserId: chosenUserId, choice: choiceMade, createdAt: createdAt)
+                    
+                    choices.append(choice)
+                    
+                    result = sqlite3_step(stmt)
+                }
+                sqlite3_finalize(stmt)
+            } else {
+                let errStr = String(cString: sqlite3_errstr(result))
+                err = .SQLError(errStr)
+            }
+            
+            _ = superheroMatchDB.dbClose(db: db)
+            
+        }
+        
+        return (err, choices)
+    }
+    
     // Update default user.
     // This is called after registration is completed.
     func updateDefaultUser(user: User!) -> (DBError, Int) {
@@ -1073,45 +1129,45 @@ class UserDB {
             let sql = """
             INSERT INTO \(DBConstants.TABLE_USER)
             (
-                \(DBConstants.U_ID),
-                \(DBConstants.USER_EMAIL),
-                \(DBConstants.USER_NAME),
-                \(DBConstants.USER_MAIN_PROFILE_PIC_URL),
-                \(DBConstants.USER_GENDER),
-                \(DBConstants.USER_LOOKING_FOR_GENDER),
-                \(DBConstants.USER_AGE),
-                \(DBConstants.USER_LOOKING_FOR_MIN_AGE),
-                \(DBConstants.USER_LOOKING_FOR_MAX_AGE),
-                \(DBConstants.USER_LOOKING_FOR_MAX_DISTANCE),
-                \(DBConstants.USER_DISTANCE_UNIT),
-                \(DBConstants.USER_LATEST_LATITUDE),
-                \(DBConstants.USER_LATEST_LONGITUDE),
-                \(DBConstants.USER_BIRTHDAY),
-                \(DBConstants.USER_COUNTRY),
-                \(DBConstants.USER_CITY),
-                \(DBConstants.USER_SUPER_POWER),
-                \(DBConstants.USER_ACCOUNT_TYPE)
+            \(DBConstants.U_ID),
+            \(DBConstants.USER_EMAIL),
+            \(DBConstants.USER_NAME),
+            \(DBConstants.USER_MAIN_PROFILE_PIC_URL),
+            \(DBConstants.USER_GENDER),
+            \(DBConstants.USER_LOOKING_FOR_GENDER),
+            \(DBConstants.USER_AGE),
+            \(DBConstants.USER_LOOKING_FOR_MIN_AGE),
+            \(DBConstants.USER_LOOKING_FOR_MAX_AGE),
+            \(DBConstants.USER_LOOKING_FOR_MAX_DISTANCE),
+            \(DBConstants.USER_DISTANCE_UNIT),
+            \(DBConstants.USER_LATEST_LATITUDE),
+            \(DBConstants.USER_LATEST_LONGITUDE),
+            \(DBConstants.USER_BIRTHDAY),
+            \(DBConstants.USER_COUNTRY),
+            \(DBConstants.USER_CITY),
+            \(DBConstants.USER_SUPER_POWER),
+            \(DBConstants.USER_ACCOUNT_TYPE)
             )
             VALUES
             (
-                '\(user.userID!)',
-                '\(user.email!)',
-                '\(user.name!)',
-                '\(user.mainProfilePicUrl!)',
-                \(user.gender!),
-                \(user.lookingForGender!),
-                \(user.age!),
-                \(user.lookingForAgeMin!),
-                \(user.lookingForAgeMax!),
-                \(user.lookingForDistanceMax!),
-                '\(user.distanceUnit!)',
-                \(user.lat!),
-                \(user.lon!),
-                '\(user.birthday!)',
-                '\(user.country!)',
-                '\(user.city!)',
-                '\(user.superPower!)',
-                '\(user.accountType!)'
+            '\(user.userID!)',
+            '\(user.email!)',
+            '\(user.name!)',
+            '\(user.mainProfilePicUrl!)',
+            \(user.gender!),
+            \(user.lookingForGender!),
+            \(user.age!),
+            \(user.lookingForAgeMin!),
+            \(user.lookingForAgeMax!),
+            \(user.lookingForDistanceMax!),
+            '\(user.distanceUnit!)',
+            \(user.lat!),
+            \(user.lon!),
+            '\(user.birthday!)',
+            '\(user.country!)',
+            '\(user.city!)',
+            '\(user.superPower!)',
+            '\(user.accountType!)'
             )
             """;
             
@@ -1558,5 +1614,84 @@ class UserDB {
         return (err, changes)
     }
     
+    // Saves new choice.
+    func insertChoice(chosenUserId: String!, choice: Int64!, createdAt: String!) -> (DBError, Int) {
+        var err:DBError = .NoError
+        var changes:Int = 0
+        
+        let superheroMatchDB = SuperheroMatchDB.sharedDB
+        
+        if let db = superheroMatchDB.dbOpen() {
+            let sql = """
+            INSERT INTO \(DBConstants.TABLE_CHOICE)
+            (
+            \(DBConstants.CHOSEN_USER_ID),
+            \(DBConstants.CHOICE),
+            \(DBConstants.CHOICE_CREATED_AT)
+            )
+            VALUES
+            (
+            '\(chosenUserId!)',
+            '\(choice!)',
+            '\(createdAt!)'
+            )
+            """;
+            
+            var result = sqlite3_exec(db, sql, nil, nil, nil)
+            
+            var retryCount:Int = 0
+            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
+                sleep(1)
+                retryCount += 1
+                result = sqlite3_exec(db, sql, nil, nil, nil)
+            }
+            
+            if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            }
+            else {
+                let errStr = String(cString: sqlite3_errstr(result))
+                err = .SQLError(errStr)
+            }
+            
+            _ = superheroMatchDB.dbClose(db: db)
+            
+        }
+        
+        return (err, changes)
+    }
+    
+    // Delete choice by id.
+    func deleteChoiceById(choiceId: Int64!) -> (DBError, Int) {
+        var err:DBError = .NoError
+        var changes:Int = 0
+        
+        let superheroMatchDB = SuperheroMatchDB.sharedDB
+        
+        if let db = superheroMatchDB.dbOpen() {
+            
+            let sql = "DELETE FROM \(DBConstants.TABLE_CHOICE) WHERE \(DBConstants.CHOICE_ID)=\(choiceId!)"
+            var result = sqlite3_exec(db, sql, nil, nil, nil)
+            
+            var retryCount:Int = 0
+            while SQLITE_BUSY == result && retryCount < RETRY_LIMIT {
+                sleep(1)
+                retryCount += 1
+                result = sqlite3_exec(db, sql, nil, nil, nil)
+            }
+            
+            if SQLITE_OK == result {
+                changes = Int(sqlite3_changes(db))
+            } else {
+                let errStr = String(cString: sqlite3_errstr(result))
+                err = .SQLError(errStr)
+            }
+            
+            _ = superheroMatchDB.dbClose(db: db)
+            
+        }
+        
+        return (err, changes)
+    }
     
 }

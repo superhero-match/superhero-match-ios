@@ -134,6 +134,8 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
             self.user = user
         }
         
+        deleteOldChoices()
+        
         locationManager.delegate = self
         
         // For use when the app is open
@@ -161,6 +163,43 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         let params = configureSuggestionsRequestParameters()
         
         fetchSuggestions(params: params, isInitialRequest: true)
+        
+    }
+    
+    func deleteOldChoices() {
+        
+        let (dbErr, choices) = self.userDB.getAllChoices()
+        if case .SQLError = dbErr {
+            print("###########  getAllChoices dbErr  ##############")
+            print(dbErr)
+        }
+        
+        for choice in choices {
+            
+            // Create date formatter
+            let dateFormatter: DateFormatter = DateFormatter()
+            
+            // Set date format
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            
+            // Apply date format
+            let choiceDate: Date = dateFormatter.date(from: choice.createdAt)!
+            
+            // Check if the choice is older than 1 day, if so then delete it.
+            let interval = Date().calculateDifference(recent: Date(), previous: choiceDate)
+            guard interval.day! < 1 else {
+                
+                let (dbErr, _) = self.userDB.deleteChoiceById(choiceId: choice.choiceId)
+                if case .SQLError = dbErr {
+                    print("###########  deleteChoiceById dbErr  ##############")
+                    print(dbErr)
+                }
+                
+                return
+                
+            }
+            
+        }
         
     }
 
@@ -312,6 +351,21 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         
         let suggestion = self.suggestions[self.currentSuggestion]
         
+        // Create date formatter
+        let dateFormatter: DateFormatter = DateFormatter()
+        
+        // Set date format
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        // Apply date format
+        let selectedDate: String = dateFormatter.string(from: Date())
+        
+        let (dbErr, _) = self.userDB.insertChoice(chosenUserId: suggestion.userID, choice: 1, createdAt: selectedDate)
+        if case .SQLError = dbErr {
+            print("###########  insertChoice dbErr  ##############")
+            print(dbErr)
+        }
+        
         if suggestion.hasLikedMe {
             // Don't move to the next suggestions unless user choses to chat with match later.
             
@@ -381,6 +435,21 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
 //        }, completion: nil)
         
         let suggestion = self.suggestions[self.currentSuggestion]
+        
+        // Create date formatter
+        let dateFormatter: DateFormatter = DateFormatter()
+        
+        // Set date format
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        // Apply date format
+        let selectedDate: String = dateFormatter.string(from: Date())
+        
+        let (dbErr, _) = self.userDB.insertChoice(chosenUserId: suggestion.userID, choice: 2, createdAt: selectedDate)
+        if case .SQLError = dbErr {
+            print("###########  insertChoice dbErr  ##############")
+            print(dbErr)
+        }
         
         let params = self.configureUploadChoiceRequestParameters(superheroID: self.user?.userID, chosenSuperheroID: suggestion.userID, choice: 2)
         self.uploadChoice(params: params, suggestion: suggestion)
@@ -487,6 +556,16 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
             }
             
         }
+        
+        let (dbErr, choices) = self.userDB.getAllChoices()
+        if case .SQLError = dbErr {
+            print("###########  getAllChoices dbErr  ##############")
+            print(dbErr)
+        }
+        
+        for choice in choices {
+            retrievedSuperheroIds.append(choice.chosenUserId)
+        }                                             
         
         params["superheroIds"] = superherosToBeFetched
         params["retrievedSuperheroIds"] = retrievedSuperheroIds

@@ -106,6 +106,9 @@ PODS:
     - SDWebImage (= 4.0.0)
   - IQAudioRecorderController (1.2.3):
     - SCSiriWaveformView
+  - Kingfisher (5.13.4):
+    - Kingfisher/Core (= 5.13.4)
+  - Kingfisher/Core (5.13.4)
   - MBProgressHUD (1.1.0)
   - nanopb (0.3.9011):
     - nanopb/decode (= 0.3.9011)
@@ -142,6 +145,7 @@ DEPENDENCIES:
   - GoogleSignIn
   - IDMPhotoBrowser
   - IQAudioRecorderController
+  - Kingfisher (~> 5.0)
   - MBProgressHUD
   - PhoneNumberKit (~> 2.6)
   - ProgressHUD
@@ -182,6 +186,7 @@ SPEC REPOS:
     - GoogleDataTransportCCTSupport
     - GoogleUtilities
     - GTMSessionFetcher
+    - Kingfisher
     - nanopb
     - Protobuf
     - RangeSeekSlider
@@ -212,6 +217,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 43b8b64263023d4f32caa0b40f4c8bfa3c5f36d8
   IDMPhotoBrowser: b96159fe4adb991a844068eb17dab9c0b7d7e51a
   IQAudioRecorderController: 69a67c2e0b87bd8746cbb4de175fd7a0bf820009
+  Kingfisher: d2279a7abece3c7f25a80cd2b7f363ca5cf3f44c
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   PhoneNumberKit: 167ee1f0bbb6efce7c62559e620eae745595532f
@@ -225,6 +231,6 @@ SPEC CHECKSUMS:
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   TrustKit: 0660dd1ce827ae7c8f553f35502a8542e248188f
 
-PODFILE CHECKSUM: 1dccf05446321dc8142cd2a38031acd2aa9f8936
+PODFILE CHECKSUM: 0b07589181522debe14968a5dd3edaedbd209a54
 
 COCOAPODS: 1.8.4

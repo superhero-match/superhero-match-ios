@@ -15,6 +15,7 @@
 import UIKit
 import CoreLocation
 import Firebase
+import MBProgressHUD
 
 class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     
@@ -110,6 +111,8 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     
     var noSuggestionsVC: NoSuggestionsVC?
     
+    let child = SpinnerViewController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -160,10 +163,14 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
           }
         }
         
-        let params = configureSuggestionsRequestParameters()
+        getSuggestions()
         
-        fetchSuggestions(params: params, isInitialRequest: true)
+        NotificationCenter.default.addObserver(self, selector: #selector(loadSuggestions), name: UIApplication.willEnterForegroundNotification, object: nil)
         
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func deleteOldChoices() {
@@ -187,16 +194,17 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
             
             // Check if the choice is older than 1 day, if so then delete it.
             let interval = Date().calculateDifference(recent: Date(), previous: choiceDate)
+        
             guard interval.day! < 1 else {
-                
+
                 let (dbErr, _) = self.userDB.deleteChoiceById(choiceId: choice.choiceId)
                 if case .SQLError = dbErr {
                     print("###########  deleteChoiceById dbErr  ##############")
                     print(dbErr)
                 }
-                
+
                 return
-                
+
             }
             
         }
@@ -579,9 +587,13 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     
     func fetchSuggestions(params: [String: Any], isInitialRequest: Bool!) {
         
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        
         self.sgs = Suggestions()
         self.sgs!.suggestions(params: params) { json, error in
             do {
+                
+                MBProgressHUD.hide(for: self.view, animated: true)
                 
                 //Convert to Data
                 let jsonData = try JSONSerialization.data(withJSONObject: json!, options: JSONSerialization.WritingOptions.prettyPrinted)
@@ -825,5 +837,20 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
     }
     
+    func getSuggestions() {
+        fetchSuggestions(params: configureSuggestionsRequestParameters(), isInitialRequest: true)
+    }
+    
+    @objc func loadSuggestions() {
+        
+        deleteOldChoices()
+        
+        retrievedSuperheroIds = []
+        
+        suggestions = []
+        
+        getSuggestions()
+        
+    }
     
 }

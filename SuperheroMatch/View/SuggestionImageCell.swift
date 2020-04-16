@@ -13,12 +13,16 @@
 */
 
 import UIKit
+import Kingfisher
 
 class SuggestionImageCell: UICollectionViewCell {
     
     var imageUrl: String? {
         didSet {
-            profileImageView.image = UIImage(named: imageUrl!)
+            
+            profileImageView.kf.indicatorType = .activity
+            profileImageView.kf.setImage(with: URL(string: imageUrl!), placeholder: UIImage(named: "user_profile"), options: [.transition(.fade(0.7))], progressBlock: nil)
+            
         }
     }
     

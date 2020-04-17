@@ -208,9 +208,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         // this callback will not be fired till the user taps on the notification launching the application.
         
         // With swizzling disabled you must let Messaging know about the message, for Analytics
-        // Messaging.messaging().appDidReceiveMessage(userInfo)
+        Messaging.messaging().appDidReceiveMessage(userInfo)
         
         // Print full message.
+        print("didReceiveRemoteNotification without completion handler")
         print(userInfo)
         
         switch userInfo["data_type"] as? String {
@@ -259,10 +260,49 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         // this callback will not be fired till the user taps on the notification launching the application.
 
         // With swizzling disabled you must let Messaging know about the message, for Analytics
-        // Messaging.messaging().appDidReceiveMessage(userInfo)
+        Messaging.messaging().appDidReceiveMessage(userInfo)
         
         // Print full message.
+        print("didReceiveRemoteNotification with completion handler")
         print(userInfo)
+        
+        switch userInfo["data_type"] as? String {
+        case "new_match":
+            let matchedSuperheroId = userInfo["superhero_id"] as? String
+            
+            let (uerr, userId) = self.userDB.getUserId()
+            if case .SQLError = uerr {
+                print("###########  getUserId uerr  ##############")
+                print(uerr)
+                
+                return
+            }
+            
+            let params = configureGetMatchRequestParameters(superheroId: userId, matchedSuperheroId: matchedSuperheroId)
+            
+            self.getMatch(params: params)
+        case "delete_match":
+            let matchedSuperheroId = userInfo["superhero_id"] as? String
+            
+            let (err, chat) = self.chatDB.getChatByMatchedUserId(matchedUserId: matchedSuperheroId)
+            if case .SQLError = err {
+                print("###########  getUserId getChatIdByChatName  ##############")
+                print(err)
+                
+                return
+            }
+            
+            let (cerr, _) = self.chatDB.deleteChatById(chatId: chat?.chatID)
+            if case .SQLError = cerr {
+                print("###########  getUserId deleteChatById  ##############")
+                print(cerr)
+                
+                return
+            }
+            
+        default:
+            print("###########  unknown message  ##############")
+        }
         
         completionHandler(UIBackgroundFetchResult.newData)
     }
@@ -279,7 +319,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         print("APNs token retrieved: \(deviceToken)")
         
         // With swizzling disabled you must set the APNs token here.
-        // Messaging.messaging().apnsToken = deviceToken
+        Messaging.messaging().apnsToken = deviceToken
     }
     
     func applicationWillResignActive(_ application: UIApplication) {
@@ -317,13 +357,14 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         let userInfo = notification.request.content.userInfo
         
         // With swizzling disabled you must let Messaging know about the message, for Analytics
-        // Messaging.messaging().appDidReceiveMessage(userInfo)
+        Messaging.messaging().appDidReceiveMessage(userInfo)
         
         // Print full message.
+        print("userNotificationCenter with UNNotificationPresentationOptions completion handler")
         print(userInfo)
         
         // Change this to your preferred presentation option
-        completionHandler([])
+        completionHandler([.badge, .sound, .alert])
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter,
@@ -332,6 +373,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         let userInfo = response.notification.request.content.userInfo
         
         // Print full message.
+        print("userNotificationCenter without UNNotificationPresentationOptions completion handler")
         print(userInfo)
         
         completionHandler()
@@ -372,7 +414,6 @@ extension AppDelegate : MessagingDelegate {
                 }
                 
             } catch {
-                // TO-DO: Show alert that something went wrong
                 print("catch in updateTokenResponse")
             }
         }
@@ -387,7 +428,6 @@ extension AppDelegate : MessagingDelegate {
         
         let dataDict:[String: String] = ["token": fcmToken]
         NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
-        // TODO: If necessary send token to application server.
         // Note: This callback is fired at each app startup and whenever a new token is generated.
         let (dbErr, user) = userDB.getUser()
         if case .SQLError = dbErr {
@@ -395,8 +435,7 @@ extension AppDelegate : MessagingDelegate {
             print(dbErr)
         }
         
-        let params = self.configureUpdateTokenRequestParameters(userId: user?.userID, token: fcmToken)
-        self.updateToken(params: params)
+        self.updateToken(params: self.configureUpdateTokenRequestParameters(userId: user?.userID, token: fcmToken))
         
     }
     // [END refresh_token]
@@ -406,6 +445,42 @@ extension AppDelegate : MessagingDelegate {
     // To enable direct data messages, you can set Messaging.messaging().shouldEstablishDirectChannel to true.
     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
         print("Received data message: \(remoteMessage.appData)")
+        
+        switch remoteMessage.appData["data_type"] as? String {
+        case "new_match":
+            let matchedSuperheroId = remoteMessage.appData["superhero_id"] as? String
+            
+            let (uerr, userId) = self.userDB.getUserId()
+            if case .SQLError = uerr {
+                print("###########  getUserId uerr  ##############")
+                print(uerr)
+                
+                return
+            }
+            
+            self.getMatch(params: configureGetMatchRequestParameters(superheroId: userId, matchedSuperheroId: matchedSuperheroId))
+        case "delete_match":
+            let matchedSuperheroId = remoteMessage.appData["superhero_id"] as? String
+            
+            let (err, chat) = self.chatDB.getChatByMatchedUserId(matchedUserId: matchedSuperheroId)
+            if case .SQLError = err {
+                print("###########  getUserId getChatIdByChatName  ##############")
+                print(err)
+                
+                return
+            }
+            
+            let (cerr, _) = self.chatDB.deleteChatById(chatId: chat?.chatID)
+            if case .SQLError = cerr {
+                print("###########  getUserId deleteChatById  ##############")
+                print(cerr)
+                
+                return
+            }
+            
+        default:
+            print("###########  unknown message  ##############")
+        }
     }
     // [END ios_10_data_message]
 }

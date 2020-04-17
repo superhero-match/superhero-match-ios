@@ -54,6 +54,7 @@
 		1150E62B22E4B521007D16CF /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E62A22E4B521007D16CF /* CustomImageView.swift */; };
 		1150E62D22E4D03E007D16CF /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E62C22E4D03E007D16CF /* ProfileImage.swift */; };
 		1150E62F22E4D58E007D16CF /* SuggestionImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1150E62E22E4D58E007D16CF /* SuggestionImageCell.swift */; };
+		11723C5C2449C1340067A742 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11723C5B2449C1280067A742 /* GoogleService-Info.plist */; };
 		1173E96A23BCEE9F00C6DDD0 /* UploadMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1173E96923BCEE9F00C6DDD0 /* UploadMatch.swift */; };
 		1173E96C23BD1F7500C6DDD0 /* DeleteMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1173E96B23BD1F7500C6DDD0 /* DeleteMatch.swift */; };
 		117A57392337CFFE00EB3560 /* SuggestionsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117A57382337CFFE00EB3560 /* SuggestionsResponse.swift */; };
@@ -162,6 +163,7 @@
 		1150E62A22E4B521007D16CF /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		1150E62C22E4D03E007D16CF /* ProfileImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImage.swift; sourceTree = "<group>"; };
 		1150E62E22E4D58E007D16CF /* SuggestionImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionImageCell.swift; sourceTree = "<group>"; };
+		11723C5B2449C1280067A742 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1173E96923BCEE9F00C6DDD0 /* UploadMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadMatch.swift; sourceTree = "<group>"; };
 		1173E96B23BD1F7500C6DDD0 /* DeleteMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteMatch.swift; sourceTree = "<group>"; };
 		117A57382337CFFE00EB3560 /* SuggestionsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsResponse.swift; sourceTree = "<group>"; };
@@ -451,6 +453,7 @@
 				11C8BC3B22DF19BB0089DCE0 /* Main.storyboard */,
 				1130FD6922E0AA6F00B64C36 /* Gotham Book.ttf */,
 				11C8BC3722DF19BB0089DCE0 /* AppDelegate.swift */,
+				11723C5B2449C1280067A742 /* GoogleService-Info.plist */,
 				11C8BC3E22DF19C60089DCE0 /* Assets.xcassets */,
 				11C8BC4022DF19C60089DCE0 /* LaunchScreen.storyboard */,
 				11C8BC4322DF19C60089DCE0 /* Info.plist */,
@@ -683,6 +686,7 @@
 				11C8BC7B22DF83C90089DCE0 /* GoogleService-Info.plist in Resources */,
 				11C8BC3F22DF19C60089DCE0 /* Assets.xcassets in Resources */,
 				11C8BC3D22DF19BB0089DCE0 /* Main.storyboard in Resources */,
+				11723C5C2449C1340067A742 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1068,7 +1072,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 5JKZKL324M;
 				INFOPLIST_FILE = SuperheroMatch/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1091,7 +1095,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 5JKZKL324M;
 				INFOPLIST_FILE = SuperheroMatch/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -24,8 +24,8 @@ class MatchesTableViewCell: UITableViewCell {
             let lastMsg = chat?.lastActivityMessage
             lastMessage.text = lastMsg
             
-            let profilePic = chat?.matchedUserMainProfilePic
-            profileImageView.image = UIImage(named: profilePic!)
+            profileImageView.kf.indicatorType = .activity
+            profileImageView.kf.setImage(with: URL(string: (chat?.matchedUserMainProfilePic!)!), placeholder: UIImage(named: "user_profile"), options: [.transition(.fade(0.7))], progressBlock: nil)
         }
         
     }

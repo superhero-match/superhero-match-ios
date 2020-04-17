@@ -20,6 +20,7 @@ class MatchesVC: UITableViewController {
     
     var chats : [Chat] = []
     let chatDB = ChatDB.sharedDB
+    let userDB = UserDB.sharedDB
     var uploadMatch: UploadMatch?
     var deleteMatch: DeleteMatch?
     
@@ -65,11 +66,12 @@ class MatchesVC: UITableViewController {
         self.tableView.addGestureRecognizer(longPressGesture)
     }
     
-    func configureDeleteMatchRequestParameters(matchId: String!) -> [String: Any] {
+    func configureDeleteMatchRequestParameters(superheroId: String!, matchedSuperheroId: String!) -> [String: Any] {
         
         var params = [String: Any]()
         
-        params["id"] = matchId
+        params["superheroId"] = superheroId
+        params["matchedSuperheroId"] = matchedSuperheroId
         
         return params
         
@@ -96,14 +98,13 @@ class MatchesVC: UITableViewController {
                 }
                 
             } catch {
-                // TO-DO: Show alert that something went wrong
                 print("catch in deleteMatch")
             }
         }
         
     }
     
-    func showDeleteMatchAlert(matchId: String!, index: Int!) {
+    func showDeleteMatchAlert(matchId: String!, matchedUserId: String!, index: Int!) {
         let alert = UIAlertController(title: "Delete match?", message: "", preferredStyle: UIAlertController.Style.alert)
         
         alert.addAction(UIAlertAction(title: "Delete", style: UIAlertAction.Style.default, handler: { _ in
@@ -115,8 +116,13 @@ class MatchesVC: UITableViewController {
                 return
             }
             
-            let params = self.configureDeleteMatchRequestParameters(matchId: matchId)
-            self.deleteMatch(params: params)
+            let (dbErr, userId) = self.userDB.getUserId()
+            if case .SQLError = dbErr {
+                print("###########  getUserId dbErr  ##############")
+                print(dbErr)
+            }
+            
+            self.deleteMatch(params: self.configureDeleteMatchRequestParameters(superheroId: userId, matchedSuperheroId: matchedUserId))
             
             self.chats.remove(at: index)
             self.tableView.reloadData()
@@ -135,7 +141,7 @@ class MatchesVC: UITableViewController {
             if let indexPath = tableView.indexPathForRow(at: touchPoint) {
                 let chat = self.chats[indexPath.row]
                 
-                self.showDeleteMatchAlert(matchId: chat.chatID, index: indexPath.row)
+                self.showDeleteMatchAlert(matchId: chat.chatID, matchedUserId: chat.matchedUserId, index: indexPath.row)
                 
             }
         }

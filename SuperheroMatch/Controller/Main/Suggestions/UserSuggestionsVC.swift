@@ -195,17 +195,23 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
             // Check if the choice is older than 1 day, if so then delete it.
             let interval = Date().calculateDifference(recent: Date(), previous: choiceDate)
         
-            guard interval.day! < 1 else {
-
-                let (dbErr, _) = self.userDB.deleteChoiceById(choiceId: choice.choiceId)
-                if case .SQLError = dbErr {
-                    print("###########  deleteChoiceById dbErr  ##############")
-                    print(dbErr)
-                }
-
-                return
-
+            let (dbErr, _) = self.userDB.deleteChoiceById(choiceId: choice.choiceId)
+            if case .SQLError = dbErr {
+                print("###########  deleteChoiceById dbErr  ##############")
+                print(dbErr)
             }
+            
+//            guard interval.day! < 1 else {
+//
+//                let (dbErr, _) = self.userDB.deleteChoiceById(choiceId: choice.choiceId)
+//                if case .SQLError = dbErr {
+//                    print("###########  deleteChoiceById dbErr  ##############")
+//                    print(dbErr)
+//                }
+//
+//                return
+//
+//            }
             
         }
         
@@ -573,7 +579,17 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         
         for choice in choices {
             retrievedSuperheroIds.append(choice.chosenUserId)
-        }                                             
+        }
+        
+        let (err, chats) = self.chatDB.getAllChats()
+        if case .SQLError = err {
+            print("###########  getAllChats err  ##############")
+            print(err)
+        }
+        
+        for chat in chats {
+            retrievedSuperheroIds.append(chat.matchedUserId)
+        }
         
         params["superheroIds"] = superherosToBeFetched
         params["retrievedSuperheroIds"] = retrievedSuperheroIds

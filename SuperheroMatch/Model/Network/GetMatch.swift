@@ -25,7 +25,7 @@ class GetMatch {
     
     func getMatch(params: [String: Any]!, closure: @escaping (_ json: Any?, _ error: Error?)->()) {
         self.networkManager.loadUrl(
-            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHERO_MATCH_PORT + "/api/v1/superhero_match/get_match",
+            url: ConstantRegistry.BASE_SERVER_URL + ConstantRegistry.SUPERHERO_GET_MATCH_PORT + "/api/v1/match/get_match",
             params: params!,
             method: .post,
             encoding: nil

@@ -29,6 +29,8 @@ class ConstantRegistry {
     static let SUPERHERO_CHOICE_PORT: String = ":4100"
     static let SUPERHERO_MATCH_PORT: String = ":4200"
     static let SUPERHERO_DELETE_MATCH_PORT: String = ":4300"
+    static let SUPERHERO_PROFILE_PORT: String = ":4400"
+    static let SUPERHERO_GET_MATCH_PORT: String = ":4500"
     static let SUPERHERO_CHAT_PORT: String = ":5000"
     static let FIREBASE_TOKEN_PORT: String = ":6000"
     static let SUPERHERO_REGISTER_MEDIA_PORT: String = ":7000"

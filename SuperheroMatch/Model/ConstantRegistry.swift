@@ -32,8 +32,12 @@ class ConstantRegistry {
     static let SUPERHERO_PROFILE_PORT: String = ":4400"
     static let SUPERHERO_GET_MATCH_PORT: String = ":4500"
     static let SUPERHERO_CHAT_PORT: String = ":5000"
+    static let SUPERHERO_OFFLINE_MESSAGES_PORT: String = ":5100"
+    static let SUPERHERO_DELETE_OFFLINE_MESSAGE_PORT: String = ":5200"
     static let FIREBASE_TOKEN_PORT: String = ":6000"
     static let SUPERHERO_REGISTER_MEDIA_PORT: String = ":7000"
+    static let SUPERHERO_UPDATE_MEDIA_PORT: String = ":7100"
+    static let SUPERHERO_DELETE_MEDIA_PORT: String = ":7200"
     
     static let DEFAULT_MAX_DISTANCE: Int = 50
     static let DEFAULT_MIN_AGE: Int = 25
@@ -57,5 +61,9 @@ class ConstantRegistry {
     
     static let ON_UPLOAD_MAIN_PROFILE_PICTURE: String = "onUploadMainProfilePicture"
     static let MAIN_PROFILE_PICTURE_URL: String = "mainProfilePictureURL"
+    
+    static let MESSAGE: String = "message"
+    
+    static let MESSAGE_HAS_BEEN_READ: Int64 = 1
     
 }

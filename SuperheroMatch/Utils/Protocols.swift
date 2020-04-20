@@ -32,11 +32,6 @@ protocol Printable {
 
 protocol MessageInputAccesoryViewDelegate {
     func handleUploadMessage(message: String)
-    func handleSelectImage()
-}
-
-protocol ChatCellDelegate {
-    func handlePlayVideo(for cell: ChatCell)
 }
 
 protocol MessageCellDelegate {

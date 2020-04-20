@@ -130,10 +130,8 @@ class DBConstants {
     static let MESSAGE_ID = "_id"
     static let MESSAGE_CHAT_ID = "message_chat_id"
     static let MESSAGE_SENDER_ID = "message_sender_id"
-    static let MESSAGE_RECEIVER_ID = "message_receiver_id"
     static let TEXT_MESSAGE = "text_message"
     static let MESSAGE_HAS_BEEN_READ = "message_has_been_read"
-    static let MESSAGE_UUID = "message_uuid"
     static let MESSAGE_CREATED = "match_message_created"
 
     // SQL to create table message
@@ -142,10 +140,8 @@ class DBConstants {
     MESSAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
     MESSAGE_CHAT_ID + " TEXT NOT NULL," +
     MESSAGE_SENDER_ID + " TEXT NOT NULL," +
-    MESSAGE_RECEIVER_ID + " TEXT NOT NULL," +
     TEXT_MESSAGE + " TEXT," +
     MESSAGE_HAS_BEEN_READ + " INTEGER default 0," +
-    MESSAGE_UUID + " TEXT NOT NULL UNIQUE," +
     MESSAGE_CREATED + " TEXT default CURRENT_TIMESTAMP , " +
     " FOREIGN KEY(" + MESSAGE_CHAT_ID + ") REFERENCES " + TABLE_CHAT + "(" + CHAT_ID + ") " +
     ")"
@@ -164,8 +160,7 @@ class DBConstants {
     "CREATE TABLE IF NOT EXISTS " + TABLE_MESSAGE_QUEUE + " (" +
     MESSAGE_QUEUE_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
     MESSAGE_QUEUE_MESSAGE_UUID + " TEXT NOT NULL UNIQUE," +
-    MESSAGE_QUEUE_MESSAGE_RECEIVER_ID + " INTEGER NOT NULL," +
-    " FOREIGN KEY(" + MESSAGE_QUEUE_MESSAGE_UUID + ") REFERENCES " + TABLE_MESSAGE + "(" + MESSAGE_UUID + ") " +
+    MESSAGE_QUEUE_MESSAGE_RECEIVER_ID + " INTEGER NOT NULL " +
     ")"
     
     
@@ -180,8 +175,7 @@ class DBConstants {
     static let TABLE_CREATE_RETRIEVED_OFFLINE_MESSAGE_UUID =
     "CREATE TABLE IF NOT EXISTS " + TABLE_RETRIEVED_OFFLINE_MESSAGE_UUID + " (" +
     RETRIEVED_OFFLINE_MESSAGE_UUID_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-    RETRIEVED_OFFLINE_MESSAGE_UUID + " TEXT NOT NULL UNIQUE," +
-    " FOREIGN KEY(" + RETRIEVED_OFFLINE_MESSAGE_UUID + ") REFERENCES " + TABLE_MESSAGE + "(" + MESSAGE_UUID + ")" +
+    RETRIEVED_OFFLINE_MESSAGE_UUID + " TEXT NOT NULL UNIQUE" +
     ")"
     
     
@@ -196,8 +190,7 @@ class DBConstants {
     static let TABLE_CREATE_RECEIVED_ONLINE_MESSAGE =
     "CREATE TABLE IF NOT EXISTS " + TABLE_RECEIVED_ONLINE_MESSAGE + " (" +
     RECEIVED_ONLINE_MESSAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-    RECEIVED_ONLINE_MESSAGE_UUID + " TEXT NOT NULL UNIQUE," +
-    " FOREIGN KEY(" + RECEIVED_ONLINE_MESSAGE_UUID + ") REFERENCES " + TABLE_MESSAGE + "(" + MESSAGE_UUID + ")" +
+    RECEIVED_ONLINE_MESSAGE_UUID + " TEXT NOT NULL UNIQUE" +
     ")"
     
     //=======================================================================================================================

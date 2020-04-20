@@ -16,6 +16,7 @@ import UIKit
 import Firebase
 import MobileCoreServices
 import AVFoundation
+import SocketIO
 
 private let reuseIdentifier = "ChatCell"
 
@@ -25,13 +26,16 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     var chat: Chat?
     var messages = [Message]()
-    var player: AVPlayer?
-    var playerLayer: AVPlayerLayer?
+    let userDB = UserDB.sharedDB
+    let chatDB = ChatDB.sharedDB
+    var manager: SocketManager!
+    var socket: SocketIOClient!
     
     lazy var containerView: MessageInputAccesoryView = {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 60)
         let containerView = MessageInputAccesoryView(frame: frame)
         containerView.delegate = self
+        
         return containerView
     }()
     
@@ -50,18 +54,34 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         configureKeyboardObservers()
         
         observeMessages()
+        
+        self.manager = SocketManager(socketURL: URL(string: "\(ConstantRegistry.BASE_SERVER_URL)\(ConstantRegistry.SUPERHERO_CHAT_PORT)")!, config: [.log(true), .forceWebsockets(true), .secure(true), .selfSigned(true), .sessionDelegate(CustomSessionDelegate())])
+        
+        self.socket = self.manager.defaultSocket
+        
+        self.socket.on(clientEvent: .connect) {data, ack in
+            print("socket connected")
+        }
+        
+        self.socket.on(ConstantRegistry.MESSAGE) {[weak self] data, ack in
+            
+            
+            
+        }
+        
+        self.socket.connect()
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        self.socket.connect()
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        self.socket.disconnect()
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
-        player?.pause()
-        playerLayer?.removeFromSuperlayer()
     }
     
     override var inputAccessoryView: UIView? {
@@ -91,11 +111,13 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ChatCell
         cell.message = messages[indexPath.item]
-        cell.delegate = self
         configureMessage(cell: cell, message: messages[indexPath.item])
+        
         return cell
+        
     }
     
     // MARK: - Handlers
@@ -113,36 +135,44 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     func estimateFrameForText(_ text: String) -> CGRect {
+        
         let size = CGSize(width: 200, height: 1000)
         let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        
         return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)], context: nil)
+        
     }
     
     func configureMessage(cell: ChatCell, message: Message) {
-        let currentUid = "1"
+        
+        let (dbErr, user) = self.userDB.getUser()
+        if case .SQLError = dbErr {
+            print("###########  getUser dbErr  ##############")
+            print(dbErr)
+        }
         
         cell.bubbleWidthAnchor?.constant = estimateFrameForText(message.messageText!).width + 32
         cell.frame.size.height = estimateFrameForText(message.messageText!).height + 20
-        cell.messageImageView.isHidden = true
         cell.textView.isHidden = false
-        cell.bubbleView.backgroundColor  = UIColor.rgb(red: 0, green: 137, blue: 249)
+        cell.bubbleView.backgroundColor  = .white //UIColor.rgb(red: 0, green: 137, blue: 249)
         
         
-        if message.messageSenderId == currentUid {
+        if message.messageSenderId == user?.userID {
             cell.bubbleViewRightAnchor?.isActive = true
             cell.bubbleViewLeftAnchor?.isActive = false
-            cell.textView.textColor = .white
+            cell.textView.textColor = .black
             cell.profileImageView.isHidden = true
         } else {
             cell.bubbleViewRightAnchor?.isActive = false
             cell.bubbleViewLeftAnchor?.isActive = true
             cell.bubbleView.backgroundColor = UIColor.rgb(red: 240, green: 240, blue: 240)
             cell.textView.textColor = .black
-            cell.profileImageView.isHidden = false
         }
+        
     }
     
     func configureNavigationBar() {
+        
         guard let chat = self.chat else { return }
         
         navigationItem.title = chat.chatName
@@ -153,6 +183,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
         
         navigationItem.rightBarButtonItem = infoBarButtonItem
+        
     }
     
     func configureKeyboardObservers() {
@@ -168,16 +199,13 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     // MARK: - API
     
-    func uploadMessageToServer(withProperties properties: [String: AnyObject]) {
-        let currentUid = "1"
-        guard let chat = self.chat else { return }
-        let creationDate = Int(NSDate().timeIntervalSince1970)
+    func uploadMessageToServer(outgoingMessage: [String: Any]) {
         
-        var values: [String: AnyObject] = ["toId": chat.matchedUserId as AnyObject, "fromId": currentUid as AnyObject, "creationDate": creationDate as AnyObject, "read": false as AnyObject]
+        // Send message to server
+        // self.socket.emit...
         
-        properties.forEach({values[$0] = $1})
+        uploadMessageNotification(outgoingMessage: outgoingMessage)
         
-        uploadMessageNotification(isImageMessage: false, isVideoMessage: false, isTextMessage: true)
     }
     
     func observeMessages() {
@@ -185,7 +213,8 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     func fetchMessage(withMessageId messageId: String) {
-        let message = Message(messageId: 3, messageChatId: "1", messageSenderId: "Superhero 1", messageReceiverId: "Superhero 2", messageText: "Super message", messageCreated: "17:10 2019-07-21", messageUUID: "uuid3")
+        
+        let message = Message(messageId: 3, messageChatId: "1", messageSenderId: "Superhero 1", messageText: "Super message", messageCreated: "17:10 2019-07-21")
         self.messages.append(message)
         
         DispatchQueue.main.async(execute: {
@@ -193,73 +222,24 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
             let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
             self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
         })
+        
         self.setMessageToRead(forMessageId: messageId, fromId: message.messageSenderId)
+        
     }
     
-    func uploadMessageNotification(isImageMessage: Bool, isVideoMessage: Bool, isTextMessage: Bool) {
-        print("uploadMessageNotification")
+    func uploadMessageNotification(outgoingMessage: [String: Any]) {
         
-        let message = Message(messageId: 4, messageChatId: "1", messageSenderId: "Superhero 1", messageReceiverId: "Superhero 2", messageText: "Another super message", messageCreated: "17:15 2019-07-21", messageUUID: "uuid4")
+        let message = Message(messageId: nil, messageChatId: self.chat?.chatID, messageSenderId: outgoingMessage["senderId"] as? String, messageText: outgoingMessage["message"] as? String, messageCreated: outgoingMessage["createdAt"] as? String)
         self.messages.append(message)
         
         self.collectionView?.reloadData()
         let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
         self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
-    }
-    
-    func uploadImageToStorage(selectedImage image: UIImage, completion: @escaping (_ imageUrl: String) -> ()) {
-        let filename = NSUUID().uuidString
-        guard let uploadData = image.jpegData(compressionQuality: 1.0) else { return }
         
-        print("uploadImageToStorage")
     }
-    
-    func sendMessage(withImageUrl imageUrl: String, image: UIImage) {
-        let properties = ["imageUrl": imageUrl, "imageWidth": image.size.width as Any, "imageHeight": image.size.height as Any] as [String: AnyObject]
-        
-        self.uploadMessageToServer(withProperties: properties)
-        self.uploadMessageNotification(isImageMessage: true, isVideoMessage: false, isTextMessage: false)
-    }
-    
-    func uploadVideoToStorage(withUrl url: URL) {
-        let filename = NSUUID().uuidString
-        
-        print("uploadVideoToStorage")
-    }
-    
-    func thumbnailImage(forFileUrl fileUrl: URL) -> UIImage? {
-        let asset = AVAsset(url: fileUrl)
-        let imageGenerator = AVAssetImageGenerator(asset: asset)
-        
-        do {
-            let time = CMTimeMake(value: 1, timescale: 60)
-            let thumbnailCGImage = try imageGenerator.copyCGImage(at: time, actualTime: nil)
-            return UIImage(cgImage: thumbnailCGImage)
-        } catch let error {
-            print("DEBUG: Exception error: ", error)
-        }
-        return nil
-    }
-    
+
     func setMessageToRead(forMessageId messageId: String, fromId: String) {
         print("setMessageToRead")
-    }
-}
-
-// MARK: - UIImagePickerControllerDelegate
-
-extension ChatController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
-        if let videoUrl = info[.mediaURL] as? URL {
-            uploadVideoToStorage(withUrl: videoUrl)
-        } else if let selectedImage = info[.editedImage] as? UIImage {
-            uploadImageToStorage(selectedImage: selectedImage) { (imageUrl) in
-                self.sendMessage(withImageUrl: imageUrl, image: selectedImage)
-            }
-        }
-        dismiss(animated: true, completion: nil)
     }
 }
 
@@ -268,34 +248,43 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
 extension ChatController: MessageInputAccesoryViewDelegate {
     
     func handleUploadMessage(message: String) {
-        let properties = ["messageText": message] as [String: AnyObject]
-        uploadMessageToServer(withProperties: properties)
+        
+        if message.count == 0 {
+            return
+        }
+        
+        let (dbErr, user) = self.userDB.getUser()
+        if case .SQLError = dbErr {
+            print("###########  getUser dbErr  ##############")
+            print(dbErr)
+        }
+        
+        // 1. Save this message to local database
+        let dateFormatter: DateFormatter = DateFormatter()
+        
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        
+        let date: String = dateFormatter.string(from: Date())
+        
+        let (err, _) = self.chatDB.insertChatMessage(messageSenderId: user?.userID, messageChatId: self.chat?.chatID, messageHasBeenRead: ConstantRegistry.MESSAGE_HAS_BEEN_READ, messageCreated: date, messagetText: message)
+        if case .SQLError = err {
+            print("###########  insertChatMessage dbErr  ##############")
+            print(err)
+        }
+        
+        // 2. Construct outgoing message object
+        var outgoingMessage = [String: Any]()
+        outgoingMessage["messageType"] = ConstantRegistry.MESSAGE
+        outgoingMessage["senderId"] = user?.userID
+        outgoingMessage["receiverId"] = self.chat?.matchedUserId
+        outgoingMessage["message"] = message
+        outgoingMessage["createdAt"] = date
+        
+        // 3. Call uploadMessageToServer with the outgoing message passed as parameter
+        uploadMessageToServer(outgoingMessage: outgoingMessage)
         
         self.containerView.clearMessageTextView()
-    }
-    
-    func handleSelectImage() {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.allowsEditing = true
-        imagePickerController.mediaTypes = [kUTTypeImage as String, kUTTypeMovie as String]
-        present(imagePickerController, animated: true, completion: nil)
-    }
-}
-
-// MARK: - ChatCellDelegate
-
-extension ChatController: ChatCellDelegate {
-    
-    func handlePlayVideo(for cell: ChatCell) {
-        guard let player = self.player else { return }
-        guard let playerLayer = self.playerLayer else { return }
-        playerLayer.frame = cell.bubbleView.bounds
-        cell.bubbleView.layer.addSublayer(playerLayer)
         
-        cell.activityIndicatorView.startAnimating()
-        player.play()
-        cell.playButton.isHidden = true
     }
+    
 }
-

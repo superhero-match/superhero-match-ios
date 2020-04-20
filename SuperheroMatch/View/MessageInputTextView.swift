@@ -22,6 +22,7 @@ class MessageInputTextView: UITextView {
         let label = UILabel()
         label.text = "Enter message.."
         label.textColor = .lightGray
+        
         return label
     }()
     

@@ -60,7 +60,6 @@ class MessagesVC: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let uid = "1"
         let message = messages[indexPath.row]
-        let chatPartnerId = message.messageReceiverId
         
         self.messages.remove(at: indexPath.row)
         self.tableView.deleteRows(at: [indexPath], with: .automatic)
@@ -84,7 +83,6 @@ class MessagesVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
-        let chatPartnerId = message.messageReceiverId
         let cell = tableView.cellForRow(at: indexPath) as! MessageCell
         self.showChatController(forChat: self.chat!)
         cell.messageTextLabel.font = UIFont.systemFont(ofSize: 12)
@@ -126,11 +124,11 @@ class MessagesVC: UITableViewController {
     
     func fetchMessage(withMessageId messageId: String) {
         
-        let message1 = Message(messageId: 1, messageChatId: "1", messageSenderId: "Superhero 1", messageReceiverId: "Superhero 2", messageText: "Awesome", messageCreated: "17:04 2019-07-21", messageUUID: "uuid1")
+        let message1 = Message(messageId: 1, messageChatId: "1", messageSenderId: "Superhero 1", messageText: "Awesome", messageCreated: "17:04 2019-07-21")
         let chatPartnerId1 = message1.messageSenderId!
         self.messagesDictionary[chatPartnerId1] = message1
         
-        let message2 = Message(messageId: 2, messageChatId: "1", messageSenderId: "Superhero 1", messageReceiverId: "Superhero 2", messageText: "More awesome", messageCreated: "17:06 2019-07-21", messageUUID: "uuid1")
+        let message2 = Message(messageId: 2, messageChatId: "1", messageSenderId: "Superhero 1", messageText: "More awesome", messageCreated: "17:06 2019-07-21")
         let chatPartnerId2 = message2.messageSenderId!
         self.messagesDictionary[chatPartnerId2] = message2
         

@@ -24,6 +24,7 @@ class MessageInputAccesoryView: UIView {
         let tv = MessageInputTextView()
         tv.font = UIFont.systemFont(ofSize: 16)
         tv.isScrollEnabled = false
+        
         return tv
     }()
     
@@ -32,13 +33,8 @@ class MessageInputAccesoryView: UIView {
         button.setTitle("Send", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.addTarget(self, action: #selector(handleUploadMessage), for: .touchUpInside)
+        
         return button
-    }()
-    
-    let uploadImageIcon: UIImageView = {
-        let iv = UIImageView()
-        iv.image = UIImage(named: "<#T##String#>")
-        return iv
     }()
     
     // MARK: - Init
@@ -53,13 +49,8 @@ class MessageInputAccesoryView: UIView {
         addSubview(sendButton)
         sendButton.anchor(top: topAnchor, left: nil, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 50, height: 50)
         
-        addSubview(uploadImageIcon)
-        uploadImageIcon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectImage)))
-        uploadImageIcon.isUserInteractionEnabled = true
-        uploadImageIcon.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 4, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 44, height: 44)
-        
         addSubview(messageInputTextView)
-        messageInputTextView.anchor(top: topAnchor, left: uploadImageIcon.rightAnchor, bottom: safeAreaLayoutGuide.bottomAnchor, right: sendButton.leftAnchor, paddingTop: 8, paddingLeft: 4, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
+        messageInputTextView.anchor(top: topAnchor, left: leftAnchor, bottom: safeAreaLayoutGuide.bottomAnchor, right: sendButton.leftAnchor, paddingTop: 8, paddingLeft: 4, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
         
         let separatorView = UIView()
         separatorView.backgroundColor = .lightGray
@@ -87,8 +78,5 @@ class MessageInputAccesoryView: UIView {
         delegate?.handleUploadMessage(message: message)
     }
     
-    @objc func handleSelectImage() {
-        delegate?.handleSelectImage()
-    }
 }
 

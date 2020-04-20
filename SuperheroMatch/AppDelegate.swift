@@ -194,8 +194,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                     return
                 }
                 
+                // Display notification
+                let center = UNUserNotificationCenter.current()
+                
+                let content = UNMutableNotificationContent()
+                content.title = "It's a match!"
+                content.body = "You matched with \(response.match!.superheroName ?? "a user.")"
+                content.sound = .default
+                
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2, repeats: false)
+                
+                let request = UNNotificationRequest(identifier: "notification", content: content, trigger: trigger)
+                
+                center.add(request, withCompletionHandler: {(error) in
+                    
+                    if error != nil {
+                        print("Error = \(error?.localizedDescription ?? "error notification")")
+                    }
+                    
+                })
+                                                   
+                
             } catch {
-                // TO-DO: Show alert that something went wrong
                 print("catch in getMatch")
             }
         }

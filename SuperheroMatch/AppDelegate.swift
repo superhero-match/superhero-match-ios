@@ -28,6 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     let userDB = UserDB.sharedDB
     let superheroMatchDB = SuperheroMatchDB.sharedDB
     let chatDB = ChatDB.sharedDB
+    var offlineMessages: OfflineMessages?
+    var deleteOfflineMessages: DeleteOfflineMessages?
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -151,6 +153,93 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         // ...
     }
     
+    func configureOfflineMessagesRequestParameters(superheroId: String!) -> [String: Any] {
+        
+        var params = [String: Any]()
+        
+        params["superheroId"] = superheroId
+        
+        return params
+        
+    }
+    
+    func getOfflineMessages(params: [String: Any]) {
+        
+        self.offlineMessages = OfflineMessages()
+        self.offlineMessages!.offlineMessages(params: params) { json, error in
+            do {
+                
+                //Convert to Data
+                let jsonData = try JSONSerialization.data(withJSONObject: json!, options: JSONSerialization.WritingOptions.prettyPrinted)
+                
+                //In production, you usually want to try and cast as the root data structure. Here we are casting as a dictionary. If the root object is an array cast as [Any].
+                let getOfflineMessagesResponse = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? AnyObject
+                
+                let response = try OfflineMessagesResponse(json: getOfflineMessagesResponse as! [String : Any])
+
+                if response.status != 200 {
+                    print("Something went wrong!")
+                    
+                    return
+                }
+                
+                print("All good!")
+                var matchedUserName: String?
+                
+                for message in response.messages {
+                    
+                    // Get chat by matched user id
+                    // Save the message to the local database
+                    let (err, chat) = self.chatDB.getChatByMatchedUserId(matchedUserId: message.senderId)
+                    if case .SQLError = err {
+                        print("###########  getChatByMatchedUserId dbErr  ##############")
+                        print(err)
+                    }
+                    
+                    matchedUserName = chat?.chatName!
+                    
+                    // Save the message to the local database
+                    let (dbErr, _) = self.chatDB.insertChatMessage(messageSenderId: message.senderId, messageChatId: chat?.chatID, messageHasBeenRead: ConstantRegistry.MESSAGE_HAS_NOT_BEEN_READ, messageCreated: message.createdAt, messagetText: message.message)
+                    if case .SQLError = dbErr {
+                        print("###########  insertChatMessage dbErr  ##############")
+                        print(dbErr)
+                    }
+                    
+                }
+                
+                self.deleteOfflineMessages = DeleteOfflineMessages()
+                self.deleteOfflineMessages!.deleteOfflineMessages(params: params) { json, error in
+                    print("messages were deleted from cache")
+                }
+                
+                
+                // Display notification
+                let center = UNUserNotificationCenter.current()
+                
+                let content = UNMutableNotificationContent()
+                content.title = "New message"
+                content.body = "You received a message from \(matchedUserName ?? "a user.")"
+                content.sound = .default
+                
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2, repeats: false)
+                
+                let request = UNNotificationRequest(identifier: "notification", content: content, trigger: trigger)
+                
+                center.add(request, withCompletionHandler: {(error) in
+                    
+                    if error != nil {
+                        print("Error = \(error?.localizedDescription ?? "error notification")")
+                    }
+                    
+                })
+                
+            } catch {
+                print("catch in getMatch")
+            }
+        }
+        
+    }
+    
     func configureGetMatchRequestParameters(superheroId: String!, matchedSuperheroId: String!) -> [String: Any] {
         
         var params = [String: Any]()
@@ -267,6 +356,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 
                 return
             }
+        case "new_message":
+            let (uerr, userId) = self.userDB.getUserId()
+            if case .SQLError = uerr {
+                print("###########  getUserId uerr  ##############")
+                print(uerr)
+            
+                return
+            }
+         
+            self.getOfflineMessages(params: configureOfflineMessagesRequestParameters(superheroId: userId))
             
         default:
             print("###########  unknown message  ##############")
@@ -298,9 +397,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 return
             }
             
-            let params = configureGetMatchRequestParameters(superheroId: userId, matchedSuperheroId: matchedSuperheroId)
-            
-            self.getMatch(params: params)
+            self.getMatch(params: configureGetMatchRequestParameters(superheroId: userId, matchedSuperheroId: matchedSuperheroId))
         case "delete_match":
             let matchedSuperheroId = userInfo["superhero_id"] as? String
             
@@ -319,6 +416,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 
                 return
             }
+        case "new_message":
+            let (uerr, userId) = self.userDB.getUserId()
+            if case .SQLError = uerr {
+                print("###########  getUserId uerr  ##############")
+                print(uerr)
+                
+                return
+            }
+             
+            self.getOfflineMessages(params: configureOfflineMessagesRequestParameters(superheroId: userId))
             
         default:
             print("###########  unknown message  ##############")
@@ -497,6 +604,16 @@ extension AppDelegate : MessagingDelegate {
                 
                 return
             }
+        case "new_message":
+            let (uerr, userId) = self.userDB.getUserId()
+            if case .SQLError = uerr {
+                print("###########  getUserId uerr  ##############")
+                print(uerr)
+            
+                return
+            }
+         
+            self.getOfflineMessages(params: configureOfflineMessagesRequestParameters(superheroId: userId))
             
         default:
             print("###########  unknown message  ##############")

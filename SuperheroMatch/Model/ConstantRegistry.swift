@@ -63,7 +63,9 @@ class ConstantRegistry {
     static let MAIN_PROFILE_PICTURE_URL: String = "mainProfilePictureURL"
     
     static let MESSAGE: String = "message"
+    static let ON_OPEN: String = "onOpen"
     
+    static let MESSAGE_HAS_NOT_BEEN_READ: Int64 = 0
     static let MESSAGE_HAS_BEEN_READ: Int64 = 1
     
 }

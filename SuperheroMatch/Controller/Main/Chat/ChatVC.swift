@@ -55,33 +55,128 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         
         observeMessages()
         
+        let (err, msgs) = self.chatDB.getAllMessagesForChatWithId(chatId: self.chat?.chatID)
+        if case .SQLError = err {
+            print("###########  getUser err  ##############")
+            print(err)
+        }
+        
+        for message in msgs {
+            messages.append(message)
+        }
+        
+        collectionView?.reloadData()
+        let indexPath = IndexPath(item: messages.count - 1, section: 0)
+        collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+        
         self.manager = SocketManager(socketURL: URL(string: "\(ConstantRegistry.BASE_SERVER_URL)\(ConstantRegistry.SUPERHERO_CHAT_PORT)")!, config: [.log(true), .forceWebsockets(true), .secure(true), .selfSigned(true), .sessionDelegate(CustomSessionDelegate())])
         
         self.socket = self.manager.defaultSocket
         
         self.socket.on(clientEvent: .connect) {data, ack in
+            
             print("socket connected")
+            
+            let (dbErr, user) = self.userDB.getUser()
+            if case .SQLError = dbErr {
+                print("###########  getUser dbErr  ##############")
+                print(dbErr)
+            }
+            
+            let userId: String = (user?.userID)!
+            
+            self.socket.emit(ConstantRegistry.ON_OPEN, userId)
+            
         }
         
         self.socket.on(ConstantRegistry.MESSAGE) {[weak self] data, ack in
             
+            print("!!! message !!!")
+            print(data)
             
+            // 1. Save message to local database
+            // Determine if this message is for this chat and from that derive wheter message is going to be read
+            let messageRead: Int64 = (data[0] as! [String: Any])["senderId"] as? String == self!.chat?.matchedUserId ? ConstantRegistry.MESSAGE_HAS_BEEN_READ : ConstantRegistry.MESSAGE_HAS_NOT_BEEN_READ
+            
+            // Convert createdAt from UTC to local time
+            let createdAtUTC: String = ((data[0] as! [String: Any])["createdAt"] as? String)!
+            
+            print("createdAtUTC")
+            print(createdAtUTC)
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+            
+            let dt = dateFormatter.date(from: createdAtUTC)
+            dateFormatter.timeZone = TimeZone.current
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+            
+            print("dt")
+            print(dt)
+            
+            let createdAtLocal: String = dateFormatter.string(from: dt!)
+            
+            print("createdAtLocal")
+            print(createdAtLocal)
+            
+            // Get message
+            let message: String = ((data[0] as! [String: Any])["message"] as? String)!
+            
+            // Get senderId
+            let senderId: String = ((data[0] as! [String: Any])["senderId"] as? String)!
+            
+            self!.saveMessageToLoacalDB(senderId: senderId, message: message, createdAt: createdAtLocal, messageRead: messageRead)
+            
+            self!.addMessageToChat(senderId: senderId, message: message, createdAt: createdAtLocal)
             
         }
         
         self.socket.connect()
+        
+    }
+    
+    func saveMessageToLoacalDB(senderId: String!, message: String!, createdAt: String!, messageRead: Int64!) {
+        
+        // Save the message to the local database
+        let (err, _) = chatDB.insertChatMessage(messageSenderId: senderId, messageChatId: chat?.chatID, messageHasBeenRead: messageRead, messageCreated: createdAt, messagetText: message)
+        if case .SQLError = err {
+            print("###########  insertChatMessage dbErr  ##############")
+            print(err)
+        }
+        
+    }
+    
+    func addMessageToChat(senderId: String!, message: String!, createdAt: String!) {
+        
+        // Check if this message is sent to this chat. If so, add it to the messages list, if not, then do nothing.
+        if senderId == chat?.matchedUserId {
+            
+            let msg = Message(messageId: nil, messageChatId: chat?.chatID, messageSenderId: senderId, messageText: message, messageCreated: createdAt)
+            messages.append(msg)
+            
+            collectionView?.reloadData()
+            let indexPath = IndexPath(item: messages.count - 1, section: 0)
+            collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+            
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
         self.socket.connect()
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        
         self.socket.disconnect()
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
+        
     }
     
     override var inputAccessoryView: UIView? {
@@ -97,6 +192,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     // MARK: - UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
         var height: CGFloat = 80
         
         let message = messages[indexPath.item]
@@ -104,6 +200,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         height = estimateFrameForText(message.messageText).height + 20
  
         return CGSize(width: view.frame.width, height: height)
+        
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -123,11 +220,13 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     // MARK: - Handlers
     
     @objc func handleInfoTapped() {
+        
         // Add network call to fetch suggestions profile data
         print("handleInfoTapped")
 //        let profileController = ProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
 //        profileController.user = user
 //        navigationController?.pushViewController(profileController, animated: true)
+        
     }
     
     @objc func handleKeyboardDidShow() {
@@ -191,18 +290,19 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     func scrollToBottom() {
+        
         if messages.count > 0 {
             let indexPath = IndexPath(item: messages.count - 1, section: 0)
             collectionView?.scrollToItem(at: indexPath, at: .top, animated: true)
         }
+        
     }
     
     // MARK: - API
     
     func uploadMessageToServer(outgoingMessage: [String: Any]) {
         
-        // Send message to server
-        // self.socket.emit...
+        self.socket.emit(ConstantRegistry.MESSAGE, outgoingMessage.description.replacingOccurrences(of: "[", with: "{").replacingOccurrences(of: "]", with: "}"))
         
         uploadMessageNotification(outgoingMessage: outgoingMessage)
         

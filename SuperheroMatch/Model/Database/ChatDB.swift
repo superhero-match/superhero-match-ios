@@ -323,7 +323,7 @@ class ChatDB {
                     }
                     
                     
-                    let chat = Chat(chatID: chatId, chatName: chatName, matchedUserId: matchedUserId, matchedUserMainProfilePic: matchedUserMainProfilePic, lastActivityMessage: lastActivityMessage?.messageChatId, lastActivityDate: lastActivityMessage?.messageCreated, unreadMessageCount: Int64(unreadMessageCount ?? ""))
+                    let chat = Chat(chatID: chatId, chatName: chatName, matchedUserId: matchedUserId, matchedUserMainProfilePic: matchedUserMainProfilePic, lastActivityMessage: lastActivityMessage?.messageText, lastActivityDate: lastActivityMessage?.messageCreated, unreadMessageCount: Int64(unreadMessageCount ?? ""))
                     
                     
                     chats.append(chat)
@@ -397,7 +397,7 @@ class ChatDB {
                         print(dbErr)
                     }
                     
-                    chat = Chat(chatID: chatId, chatName: chatName, matchedUserId: matchedUserId, matchedUserMainProfilePic: matchedUserMainProfilePic, lastActivityMessage: lastActivityMessage?.messageChatId, lastActivityDate: lastActivityMessage?.messageCreated, unreadMessageCount: Int64(unreadMessageCount ?? ""))
+                    chat = Chat(chatID: chatId, chatName: chatName, matchedUserId: matchedUserId, matchedUserMainProfilePic: matchedUserMainProfilePic, lastActivityMessage: lastActivityMessage?.messageText, lastActivityDate: lastActivityMessage?.messageCreated, unreadMessageCount: Int64(unreadMessageCount ?? ""))
                     
                 }
                 

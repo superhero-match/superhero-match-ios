@@ -26,6 +26,24 @@ class MatchesTableViewCell: UITableViewCell {
             
             profileImageView.kf.indicatorType = .activity
             profileImageView.kf.setImage(with: URL(string: (chat?.matchedUserMainProfilePic!)!), placeholder: UIImage(named: "user_profile"), options: [.transition(.fade(0.7))], progressBlock: nil)
+            
+            let dateSplits = chat?.lastActivityDate.components(separatedBy: " ")
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            let messageDate = formatter.date(from: dateSplits![0])
+            
+            let today = Date()
+            let todayFormatedStr = formatter.string(from: today)
+            let todayFormatedDate = formatter.date(from: todayFormatedStr)
+            
+            if todayFormatedDate == messageDate {
+                
+                lastMessageCreatedAt.text = dateSplits![1]
+                return
+                
+            }
+            
+            lastMessageCreatedAt.text = dateSplits![0]
         }
         
     }
@@ -55,6 +73,14 @@ class MatchesTableViewCell: UITableViewCell {
         return lastMessage
     }()
     
+    let lastMessageCreatedAt: UILabel = {
+        let lastMessageCreatedAt = UILabel()
+        lastMessageCreatedAt.font = UIFont(name: "Gotham Book", size: 12)
+        lastMessageCreatedAt.textAlignment = .right
+        
+        return lastMessageCreatedAt
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -63,7 +89,10 @@ class MatchesTableViewCell: UITableViewCell {
         profileImageView.layer.cornerRadius = 80 / 2
         
         addSubview(chatName)
-        chatName.anchor(top: self.topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 16, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: 0, height: 35)
+        chatName.anchor(top: self.topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 16, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: 150, height: 35)
+        
+        addSubview(lastMessageCreatedAt)
+        lastMessageCreatedAt.anchor(top: self.topAnchor, left: chatName.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 16, paddingLeft: 0, paddingBottom: 0, paddingRight: 5, width: 0, height: 35)
         
         addSubview(lastMessage)
         lastMessage.anchor(top: chatName.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: self.rightAnchor, paddingTop: 0, paddingLeft: 10, paddingBottom: 0, paddingRight: 0, width: 0, height: 35)

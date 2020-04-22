@@ -111,8 +111,6 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     
     var noSuggestionsVC: NoSuggestionsVC?
     
-    let child = SpinnerViewController()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         

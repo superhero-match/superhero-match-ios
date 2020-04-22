@@ -15,12 +15,12 @@
 import UIKit
 import Firebase
 import GoogleSignIn
+import MBProgressHUD
 
 class VerifyIdentityVC: UIViewController, GIDSignInUIDelegate {
     
     var checkEmail: CheckEmail?
     let userDB = UserDB.sharedDB
-    let child = SpinnerViewController()
 
     let logoContainerView: UIView = {
         let view = UIView()
@@ -119,32 +119,14 @@ class VerifyIdentityVC: UIViewController, GIDSignInUIDelegate {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func createSpinnerView(){
-        
-        // Add the spinner view controller
-        addChild(self.child)
-        self.child.view.frame = view.frame
-        view.addSubview(self.child.view)
-        self.child.didMove(toParent: self)
-        
-    }
-    
-    func removeSpinnerView() {
-        
-        self.child.willMove(toParent: nil)
-        self.child.view.removeFromSuperview()
-        self.child.removeFromParent()
-        
-    }
-    
     func checkEmailRegistered(checkEmail: CheckEmail, email: String) {
         
-        createSpinnerView()
+        MBProgressHUD.showAdded(to: self.view, animated: true)
         
         checkEmail.checkEmail(email: email) { json, error in
             do {
                 
-                self.removeSpinnerView()
+                MBProgressHUD.hide(for: self.view, animated: true)
                 
                 //Convert to Data
                 print("before jsonData")

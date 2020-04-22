@@ -124,9 +124,7 @@ class Superhero {
         }
         
         // Extract hasLikedMe
-        guard let hasLikedMe = json["hasLikedMe"] as? Bool else {
-            throw SerializationError.missing("hasLikedMe")
-        }
+        let hasLikedMe = ((json["hasLikedMe"] as? Bool) != nil) ? json["hasLikedMe"] as? Bool : false
         
         // Extract createdAt
         guard let createdAt = json["createdAt"] as? String else {

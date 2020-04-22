@@ -17,6 +17,7 @@ import Firebase
 import MobileCoreServices
 import AVFoundation
 import SocketIO
+import MBProgressHUD
 
 private let reuseIdentifier = "ChatCell"
 
@@ -30,6 +31,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     let chatDB = ChatDB.sharedDB
     var manager: SocketManager!
     var socket: SocketIOClient!
+    var suggestionProfile: SuggestionProfile?
     
     lazy var containerView: MessageInputAccesoryView = {
         let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 60)
@@ -91,18 +93,12 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         
         self.socket.on(ConstantRegistry.MESSAGE) {[weak self] data, ack in
             
-            print("!!! message !!!")
-            print(data)
-            
             // 1. Save message to local database
             // Determine if this message is for this chat and from that derive wheter message is going to be read
             let messageRead: Int64 = (data[0] as! [String: Any])["senderId"] as? String == self!.chat?.matchedUserId ? ConstantRegistry.MESSAGE_HAS_BEEN_READ : ConstantRegistry.MESSAGE_HAS_NOT_BEEN_READ
             
             // Convert createdAt from UTC to local time
             let createdAtUTC: String = ((data[0] as! [String: Any])["createdAt"] as? String)!
-            
-            print("createdAtUTC")
-            print(createdAtUTC)
             
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -112,13 +108,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
             dateFormatter.timeZone = TimeZone.current
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
             
-            print("dt")
-            print(dt)
-            
             let createdAtLocal: String = dateFormatter.string(from: dt!)
-            
-            print("createdAtLocal")
-            print(createdAtLocal)
             
             // Get message
             let message: String = ((data[0] as! [String: Any])["message"] as? String)!
@@ -132,7 +122,20 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
             
         }
         
-        self.socket.connect()
+        switch self.socket.status {
+        case SocketIOStatus.connected:
+            print("socket already connected")
+        case SocketIOStatus.connecting:
+            print("socket is connecting")
+        case SocketIOStatus.disconnected:
+            print("socket is disconnected")
+            print("###########  self.socket.connect()  ##############")
+            self.socket.connect()
+        case SocketIOStatus.notConnected:
+            print("socket is notConnected")
+            print("###########  self.socket.connect()  ##############")
+            self.socket.connect()
+        }
         
     }
     
@@ -165,17 +168,15 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     override func viewWillAppear(_ animated: Bool) {
         
-        self.socket.connect()
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
         
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        
+
         self.socket.disconnect()
         super.viewWillDisappear(animated)
-        tabBarController?.tabBar.isHidden = false
         
     }
     
@@ -221,11 +222,42 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     @objc func handleInfoTapped() {
         
-        // Add network call to fetch suggestions profile data
-        print("handleInfoTapped")
-//        let profileController = ProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
-//        profileController.user = user
-//        navigationController?.pushViewController(profileController, animated: true)
+        var params = [String: Any]()        
+        params["superheroId"] = self.chat?.matchedUserId
+
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        
+        self.suggestionProfile = SuggestionProfile()
+        self.suggestionProfile!.getSuggestionProfile(params: params) { json, error in
+            do {
+                
+                MBProgressHUD.hide(for: self.view, animated: true)
+                
+                //Convert to Data
+                let jsonData = try JSONSerialization.data(withJSONObject: json!, options: JSONSerialization.WritingOptions.prettyPrinted)
+                
+                //In production, you usually want to try and cast as the root data structure. Here we are casting as a dictionary. If the root object is an array cast as [Any].
+                let suggestionProfileResponse = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers) as? AnyObject
+                
+                let response = try SuggestionProfileResponse(json: suggestionProfileResponse as! [String : Any])
+                
+                if response.status != 200 {
+                    print("Something went wrong!")
+                    
+                    return
+                }
+                
+                self.tabBarController?.tabBar.isHidden = true
+                
+                var matchProfileVC: MatchProfileVC?
+                matchProfileVC = MatchProfileVC()
+                matchProfileVC!.superhero = response.profile
+                self.navigationController?.pushViewController(matchProfileVC!, animated: true)
+                
+            } catch {
+                print("catch in getSuggestionProfile")
+            }
+        }
         
     }
     
@@ -253,7 +285,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         cell.bubbleWidthAnchor?.constant = estimateFrameForText(message.messageText!).width + 32
         cell.frame.size.height = estimateFrameForText(message.messageText!).height + 20
         cell.textView.isHidden = false
-        cell.bubbleView.backgroundColor  = .white //UIColor.rgb(red: 0, green: 137, blue: 249)
+        cell.bubbleView.backgroundColor  = .white
         
         
         if message.messageSenderId == user?.userID {
@@ -266,6 +298,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
             cell.bubbleViewLeftAnchor?.isActive = true
             cell.bubbleView.backgroundColor = UIColor.rgb(red: 240, green: 240, blue: 240)
             cell.textView.textColor = .black
+            cell.matchedUserMainProfilePic = self.chat?.matchedUserMainProfilePic
         }
         
     }

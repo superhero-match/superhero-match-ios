@@ -96,6 +96,9 @@
 		11C8BC7B22DF83C90089DCE0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11C8BC7A22DF83C90089DCE0 /* GoogleService-Info.plist */; };
 		11D9330B2445DD5700F241F6 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D9330A2445DD5700F241F6 /* SpinnerViewController.swift */; };
 		11DAB6D323BBBD0900881573 /* ItIsAMatchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DAB6D223BBBD0900881573 /* ItIsAMatchVC.swift */; };
+		11FF3C35245044C00005C236 /* SuggestionProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11FF3C34245044BF0005C236 /* SuggestionProfile.swift */; };
+		11FF3C37245047450005C236 /* SuggestionProfileResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11FF3C36245047450005C236 /* SuggestionProfileResponse.swift */; };
+		11FF3C392450559B0005C236 /* MatchProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11FF3C382450559B0005C236 /* MatchProfileVC.swift */; };
 		13771A5756DCFA9DE7F49235 /* Pods_SuperheroMatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEB1BC6B65AB1EB9B4604B32 /* Pods_SuperheroMatch.framework */; };
 		3FCFFC296B003D6CD391E827 /* Pods_SuperheroMatchTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E77D9B26C1D651171341CCE /* Pods_SuperheroMatchTests.framework */; };
 		EB84F46F089DF5E915A50EDB /* Pods_SuperheroMatchUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DD572D8A3A75AD91A6C8667 /* Pods_SuperheroMatchUITests.framework */; };
@@ -217,6 +220,9 @@
 		11D9330A2445DD5700F241F6 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SpinnerViewController.swift; path = SuperheroMatch/Controller/SpinnerViewController.swift; sourceTree = SOURCE_ROOT; };
 		11DAB6D223BBBD0900881573 /* ItIsAMatchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItIsAMatchVC.swift; sourceTree = "<group>"; };
 		11F722416851569C1C7FBC5F /* Pods-SuperheroMatchUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SuperheroMatchUITests.release.xcconfig"; path = "Target Support Files/Pods-SuperheroMatchUITests/Pods-SuperheroMatchUITests.release.xcconfig"; sourceTree = "<group>"; };
+		11FF3C34245044BF0005C236 /* SuggestionProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionProfile.swift; sourceTree = "<group>"; };
+		11FF3C36245047450005C236 /* SuggestionProfileResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionProfileResponse.swift; sourceTree = "<group>"; };
+		11FF3C382450559B0005C236 /* MatchProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchProfileVC.swift; sourceTree = "<group>"; };
 		1E77D9B26C1D651171341CCE /* Pods_SuperheroMatchTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SuperheroMatchTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DD572D8A3A75AD91A6C8667 /* Pods_SuperheroMatchUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SuperheroMatchUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		368A0E37CB3D98F623B428A3 /* Pods-SuperheroMatchUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SuperheroMatchUITests.debug.xcconfig"; path = "Target Support Files/Pods-SuperheroMatchUITests/Pods-SuperheroMatchUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -275,6 +281,7 @@
 				1185A0E42446EE22002199C0 /* ChoiceItem.swift */,
 				11C46939244F1DEA002B744D /* OfflineMessage.swift */,
 				11C4693B244F2002002B744D /* OfflineMessagesResponse.swift */,
+				11FF3C36245047450005C236 /* SuggestionProfileResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -297,6 +304,7 @@
 				1131857023D0A34D0094BF9D /* GetMatch.swift */,
 				11C4693D244F211F002B744D /* OfflineMessages.swift */,
 				11C4693F244F21C2002B744D /* DeleteOfflineMessages.swift */,
+				11FF3C34245044BF0005C236 /* SuggestionProfile.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -331,6 +339,7 @@
 			isa = PBXGroup;
 			children = (
 				1130FD6522E0A48600B64C36 /* MatchesVC.swift */,
+				11FF3C382450559B0005C236 /* MatchProfileVC.swift */,
 			);
 			path = Matches;
 			sourceTree = "<group>";
@@ -852,6 +861,7 @@
 				1150E61B22E4B012007D16CF /* MessagesVC.swift in Sources */,
 				1130FD7022E0D88600B64C36 /* Chat.swift in Sources */,
 				1150E61D22E4B088007D16CF /* NewMessageVC.swift in Sources */,
+				11FF3C37245047450005C236 /* SuggestionProfileResponse.swift in Sources */,
 				11B4494922E23C0600FD7122 /* ChatDB.swift in Sources */,
 				11B8A1FD23B3C26500244E1F /* ProfilePicture.swift in Sources */,
 				11C4693C244F2002002B744D /* OfflineMessagesResponse.swift in Sources */,
@@ -862,6 +872,7 @@
 				1130FD7622E0E08700B64C36 /* ReceivedOnlineMessage.swift in Sources */,
 				1122491322FB41F70064F54C /* RegisterResponse.swift in Sources */,
 				1130FD7B22E0E33900B64C36 /* ProfileHeader.swift in Sources */,
+				11FF3C392450559B0005C236 /* MatchProfileVC.swift in Sources */,
 				110D372B22E34B0B00DE7405 /* DeleteAccount.swift in Sources */,
 				1114471F238AA39A0057350F /* ProfileImageCell.swift in Sources */,
 				11B4494522E1F62F00FD7122 /* UserDB.swift in Sources */,
@@ -898,6 +909,7 @@
 				1150E62522E4B1DE007D16CF /* MessageInputTextView.swift in Sources */,
 				110D372422E33F2100DE7405 /* CheckEmail.swift in Sources */,
 				11C6650E2351F966004E190E /* UserProfileVC.swift in Sources */,
+				11FF3C35245044C00005C236 /* SuggestionProfile.swift in Sources */,
 				1130FD7422E0DFCF00B64C36 /* MessageQueueItem.swift in Sources */,
 				11C8BC6E22DF410D0089DCE0 /* SuperheroNameVC.swift in Sources */,
 				11C6651023522C90004E190E /* UserSuggestionsVC.swift in Sources */,

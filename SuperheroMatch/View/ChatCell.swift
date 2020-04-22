@@ -31,11 +31,18 @@ class ChatCell: UICollectionViewCell {
                 textView.text = messageText
             }
             
-            // guard let chatPartnerId = message?.messageSenderId else { return }
-            
-            //            guard let profileImageUrl = user.profileImageUrl else { return }
-            //            self.profileImageView.loadImage(with: profileImageUrl)
         }
+    }
+    
+    var matchedUserMainProfilePic: String? {
+        
+        didSet {
+            
+            profileImageView.kf.indicatorType = .activity
+            profileImageView.kf.setImage(with: URL(string: matchedUserMainProfilePic!), placeholder: UIImage(named: "user_profile"), options: [.transition(.fade(0.7))], progressBlock: nil)
+            
+        }
+        
     }
     
     let activityIndicatorView: UIActivityIndicatorView = {

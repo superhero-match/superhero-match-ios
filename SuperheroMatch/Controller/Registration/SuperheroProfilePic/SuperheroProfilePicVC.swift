@@ -15,6 +15,7 @@
 import UIKit
 import Firebase
 import SocketIO
+import MBProgressHUD
 
 class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -26,7 +27,6 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
     let userDB = UserDB.sharedDB
     var manager: SocketManager!
     var socket: SocketIOClient!
-    let child = SpinnerViewController()
     
     let superheroProfilePicLabel: UILabel = {
         let lbl = UILabel()
@@ -115,7 +115,7 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         
         self.socket.on(ConstantRegistry.MAIN_PROFILE_PICTURE_URL) {[weak self] data, ack in
             
-            self!.removeSpinnerView()
+            MBProgressHUD.hide(for: self!.view, animated: true)
             
             if let url = data[0] as? String {
                 self!.userMainProfilePicURL = url
@@ -123,25 +123,20 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
             
         }
         
-        self.socket.connect()
-    }
-    
-    func createSpinnerView(){
-        
-        // Add the spinner view controller
-        addChild(self.child)
-        self.child.view.frame = view.frame
-        view.addSubview(self.child.view)
-        self.child.didMove(toParent: self)
-        
-    }
-    
-    func removeSpinnerView() {
-        
-        self.child.willMove(toParent: nil)
-        self.child.view.removeFromSuperview()
-        self.child.removeFromParent()
-        
+        switch self.socket.status {
+        case SocketIOStatus.connected:
+            print("socket already connected")
+        case SocketIOStatus.connecting:
+            print("socket is connecting")
+        case SocketIOStatus.disconnected:
+            print("socket is disconnected")
+            print("###########  self.socket.connect()  ##############")
+            self.socket.connect()
+        case SocketIOStatus.notConnected:
+            print("socket is notConnected")
+            print("###########  self.socket.connect()  ##############")
+            self.socket.connect()
+        }
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -167,7 +162,7 @@ class SuperheroProfilePicVC: UIViewController, UIImagePickerControllerDelegate, 
         let strBase64 = imageData.base64EncodedString(options: .lineLength64Characters)
         
         self.socket.emit(ConstantRegistry.ON_UPLOAD_MAIN_PROFILE_PICTURE, userID, strBase64)
-        createSpinnerView()
+        MBProgressHUD.showAdded(to: self.view, animated: true)
         
         self.dismiss(animated: true, completion: nil)
         

@@ -16,7 +16,6 @@ import Foundation
 
 class ProfilePicture {
     
-    var id: Int64!
     var superheroId: String!
     var profilePicUrl: String!
     var position: Int!
@@ -27,12 +26,10 @@ class ProfilePicture {
     }
     
     init(
-        id: Int64!,
         superheroId: String!,
         profilePicUrl: String!,
         position: Int!
     ) {
-            self.id = id
             self.superheroId = superheroId
             self.profilePicUrl = profilePicUrl
             self.position = position
@@ -40,11 +37,6 @@ class ProfilePicture {
     
     init(json: [String: Any]) throws {
 
-        // Extract id
-        guard let id = json["id"] as? Int64 else {
-            throw SerializationError.missing("id")
-        }
-        
         // Extract superheroId
         guard let superheroId = json["superheroId"] as? String else {
             throw SerializationError.missing("superheroId")
@@ -62,7 +54,6 @@ class ProfilePicture {
         
 
         // Initialize properties
-        self.id = id
         self.superheroId = superheroId
         self.profilePicUrl = profilePicUrl
         self.position = position

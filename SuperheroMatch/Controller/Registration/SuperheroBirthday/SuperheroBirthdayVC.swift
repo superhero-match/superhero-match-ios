@@ -75,6 +75,7 @@ class SuperheroBirthdayVC: UIViewController {
     }()
 
     override func viewDidLoad() {
+        
         super.viewDidLoad()
 
         // background color white
@@ -87,6 +88,7 @@ class SuperheroBirthdayVC: UIViewController {
         
         view.addSubview(termsAndPoliciesBtn)
         termsAndPoliciesBtn.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
+        
     }
     
     func configureComponents() {
@@ -98,6 +100,7 @@ class SuperheroBirthdayVC: UIViewController {
         
         view.addSubview(stackView)
         stackView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 240)
+        
     }
     
     @objc func handleNext() {
@@ -148,15 +151,19 @@ class SuperheroBirthdayVC: UIViewController {
         UserDefaults.standard.synchronize()
         
         print("Selected value \(selectedDate)")
+        
     }
     
     func showIncorrectAgeAlert() {
+        
         let alert = UIAlertController(title: "You must be 18+", message: "You can only use this app if you are 18 years old or older", preferredStyle: UIAlertController.Style.alert)
         
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { _ in
             //Cancel Action
         }))
+        
         self.present(alert, animated: true, completion: nil)
+        
     }
     
 }

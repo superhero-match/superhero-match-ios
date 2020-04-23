@@ -18,8 +18,9 @@ private let reuseIdentifier = "ProfileImageCell"
 
 class UserProfileImagesVC: UICollectionViewController , UICollectionViewDelegateFlowLayout {
     
-    var user: User?
-    var loadedUser: User?
+    var user: Superhero?
+    var loadedUser: Superhero?
+    var profilePictures : [ProfilePicture] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +34,17 @@ class UserProfileImagesVC: UICollectionViewController , UICollectionViewDelegate
 
         // Do any additional setup after loading the view.
         if let loadedUser = self.loadedUser {
+            
             self.user = loadedUser
+            
+            let profilePicture: ProfilePicture = ProfilePicture(superheroId: self.user?.userID, profilePicUrl: self.user?.mainProfilePicUrl, position: 0)
+            
+            profilePictures.append(profilePicture)
+            
+            for pp in self.user!.profilePictures {
+                profilePictures.append(pp)
+            }
+            
         } else {
             // Display an error message
             print("UserProfileImagesVC  -->  did not load user")
@@ -48,7 +59,7 @@ class UserProfileImagesVC: UICollectionViewController , UICollectionViewDelegate
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (self.user?.profilePicsUrls!.count)!
+        return ((self.user?.profilePictures.count)! + 1)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -57,11 +68,11 @@ class UserProfileImagesVC: UICollectionViewController , UICollectionViewDelegate
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ProfileImageCell
-    
-        cell.imageUrl = self.user?.profilePicsUrls![indexPath.item]
+        
+        cell.imageUrl = self.profilePictures[indexPath.item].profilePicUrl
         cell.nameAndAge = self.user!.superheroName + ", \(self.user?.age ?? 0)"
         cell.location = self.user!.city
-        cell.superpower = self.user?.superPower
+        cell.superpower = self.user?.superpower
     
         return cell
     }

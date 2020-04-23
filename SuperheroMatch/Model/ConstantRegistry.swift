@@ -68,4 +68,7 @@ class ConstantRegistry {
     static let MESSAGE_HAS_NOT_BEEN_READ: Int64 = 0
     static let MESSAGE_HAS_BEEN_READ: Int64 = 1
     
+    static let ON_UPDATE_PROFILE_PICTURE: String = "onUpdateProfilePicture"
+    static let UPDATE_PROFILE_PICTURE_URL: String = "updateProfilePictureURL"
+    
 }

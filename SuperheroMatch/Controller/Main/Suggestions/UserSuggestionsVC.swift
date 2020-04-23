@@ -192,24 +192,18 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
             
             // Check if the choice is older than 1 day, if so then delete it.
             let interval = Date().calculateDifference(recent: Date(), previous: choiceDate)
-        
-            let (dbErr, _) = self.userDB.deleteChoiceById(choiceId: choice.choiceId)
-            if case .SQLError = dbErr {
-                print("###########  deleteChoiceById dbErr  ##############")
-                print(dbErr)
+                    
+            guard interval.day! < 1 else {
+
+                let (dbErr, _) = self.userDB.deleteChoiceById(choiceId: choice.choiceId)
+                if case .SQLError = dbErr {
+                    print("###########  deleteChoiceById dbErr  ##############")
+                    print(dbErr)
+                }
+
+                return
+
             }
-            
-//            guard interval.day! < 1 else {
-//
-//                let (dbErr, _) = self.userDB.deleteChoiceById(choiceId: choice.choiceId)
-//                if case .SQLError = dbErr {
-//                    print("###########  deleteChoiceById dbErr  ##############")
-//                    print(dbErr)
-//                }
-//
-//                return
-//
-//            }
             
         }
         

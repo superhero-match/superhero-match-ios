@@ -18,21 +18,21 @@ class ProfileImageCell: UICollectionViewCell {
     
     var imageUrl: String? {
           didSet {
-              // image: UIImage(named: "test10")
-              profileImageView.image = UIImage(named: imageUrl!)
+            
+            profileImageView.kf.indicatorType = .activity
+            profileImageView.kf.setImage(with: URL(string: imageUrl!), placeholder: UIImage(named: "user_profile"), options: [.transition(.fade(0.7))], progressBlock: nil)
+            
           }
       }
       
       var nameAndAge: String? {
           didSet {
-              // userNameAge.text = "Superhero, 34"
               userNameAge.text = nameAndAge
           }
       }
       
       var location: String? {
           didSet {
-              // city.text = "Somewhere"
               city.text = location
           }
       }
@@ -40,7 +40,6 @@ class ProfileImageCell: UICollectionViewCell {
       var superpower : String? {
           didSet {
               superPower.text = superpower
-              // superPower.text = "Awesome Super Power that I have and it is just test to see how it looks like on the screen when character length is maxed out."
           }
       }
       

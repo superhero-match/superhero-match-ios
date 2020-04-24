@@ -68,6 +68,8 @@ class UserProfileVC: UIViewController, UIImagePickerControllerDelegate, UINaviga
         
         navigationController?.navigationBar.isTranslucent = false
         
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadProfile), name: NSNotification.Name("ReloadProfileNotification"), object: nil)
+        
         self.manager = SocketManager(socketURL: URL(string: "\(ConstantRegistry.BASE_SERVER_URL)\(ConstantRegistry.SUPERHERO_UPDATE_MEDIA_PORT)")!, config: [.log(true), .forceWebsockets(true), .secure(true), .selfSigned(true), .sessionDelegate(CustomSessionDelegate())])
         
         self.socket = self.manager.defaultSocket
@@ -82,6 +84,7 @@ class UserProfileVC: UIViewController, UIImagePickerControllerDelegate, UINaviga
             self!.timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
                 
                 MBProgressHUD.hide(for: self!.view, animated: true)
+                NotificationCenter.default.post(name: Notification.Name("ReloadProfileNotification"), object: nil, userInfo: nil)
                 
             }
             
@@ -93,12 +96,8 @@ class UserProfileVC: UIViewController, UIImagePickerControllerDelegate, UINaviga
         case SocketIOStatus.connecting:
             print("socket is connecting")
         case SocketIOStatus.disconnected:
-            print("socket is disconnected")
-            print("###########  self.socket.connect()  ##############")
             self.socket.connect()
         case SocketIOStatus.notConnected:
-            print("socket is notConnected")
-            print("###########  self.socket.connect()  ##############")
             self.socket.connect()
         }
         
@@ -130,6 +129,7 @@ class UserProfileVC: UIViewController, UIImagePickerControllerDelegate, UINaviga
             self!.timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
                 
                 MBProgressHUD.hide(for: self!.view, animated: true)
+                NotificationCenter.default.post(name: Notification.Name("ReloadProfileNotification"), object: nil, userInfo: nil)
                 
             }
             
@@ -141,12 +141,8 @@ class UserProfileVC: UIViewController, UIImagePickerControllerDelegate, UINaviga
         case SocketIOStatus.connecting:
             print("socket is connecting")
         case SocketIOStatus.disconnected:
-            print("socket is disconnected")
-            print("###########  self.socket.connect()  ##############")
             self.socket.connect()
         case SocketIOStatus.notConnected:
-            print("socket is notConnected")
-            print("###########  self.socket.connect()  ##############")
             self.socket.connect()
         }
         
@@ -306,6 +302,17 @@ class UserProfileVC: UIViewController, UIImagePickerControllerDelegate, UINaviga
             }
         }
         
+    }
+    
+    @objc func reloadProfile() {
+        
+        let (dbErr, user) = self.userDB.getUser()
+        if case .SQLError = dbErr {
+            print("###########  getUser dbErr  ##############")
+            print(dbErr)
+        }
+        
+        getUserProfile(userId: user!.userID)
         
     }
     

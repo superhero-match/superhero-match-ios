@@ -48,7 +48,6 @@ class ProfileImageCell: UICollectionViewCell {
           piv.contentMode = .scaleAspectFill
           piv.layer.cornerRadius = 10
           piv.clipsToBounds = true
-          piv.tappable = true
           piv.layer.shadowColor = UIColor.black.cgColor
           piv.layer.shadowOpacity = 1
           piv.layer.shadowOffset = CGSize.zero
@@ -102,7 +101,7 @@ class ProfileImageCell: UICollectionViewCell {
           profileImageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
           
           addSubview(gradientView)
-          gradientView.anchor(top: nil, left: nil, bottom: profileImageView.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: frame.width, height: 125)
+          gradientView.anchor(top: nil, left: nil, bottom: profileImageView.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: frame.width, height: frame.height)
           gradientView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
           
           let gradientLayer = CAGradientLayer()

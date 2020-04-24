@@ -67,6 +67,7 @@
 		1191E3F52382B6C30077FA99 /* SuggestionProfileImagesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1191E3F42382B6C30077FA99 /* SuggestionProfileImagesVC.swift */; };
 		1191E3F72382D8FD0077FA99 /* SuggestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1191E3F62382D8FD0077FA99 /* SuggestionCell.swift */; };
 		119A3F20234B733200690ED4 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119A3F1F234B733200690ED4 /* ProfileVC.swift */; };
+		11A2827E2452C34C0052799D /* DeleteProfilePicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A2827D2452C34B0052799D /* DeleteProfilePicture.swift */; };
 		11B4494122E1D56500FD7122 /* DBConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B4494022E1D56500FD7122 /* DBConstants.swift */; };
 		11B4494322E1DEDF00FD7122 /* SuperheroMatchDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B4494222E1DEDF00FD7122 /* SuperheroMatchDB.swift */; };
 		11B4494522E1F62F00FD7122 /* UserDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B4494422E1F62F00FD7122 /* UserDB.swift */; };
@@ -183,6 +184,7 @@
 		1191E3F42382B6C30077FA99 /* SuggestionProfileImagesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionProfileImagesVC.swift; sourceTree = "<group>"; };
 		1191E3F62382D8FD0077FA99 /* SuggestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionCell.swift; sourceTree = "<group>"; };
 		119A3F1F234B733200690ED4 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
+		11A2827D2452C34B0052799D /* DeleteProfilePicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteProfilePicture.swift; sourceTree = "<group>"; };
 		11B4493E22E1D3E600FD7122 /* SuperheroMatch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SuperheroMatch-Bridging-Header.h"; sourceTree = "<group>"; };
 		11B4494022E1D56500FD7122 /* DBConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBConstants.swift; sourceTree = "<group>"; };
 		11B4494222E1DEDF00FD7122 /* SuperheroMatchDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperheroMatchDB.swift; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 				11C4693D244F211F002B744D /* OfflineMessages.swift */,
 				11C4693F244F21C2002B744D /* DeleteOfflineMessages.swift */,
 				11FF3C34245044BF0005C236 /* SuggestionProfile.swift */,
+				11A2827D2452C34B0052799D /* DeleteProfilePicture.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -884,6 +887,7 @@
 				11C8BC7022DF495A0089DCE0 /* SuperheroBirthdayVC.swift in Sources */,
 				1150E62D22E4D03E007D16CF /* ProfileImage.swift in Sources */,
 				11DAB6D323BBBD0900881573 /* ItIsAMatchVC.swift in Sources */,
+				11A2827E2452C34C0052799D /* DeleteProfilePicture.swift in Sources */,
 				110D373522E3541400DE7405 /* UpdateMessagingToken.swift in Sources */,
 				11C8BC7222DF4BBF0089DCE0 /* SuperheroGenderVC.swift in Sources */,
 				1130FD6E22E0C81500B64C36 /* User.swift in Sources */,

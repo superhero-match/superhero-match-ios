@@ -66,6 +66,7 @@
 		1191609A2349FFF80015912C /* SuperheroDistanceUnitVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119160992349FFF80015912C /* SuperheroDistanceUnitVC.swift */; };
 		1191E3F52382B6C30077FA99 /* SuggestionProfileImagesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1191E3F42382B6C30077FA99 /* SuggestionProfileImagesVC.swift */; };
 		1191E3F72382D8FD0077FA99 /* SuggestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1191E3F62382D8FD0077FA99 /* SuggestionCell.swift */; };
+		1197B0B72454264100377E44 /* AdMobNativeSuggestionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1197B0B62454264100377E44 /* AdMobNativeSuggestionsVC.swift */; };
 		119A3F20234B733200690ED4 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119A3F1F234B733200690ED4 /* ProfileVC.swift */; };
 		11A2827E2452C34C0052799D /* DeleteProfilePicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11A2827D2452C34B0052799D /* DeleteProfilePicture.swift */; };
 		11B4494122E1D56500FD7122 /* DBConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B4494022E1D56500FD7122 /* DBConstants.swift */; };
@@ -183,6 +184,7 @@
 		119160992349FFF80015912C /* SuperheroDistanceUnitVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperheroDistanceUnitVC.swift; sourceTree = "<group>"; };
 		1191E3F42382B6C30077FA99 /* SuggestionProfileImagesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionProfileImagesVC.swift; sourceTree = "<group>"; };
 		1191E3F62382D8FD0077FA99 /* SuggestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionCell.swift; sourceTree = "<group>"; };
+		1197B0B62454264100377E44 /* AdMobNativeSuggestionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdMobNativeSuggestionsVC.swift; sourceTree = "<group>"; };
 		119A3F1F234B733200690ED4 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		11A2827D2452C34B0052799D /* DeleteProfilePicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteProfilePicture.swift; sourceTree = "<group>"; };
 		11B4493E22E1D3E600FD7122 /* SuperheroMatch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SuperheroMatch-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -334,6 +336,7 @@
 				1191E3F42382B6C30077FA99 /* SuggestionProfileImagesVC.swift */,
 				11B8A1FE23B412EB00244E1F /* NoSuggestionsVC.swift */,
 				11DAB6D223BBBD0900881573 /* ItIsAMatchVC.swift */,
+				1197B0B62454264100377E44 /* AdMobNativeSuggestionsVC.swift */,
 			);
 			path = Suggestions;
 			sourceTree = "<group>";
@@ -851,6 +854,7 @@
 				1185A0E52446EE22002199C0 /* ChoiceItem.swift in Sources */,
 				11C8BC7622DF6A130089DCE0 /* SuperheroSuperPowerVC.swift in Sources */,
 				11B4494122E1D56500FD7122 /* DBConstants.swift in Sources */,
+				1197B0B72454264100377E44 /* AdMobNativeSuggestionsVC.swift in Sources */,
 				110D372D22E34C0700DE7405 /* Invite.swift in Sources */,
 				118E97B7235B146700B2F8BC /* ProfileSettingsVC.swift in Sources */,
 				11144721238AA46F0057350F /* UserProfileImagesVC.swift in Sources */,

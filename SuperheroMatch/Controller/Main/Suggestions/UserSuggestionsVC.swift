@@ -110,6 +110,7 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     var suggestionprofileImagesVC: SuggestionProfileImagesVC?
     
     var noSuggestionsVC: NoSuggestionsVC?
+    var adMobNativeSuggestionsVC: AdMobNativeSuggestionsVC?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -223,6 +224,20 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         
     }
     
+    func configureUIForAdMobVC() {
+        
+        view.addSubview(dislikeButton)
+        dislikeButton.anchor(top: adMobNativeSuggestionsVC!.view.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 40, width: 50, height: 50)
+        
+        view.addSubview(superPowerButton)
+        superPowerButton.anchor(top: adMobNativeSuggestionsVC!.view.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
+        superPowerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        view.addSubview(likeButton)
+        likeButton.anchor(top: adMobNativeSuggestionsVC!.view.bottomAnchor, left: nil, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 40, paddingBottom: 0, paddingRight: 20, width: 50, height: 50)
+        
+    }
+    
     func configureUIWithSuggestions() {
         
         view.addSubview(dislikeButton)
@@ -243,6 +258,7 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         
         if !hasSuggestions {
             configureUIForNoSuggestions()
+            // configureUIForAdMobVC()
             
             return
         }
@@ -313,9 +329,26 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
         
     }
     
+    func configureAdMobVC() {
+        
+        self.adMobNativeSuggestionsVC = AdMobNativeSuggestionsVC()
+        
+        self.suggestionprofileImagesVC?.removeFromParent()
+        self.suggestionDetailsView.removeFromSuperview()
+        self.noSuggestionsVC?.removeFromParent()
+        
+        addChild(self.adMobNativeSuggestionsVC!)
+        view.addSubview(self.adMobNativeSuggestionsVC!.view)
+        self.adMobNativeSuggestionsVC!.didMove(toParent: self)
+        self.adMobNativeSuggestionsVC!.view.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 5, paddingLeft: 5, paddingBottom: 0, paddingRight: 5, width: view.frame.width-10, height: view.frame.height * 0.70)
+        self.adMobNativeSuggestionsVC!.view.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+    }
+    
     func configureSuggestionProfilePicVC(isInitialRequest: Bool) {
         
         self.noSuggestionsVC?.removeFromParent()
+        self.adMobNativeSuggestionsVC?.removeFromParent()
         
         if !isInitialRequest {
             self.suggestionprofileImagesVC?.removeFromParent()
@@ -352,6 +385,8 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     @objc func likeTapped() {
         
         if self.suggestions.count == 0 {
+            //self.configureAdMobVC()
+            
             return
         }
         
@@ -416,11 +451,6 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
             self.uploadChoice(params: params, suggestion: suggestion)
         }
         
-//        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
-//
-//
-//        }, completion: nil)
-        
     }
     
     @objc func superpowerTapped() {
@@ -433,12 +463,10 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
     @objc func dislikeTapped() {
         
         if self.suggestions.count == 0 {
+            // self.configureAdMobVC()
+            
             return
         }
-        
-//        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
-//
-//        }, completion: nil)
         
         let suggestion = self.suggestions[self.currentSuggestion]
         
@@ -647,6 +675,7 @@ class UserSuggestionsVC: UIViewController, CLLocationManagerDelegate {
                     
                 } else {
                     self.configureNoSuggestionsVC()
+                    // self.configureAdMobVC()
                 }
                 
                 if isInitialRequest {

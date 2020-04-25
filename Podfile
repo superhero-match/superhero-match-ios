@@ -36,6 +36,8 @@ target 'SuperheroMatch' do
 
   pod 'Kingfisher', '~> 5.0'
 
+  pod 'Google-Mobile-Ads-SDK'
+
   target 'SuperheroMatchTests' do
     inherit! :search_paths
     # Pods for testing
